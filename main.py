@@ -1,12 +1,15 @@
+from configparser import ConfigParser
+
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
+config = ConfigParser()
+config.read('config.ini')
+mode = config['DEFAULT'].get('mode')
+
 app = FastAPI()
 
-origins = [
-    "http://localhost:5173",  # frontend address of svelt dev server
-    "http://127.0.0.1:5173",
-]
+origins = config['CORSLIST'].get(mode).split()  # get CORS allow list from 'config.ini'
 
 app.add_middleware(  # allow CORS credential
     CORSMiddleware,
