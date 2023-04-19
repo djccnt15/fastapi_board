@@ -133,3 +133,4 @@ include/
 scripts/
 pyvenv.cfg
 note.py
+keys.json

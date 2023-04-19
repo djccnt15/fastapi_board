@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Boolean, Integer, String, Text, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
 from .database import Base
 
@@ -13,6 +13,10 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     is_superuser = Column(Boolean)
     is_staff = Column(Boolean)
+    date_create = Column(DateTime, nullable=False)
+
+    questions: Mapped[list["Question"]] = relationship(back_populates="user")
+    answers: Mapped[list["Answer"]] = relationship(back_populates="user")
 
 
 class Question(Base):
@@ -20,10 +24,12 @@ class Question(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
-    user = relationship("User", backref="questions")
     subject = Column(String, nullable=False)
     content = Column(Text, nullable=False)
-    create_date = Column(DateTime, nullable=False)
+    date_create = Column(DateTime, nullable=False)
+
+    user: Mapped["User"] = relationship(back_populates="questions")
+    answers: Mapped[list["Answer"]] = relationship(back_populates="questions")
 
 
 class Answer(Base):
@@ -31,8 +37,9 @@ class Answer(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
-    user = relationship("User", backref="answers")
     content = Column(Text, nullable=False)
-    create_date = Column(DateTime, nullable=False)
+    date_create = Column(DateTime, nullable=False)
     id_question = Column(Integer, ForeignKey("question.id"), nullable=False)
-    question = relationship("Question", backref="answers")
+
+    user: Mapped["User"] = relationship(back_populates="answers")
+    question: Mapped["Question"] = relationship(back_populates="answers")
