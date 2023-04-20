@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Boolean, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 
-from .database import Base
+from sql_app.database import Base
 
 
 class User(Base):
@@ -29,7 +29,7 @@ class Question(Base):
     date_create = Column(DateTime, nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="questions")
-    answers: Mapped[list["Answer"]] = relationship(back_populates="questions")
+    answers: Mapped[list["Answer"]] = relationship(back_populates="question")
 
 
 class Answer(Base):
