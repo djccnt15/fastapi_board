@@ -134,3 +134,6 @@ scripts/
 pyvenv.cfg
 note.py
 keys.json
+alembic.ini
+migrations/
+sql_app.db
