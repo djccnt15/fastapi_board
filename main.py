@@ -1,15 +1,12 @@
-from configparser import ConfigParser
-
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-config = ConfigParser()
-config.read('config.ini')
-mode = config['DEFAULT'].get('mode')
+from settings.config import config, mode
+from settings.routes import router
 
 app = FastAPI()
 
-origins = config['CORSLIST'].get(mode).split()  # get CORS allow list from 'config.ini'
+origins = config['CORSLIST'].get(mode).split()  # get CORS allow list
 
 app.add_middleware(  # allow CORS credential
     CORSMiddleware,
@@ -18,6 +15,9 @@ app.add_middleware(  # allow CORS credential
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Routers
+app.include_router(router)
 
 
 @app.get("/")

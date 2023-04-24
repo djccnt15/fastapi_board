@@ -4,7 +4,7 @@
 
 ## memo
 
-FastAPI의 개발용 서버 구동 명령어는 아래와 같다.  
+- FastAPI의 개발용 서버 구동 명령어는 아래와 같다.  
 
 ```powershell
 > uvicorn main:app --reload

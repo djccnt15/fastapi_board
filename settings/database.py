@@ -1,15 +1,14 @@
 import json
-from configparser import ConfigParser
+from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.engine import URL
 from addict import Dict
 
-config = ConfigParser()
-config.read('config.ini')
-mode = config['DEFAULT'].get('mode')
-db_key = config['DATABASE'].get('db')
+from settings.config import config, mode
+
+db_key = Path(*config['DATABASE'].get('db').split())
 db_thread_check = config['DATABASE_THREAD_CHECK'].get(mode)
 
 with open(file=db_key, mode='r') as f:
@@ -31,3 +30,11 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

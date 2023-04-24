@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Boolean, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 
-from database import Base
+from settings.database import Base
 
 
 class User(Base):
@@ -39,7 +39,7 @@ class Answer(Base):
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
     content = Column(Text, nullable=False)
     date_create = Column(DateTime, nullable=False)
-    id_question = Column(Integer, ForeignKey("question.id"), nullable=False)
+    id_question = Column(Integer, ForeignKey(Question.id), nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="answers")
     question: Mapped["Question"] = relationship(back_populates="answers")
