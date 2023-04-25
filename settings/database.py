@@ -6,10 +6,10 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.engine import URL
 from addict import Dict
 
-from settings.config import config, mode
+from settings.config import get_config, mode, dir_config
 
-db_key = Path(*config['DATABASE'].get('db').split())
-db_thread_check = config['DATABASE_THREAD_CHECK'].get(mode)
+db_key = Path(dir_config, get_config()['DATABASE'].get('db'))
+db_thread_check = get_config()['DATABASE_THREAD_CHECK'].get(mode)
 
 with open(file=db_key, mode='r') as f:
     db_key = Dict(json.load(fp=f)).db[mode]

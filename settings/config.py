@@ -1,6 +1,13 @@
 from pathlib import Path
 from configparser import ConfigParser
 
-config = ConfigParser()
-config.read(Path('settings', 'config.ini'))
-mode = config['DEFAULT'].get('mode')
+dir_config = Path('settings')
+
+
+def get_config():
+    config = ConfigParser()
+    config.read(dir_config / 'config.ini')
+    return config
+
+
+mode = get_config()['DEFAULT'].get('mode')
