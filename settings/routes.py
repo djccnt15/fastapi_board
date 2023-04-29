@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from src.endpoints.board_qna.question import router as router_question
+from src.endpoints.board.post import router as router_post
 
 router = APIRouter()
 
-router.include_router(router_question)
+router.include_router(router_post)
