@@ -10,6 +10,18 @@
 > uvicorn main:app --reload
 ```
 
+## migration 관련
+
+alembic을 이용한 마이그레이션 명령어는 아래와 같다.  
+
+```powershell
+> alembic init migrations
+
+> alembic revision --autogenerate
+
+> alembic upgrade head
+```
+
 ## configuration 관련
 
 - `config.ini` 파일을 통해 각종 환경 설정 제어

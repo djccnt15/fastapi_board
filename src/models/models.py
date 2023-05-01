@@ -11,11 +11,11 @@ class User(Base):
     username = Column(String(length=50), unique=True, nullable=False)
     password = Column(String(length=255), nullable=False)
     email = Column(String(length=255), unique=True, nullable=False)
-    is_superuser = Column(Boolean)
-    is_staff = Column(Boolean)
+    is_superuser = Column(Boolean, default=None)
+    is_staff = Column(Boolean, default=None)
     date_create = Column(DateTime, nullable=False)
-    is_blocked = Column(Boolean)
-    is_active = Column(Boolean, nullable=False, default=1)
+    is_blocked = Column(Boolean, default=None)
+    is_active = Column(Boolean, nullable=False, default=True)
 
     post: Mapped[list['Post']] = relationship(back_populates='user')
     comment: Mapped[list['Comment']] = relationship(back_populates='user')
@@ -26,7 +26,7 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tier = Column(Integer, nullable=False)
-    name = Column(String(length=255), nullable=False)
+    category = Column(String(length=255), nullable=False)
     id_parent = Column(Integer, ForeignKey('category.id'))
 
     child = relationship(argument='Category', remote_side=[id])
