@@ -23,7 +23,7 @@ def get_comment_list(db: Session, id_post: int):
             User.username, User.is_superuser, User.is_staff, User.is_staff, User.is_blocked, User.is_active
         ) \
         .join(comment_last_upd, Comment.id == comment_last_upd.c.id_comment) \
-        .join(User, User.id == Comment.id_user) \
+        .join(User, Comment.user) \
         .filter(Comment.id_post == id_post) \
         .filter(Comment.is_active == True) \
         .order_by(Comment.date_create) \

@@ -36,7 +36,7 @@ def get_post_list(db: Session, category: str = ''):
         .filter(Post.is_active == True) \
         .join(post_content, Post.id == post_content.c.id_post) \
         .join(post_category, Post.id_category == post_category.c.id) \
-        .join(User, User.id == Post.id_user)
+        .join(User, Post.user)
     total = post_list.distinct().count()
     post_list = post_list \
         .order_by(Post.id.desc()) \
