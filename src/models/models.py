@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Boolean, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy.types import Boolean, Integer, String, Text, DateTime, BigInteger, Uuid
 from sqlalchemy.orm import relationship, Mapped
 
 from settings.database import Base
@@ -7,13 +8,13 @@ from settings.database import Base
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(length=50), unique=True, nullable=False)
+    id = Column(BigInteger, primary_key=True, index=True)
+    username = Column(String(length=100), unique=True, nullable=False)
     password = Column(String(length=255), nullable=False)
     email = Column(String(length=255), unique=True, nullable=False)
+    date_create = Column(DateTime, nullable=False)
     is_superuser = Column(Boolean, default=None)
     is_staff = Column(Boolean, default=None)
-    date_create = Column(DateTime, nullable=False)
     is_blocked = Column(Boolean, default=None)
     is_active = Column(Boolean, nullable=False, default=True)
 
@@ -36,7 +37,7 @@ class Category(Base):
 class Post(Base):
     __tablename__ = 'post'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True, index=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
     id_category = Column(Integer, ForeignKey(Category.id), nullable=False)
     date_create = Column(DateTime, nullable=False)
@@ -51,7 +52,7 @@ class Post(Base):
 class PostContent(Base):
     __tablename__ = 'post_content'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True, index=True)
     version = Column(Integer, nullable=False)
     date_upd = Column(DateTime, nullable=False)
     subject = Column(String, nullable=False)
@@ -64,7 +65,7 @@ class PostContent(Base):
 class Comment(Base):
     __tablename__ = 'comment'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True, index=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
     id_post = Column(Integer, ForeignKey(Post.id), nullable=False)
     date_create = Column(DateTime, nullable=False)
@@ -78,7 +79,7 @@ class Comment(Base):
 class CommentContent(Base):
     __tablename__ = 'comment_content'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True, index=True)
     version = Column(Integer, nullable=False)
     date_upd = Column(DateTime, nullable=False)
     content = Column(Text, nullable=False)
