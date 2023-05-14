@@ -1,3 +1,4 @@
+from uuid import UUID
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -8,7 +9,7 @@ from src.schemas.board.comment import Comment
 
 
 class PostSumm(Category):
-    id: int
+    id: UUID
     date_create: datetime
     subject: str
     username: str
@@ -23,7 +24,7 @@ class PostList(BaseModel):
 
 
 class Post(BaseModel):
-    id: int
+    id: UUID
     date_create: datetime
     category: Category
     user: User

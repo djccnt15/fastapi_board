@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy.sql.functions import max as SQLMax
+from sqlalchemy.sql import functions
 
 from src.models.models import User, Post, Category, PostContent
 
@@ -19,7 +19,7 @@ def get_post_list(db: Session, category: str = ''):
         .join(category_tier_1, Category.id_parent == category_tier_1.c.id) \
         .subquery(name='post_category')
     post_last_upd = db \
-        .query(SQLMax(PostContent.version), PostContent.id) \
+        .query(functions.max(PostContent.version), PostContent.id) \
         .group_by(PostContent.id_post) \
         .subquery(name='post_last_upd')
     post_content = db \

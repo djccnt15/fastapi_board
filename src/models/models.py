@@ -30,7 +30,7 @@ class Category(Base):
     category = Column(String(length=255), nullable=False)
     id_parent = Column(Integer, ForeignKey('category.id'))
 
-    child = relationship(argument='Category', remote_side=[id])
+    parent = relationship(argument='Category', remote_side=[id])
     post: Mapped[list['Post']] = relationship(back_populates='category')
 
 

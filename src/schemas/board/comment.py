@@ -1,10 +1,11 @@
+from uuid import UUID
 from datetime import datetime
 
 from pydantic import BaseModel
 
 
 class Comment(BaseModel):
-    id: int
+    id: UUID
     version: int
     date_create: datetime
     date_upd: datetime

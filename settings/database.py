@@ -1,9 +1,8 @@
 import json
 from pathlib import Path
 
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy.engine import URL
+from sqlalchemy.engine import URL, create_engine
 from addict import Dict
 
 from settings.config import get_config, mode, dir_config

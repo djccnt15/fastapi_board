@@ -23,8 +23,3 @@ app.include_router(router)
 @app.get("/")
 def index():
     return {"message": "This is temporal index page"}
-
-
-@app.get("/hello")
-def hello():
-    return {"message": "Hello World!"}
