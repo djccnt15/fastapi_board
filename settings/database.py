@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.engine import URL, create_engine
@@ -7,8 +6,7 @@ from addict import Dict
 
 from settings.config import get_config, mode, dir_config
 
-db_key = Path(dir_config, get_config()['DATABASE'].get('db'))
-db_thread_check = get_config()['DATABASE_THREAD_CHECK'].get(mode)
+db_key = dir_config / get_config()['DATABASE'].get('db')
 
 with open(file=db_key, mode='r') as f:
     db_key = Dict(json.load(fp=f)).db[mode]
