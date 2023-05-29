@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 
-@router.get("/list/{category}", response_model=PostList)
+@router.get("/{category}", response_model=PostList)
 def post_list(category: str, db: Session = Depends(get_db)):
     total, post_list = get_post_list(db, category)
     return {

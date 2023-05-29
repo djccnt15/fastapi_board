@@ -8,26 +8,9 @@ from src.schemas.common.category import Category
 from src.schemas.board.comment import Comment
 
 
-class PostSumm(Category):
-    id: UUID
-    date_create: datetime
-    subject: str
-    username: str
-
-    class Config:
-        orm_mode = True
-
-
-class PostList(BaseModel):
-    total: int = 0
-    post_list: list[PostSumm] = []
-
-
 class Post(BaseModel):
     id: UUID
     date_create: datetime
-    category: Category
-    user: User
 
     class Config:
         orm_mode = True
@@ -47,3 +30,18 @@ class PostDetail(BaseModel):
     post: Post
     content: PostContent
     comment: list[Comment] = []
+
+
+class PostSumm(BaseModel):
+    Post: Post
+    Content: PostContent
+    Category: Category
+    User: User
+
+    class Config:
+        orm_mode = True
+
+
+class PostList(BaseModel):
+    total: int = 0
+    post_list: list[PostSumm] = []

@@ -1,5 +1,7 @@
+from sqlalchemy.sql import select
+from sqlalchemy.orm import Session, aliased
+from sqlalchemy.sql.functions import max as MAX
 from sqlalchemy.orm import Session
-from sqlalchemy.sql import functions
 
 from src.models.models import User, Post, Category, PostContent
 
@@ -9,39 +11,31 @@ def create_post(db: Session):
 
 
 def get_post_list(db: Session, category: str = ''):
-    category_tier_1 = db \
-        .query(Category.id, Category.category) \
-        .filter(Category.category == category) \
-        .subquery(name='category_tier_1')
-    post_category = db \
-        .query(Category.id, Category.category,
-               category_tier_1.c.category) \
-        .join(category_tier_1, Category.id_parent == category_tier_1.c.id) \
+    category_tier_1 = aliased(Category)
+    category_list = select(Category) \
+        .join(Category.parent.of_type(category_tier_1)) \
+        .where(category_tier_1.category == category) \
+        .subquery(name='category_list')
+    post_category = select(Post) \
+        .join(category_list, Post.id_category == category_list.c.id) \
         .subquery(name='post_category')
-    post_last_upd = db \
-        .query(functions.max(PostContent.version), PostContent.id) \
+    post_last_upd = select(MAX(PostContent.version), PostContent.id) \
         .group_by(PostContent.id_post) \
         .subquery(name='post_last_upd')
-    post_content = db \
-        .query(PostContent.id_post, PostContent.id, PostContent.date_upd, PostContent.subject) \
+    content_subq = select(PostContent) \
         .join(post_last_upd, PostContent.id == post_last_upd.c.id) \
-        .subquery(name='post_content')
-    post_list = db \
-        .query(
-            Post.id, Post.date_create,
-            post_content.c.subject,
-            post_category.c.category,
-            User.username
-        ) \
-        .filter(Post.is_active == True) \
-        .join(post_content, Post.id == post_content.c.id_post) \
-        .join(post_category, Post.id_category == post_category.c.id) \
-        .join(User, Post.user)
-    total = post_list.distinct().count()
-    post_list = post_list \
-        .order_by(Post.id.desc()) \
-        .all()
-    return total, post_list
+        .subquery(name='Content')
+    Content = aliased(PostContent, content_subq, name='Content')
+    post_list = select(Post, Content, Category, User) \
+        .join(Content) \
+        .join(post_category, post_category.c.id == Post.id) \
+        .join(Category) \
+        .join(User) \
+        .where(Post.is_active == True) \
+        .order_by(Post.date_create.desc())
+    result = db.execute(post_list).all()
+    total = len(result)
+    return total, result
 
 
 def get_post(db: Session, id_post: int):
