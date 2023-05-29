@@ -29,6 +29,7 @@ class UserCreate(UserName, UserEmail):
 
 
 class User(UserName):
+    id: int
     is_superuser: bool | None = None
     is_staff: bool | None = None
     is_blocked: bool | None = None
@@ -39,5 +40,4 @@ class User(UserName):
 
 
 class UserInfo(User, UserEmail):
-    id: int
     date_create: date

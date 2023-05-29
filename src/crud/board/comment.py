@@ -1,31 +1,19 @@
-from sqlalchemy.orm import Session
-from sqlalchemy.sql.functions import max as SQLMax
+from uuid import UUID
 
-from src.models.models import User, Comment, CommentContent
+from sqlalchemy.sql import select, functions
+from sqlalchemy.orm import Session, aliased
+
+from src.models.models import Comment, CommentContent, User
 
 
-def get_comment_list(db: Session, id_post: int):
-    comment_last_upd = db \
-        .query(
-            SQLMax(CommentContent.version),
-            CommentContent.id,
-            CommentContent.id_comment,
-            CommentContent.version,
-            CommentContent.date_upd,
-            CommentContent.content
-        ) \
+def get_comment_list(db: Session, id_post: UUID):
+    content_subq = select(functions.max(CommentContent.version), CommentContent) \
         .group_by(CommentContent.id_comment) \
-        .subquery(name='comment_last_upd')
-    comment = db \
-        .query(
-            Comment.id, Comment.date_create,
-            comment_last_upd.c.version, comment_last_upd.c.date_upd, comment_last_upd.c.content,
-            User.username, User.is_superuser, User.is_staff, User.is_staff, User.is_blocked, User.is_active
-        ) \
-        .join(comment_last_upd, Comment.id == comment_last_upd.c.id_comment) \
-        .join(User, Comment.user) \
-        .filter(Comment.id_post == id_post) \
-        .filter(Comment.is_active == True) \
-        .order_by(Comment.date_create) \
-        .all()
-    return comment
+        .subquery(name="Content")
+    Content = aliased(CommentContent, content_subq, name='Content')
+    comment = select(Comment, Content, User) \
+        .join(Content) \
+        .join(User) \
+        .where(Comment.id_post == id_post)
+    res = db.execute(comment).all()
+    return res

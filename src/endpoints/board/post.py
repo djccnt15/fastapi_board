@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -21,13 +23,11 @@ def post_list(category: str, db: Session = Depends(get_db)):
     }
 
 
-@router.get("/post/", response_model=PostDetail)
-def post_detail(id_post: int, db: Session = Depends(get_db)):
+@router.get("/post/", response_model=PostResponse)
+def post_detail(id_post: UUID, db: Session = Depends(get_db)):
     post = get_post(db, id_post)
-    content = get_post_content(db, id_post)
     comment = get_comment_list(db, id_post)
     return {
         'post': post,
-        'content': content,
         'comment': comment
     }

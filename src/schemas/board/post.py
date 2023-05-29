@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from src.schemas.common.user import User
 from src.schemas.common.category import Category
-from src.schemas.board.comment import Comment
+from src.schemas.board.comment import CommentDetail
 
 
 class Post(BaseModel):
@@ -17,19 +17,13 @@ class Post(BaseModel):
 
 
 class PostContent(BaseModel):
-    version: int
+    id: UUID
     date_upd: datetime
     subject: str
     content: str
 
     class Config:
         orm_mode = True
-
-
-class PostDetail(BaseModel):
-    post: Post
-    content: PostContent
-    comment: list[Comment] = []
 
 
 class PostSumm(BaseModel):
@@ -45,3 +39,21 @@ class PostSumm(BaseModel):
 class PostList(BaseModel):
     total: int = 0
     post_list: list[PostSumm] = []
+
+
+class PostDetail(BaseModel):
+    Post: Post
+    Content: PostContent
+    Category: Category
+    User: User
+
+    class Config:
+        orm_mode = True
+
+
+class PostResponse(BaseModel):
+    post: PostDetail
+    comment: list[CommentDetail]
+
+    class Config:
+        orm_mode = True

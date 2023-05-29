@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy.sql import select, functions
 from sqlalchemy.orm import Session, aliased
 
@@ -30,18 +32,19 @@ def get_post_list(db: Session, category: str = ''):
     return total, result
 
 
-def get_post(db: Session, id_post: int):
-    post = db.get(Post, id_post)
-    return post
-
-
-def get_post_content(db: Session, id_post: int):
-    content = db \
-        .query(PostContent) \
-        .filter(PostContent.id_post == id_post) \
-        .order_by(PostContent.version.desc()) \
-        .first()
-    return content
+def get_post(db: Session, id_post: UUID):
+    content_subq = select(functions.max(PostContent.version), PostContent) \
+        .group_by(PostContent.id_post) \
+        .subquery(name='Content')
+    Category = aliased(PostCategory, name='Category')
+    Content = aliased(PostContent, content_subq, name='Content')
+    post = select(Post, Content, Category, User) \
+        .join(Content) \
+        .join(Category) \
+        .join(User) \
+        .where(Post.id == id_post)
+    res = db.execute(post).first()
+    return res
 
 
 def update_post(db: Session):
