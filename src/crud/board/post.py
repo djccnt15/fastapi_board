@@ -1,9 +1,7 @@
-from sqlalchemy.sql import select
+from sqlalchemy.sql import select, functions
 from sqlalchemy.orm import Session, aliased
-from sqlalchemy.sql.functions import max as MAX
-from sqlalchemy.orm import Session
 
-from src.models.models import User, Post, Category, PostContent
+from src.models.models import User, Post, PostCategory, PostContent
 
 
 def create_post(db: Session):
@@ -11,24 +9,18 @@ def create_post(db: Session):
 
 
 def get_post_list(db: Session, category: str = ''):
-    category_tier_1 = aliased(Category)
-    category_list = select(Category) \
-        .join(Category.parent.of_type(category_tier_1)) \
+    category_tier_1 = aliased(PostCategory)
+    category_subq = select(PostCategory) \
+        .join(PostCategory.parent.of_type(category_tier_1)) \
         .where(category_tier_1.category == category) \
-        .subquery(name='category_list')
-    post_category = select(Post) \
-        .join(category_list, Post.id_category == category_list.c.id) \
-        .subquery(name='post_category')
-    post_last_upd = select(MAX(PostContent.version), PostContent.id) \
+        .subquery(name='category_subq')
+    Category = aliased(PostCategory, category_subq, name='Category')
+    content_subq = select(functions.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
-        .subquery(name='post_last_upd')
-    content_subq = select(PostContent) \
-        .join(post_last_upd, PostContent.id == post_last_upd.c.id) \
         .subquery(name='Content')
     Content = aliased(PostContent, content_subq, name='Content')
     post_list = select(Post, Content, Category, User) \
         .join(Content) \
-        .join(post_category, post_category.c.id == Post.id) \
         .join(Category) \
         .join(User) \
         .where(Post.is_active == True) \

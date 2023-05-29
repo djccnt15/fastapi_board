@@ -22,7 +22,7 @@ class User(Base):
     comment: Mapped[list['Comment']] = relationship(back_populates='user')
 
 
-class Category(Base):
+class PostCategory(Base):
     __tablename__ = 'category'
 
     id = Column(Integer, primary_key=True, index=True)
@@ -30,7 +30,7 @@ class Category(Base):
     category = Column(String(length=255), nullable=False)
     id_parent = Column(Integer, ForeignKey('category.id'))
 
-    parent = relationship(argument='Category', remote_side=[id])
+    parent = relationship(argument='PostCategory', remote_side=[id])
     post: Mapped[list['Post']] = relationship(back_populates='category')
 
 
@@ -39,12 +39,12 @@ class Post(Base):
 
     id = Column(Uuid, primary_key=True, index=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
-    id_category = Column(Integer, ForeignKey(Category.id), nullable=False)
+    id_category = Column(Integer, ForeignKey(PostCategory.id), nullable=False)
     date_create = Column(DateTime, nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)
 
     user: Mapped['User'] = relationship(back_populates='post')
-    category: Mapped[list['Category']] = relationship(back_populates='post')
+    category: Mapped[list['PostCategory']] = relationship(back_populates='post')
     content: Mapped[list['PostContent']] = relationship(back_populates='post')
     comment: Mapped[list['Comment']] = relationship(back_populates='post')
 
