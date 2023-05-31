@@ -4,22 +4,30 @@
 
 ## memo
 
-- FastAPI의 개발용 서버 구동 명령어는 아래와 같다.  
+- FastAPI의 개발용 서버 구동 명령어
 
 ```powershell
-> uvicorn main:app --reload
+uvicorn main:app --reload
 ```
 
-## migration 관련
+## alembic 기반 migration 관련
 
-alembic을 이용한 마이그레이션 명령어는 아래와 같다.  
+- alembic 시작
 
 ```powershell
-> alembic init migrations
+alembic init migrations
+```
 
-> alembic revision --autogenerate
+- revision 생성
 
-> alembic upgrade head
+```powershell
+alembic revision --autogenerate
+```
+
+- 최신 리비전으로 migration 실행
+
+```powershell
+alembic upgrade head
 ```
 
 ## configuration 관련

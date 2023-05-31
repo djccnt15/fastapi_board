@@ -27,12 +27,12 @@ def get_post_list(db: Session, category: str = ''):
         .join(User) \
         .where(Post.is_active == True) \
         .order_by(Post.date_create.desc())
-    result = db.execute(post_list).all()
-    total = len(result)
-    return total, result
+    res = db.execute(post_list).all()
+    total = len(res)
+    return total, res
 
 
-def get_post(db: Session, id_post: UUID):
+def get_post(db: Session, id: UUID):
     content_subq = select(functions.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
         .subquery(name='Content')
@@ -42,7 +42,7 @@ def get_post(db: Session, id_post: UUID):
         .join(Content) \
         .join(Category) \
         .join(User) \
-        .where(Post.id == id_post)
+        .where(Post.id == id)
     res = db.execute(post).first()
     return res
 

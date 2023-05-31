@@ -29,10 +29,10 @@ def post_list(category: str, db: Session = Depends(get_db)):
     }
 
 
-@router.get("/post/", response_model=PostResponse)
-def post_detail(id_post: UUID, db: Session = Depends(get_db)):
-    post = get_post(db, id_post)
-    comment = get_comment_list(db, id_post)
+@router.get("/post/", response_model=PostDetailList)
+def post_detail(id: UUID, db: Session = Depends(get_db)):
+    post = get_post(db, id)
+    comment = get_comment_list(db, id)
     if post is None or comment is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

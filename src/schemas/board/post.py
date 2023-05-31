@@ -38,7 +38,7 @@ class PostSumm(BaseModel):
 
 class PostList(BaseModel):
     total: int = 0
-    post_list: list[PostSumm] = []
+    post_list: list[PostSumm]
 
 
 class PostDetail(BaseModel):
@@ -51,9 +51,6 @@ class PostDetail(BaseModel):
         orm_mode = True
 
 
-class PostResponse(BaseModel):
+class PostDetailList(BaseModel):
     post: PostDetail
     comment: list[CommentDetail]
-
-    class Config:
-        orm_mode = True
