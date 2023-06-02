@@ -21,15 +21,13 @@ def get_post_list(db: Session, category: str = ''):
         .group_by(PostContent.id_post) \
         .subquery(name='Content')
     Content = aliased(PostContent, content_subq, name='Content')
-    post_list = select(Post, Content, Category, User) \
+    q = select(Post, Content, Category, User) \
         .join(Content) \
         .join(Category) \
         .join(User) \
         .where(Post.is_active == True) \
         .order_by(Post.date_create.desc())
-    res = db.execute(post_list).all()
-    total = len(res)
-    return total, res
+    return db.execute(q).all()
 
 
 def get_post(db: Session, id: UUID):
@@ -38,13 +36,12 @@ def get_post(db: Session, id: UUID):
         .subquery(name='Content')
     Category = aliased(PostCategory, name='Category')
     Content = aliased(PostContent, content_subq, name='Content')
-    post = select(Post, Content, Category, User) \
+    q = select(Post, Content, Category, User) \
         .join(Content) \
         .join(Category) \
         .join(User) \
         .where(Post.id == id)
-    res = db.execute(post).first()
-    return res
+    return db.execute(q).first()
 
 
 def update_post(db: Session):

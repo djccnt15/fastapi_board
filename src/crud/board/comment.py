@@ -11,9 +11,8 @@ def get_comment_list(db: Session, id_post: UUID):
         .group_by(CommentContent.id_comment) \
         .subquery(name="Content")
     Content = aliased(CommentContent, content_subq, name='Content')
-    comment = select(Comment, Content, User) \
+    q = select(Comment, Content, User) \
         .join(Content) \
         .join(User) \
         .where(Comment.id_post == id_post)
-    res = db.execute(comment).all()
-    return res
+    return db.execute(q).all()

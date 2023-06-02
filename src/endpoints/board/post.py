@@ -17,7 +17,8 @@ router = APIRouter(
 
 @router.get("/{category}", response_model=PostList)
 def post_list(category: str, db: Session = Depends(get_db)):
-    total, post_list = get_post_list(db, category)
+    post_list = get_post_list(db, category)
+    total = len(post_list)
     if total == 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
