@@ -1,6 +1,6 @@
 import json
 
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL, create_engine
 from addict import Dict
 
@@ -27,8 +27,6 @@ if str(SQLALCHEMY_DATABASE_URL).startswith("sqlite"):  # check_same_thread arg i
 else:
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
 
 
 def get_db():

@@ -1,5 +1,5 @@
-from src.models.models import Base as base_model
+from src.models import *
 
 alembic_meta_data = [
-    base_model.metadata,
+    models.Base.metadata,
 ]

@@ -1,8 +1,8 @@
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import Boolean, Integer, String, Text, DateTime, BigInteger, Uuid
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import declarative_base, relationship, Mapped
 
-from settings.database import Base
+Base = declarative_base()
 
 
 class User(Base):
