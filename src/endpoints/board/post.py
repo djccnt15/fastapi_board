@@ -16,13 +16,13 @@ router = APIRouter(
 
 
 @router.get("/{category}", response_model=PostList)
-def post_list(category: str, db: Session = Depends(get_db)):
-    post_list = get_post_list(db, category)
+def post_list(category: str, keyword: str = '', skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    post_list = get_post_list(db, category, keyword, skip, limit)
     total = len(post_list)
     if total == 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No such category"
+            detail="Query Result is Empty"
         )
     return {
         'total': total,
