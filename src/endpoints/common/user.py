@@ -11,16 +11,19 @@ router = APIRouter(
 )
 
 
-@router.post("/create", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/create", status_code=status.HTTP_204_NO_CONTENT)
 def user_create(user_create: UserCreate, db: Session = Depends(get_db)):
-    if get_existing_useremail(db, user_create):
+    existing_user = get_existing_user(db, user_create)
+    conflict_email = [u for u in existing_user if u.email == user_create.email]
+    conflict_username = [u for u in existing_user if u.username == user_create.username]
+    if conflict_email:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Email already Signed up"
+            detail="email conflict"
         )
-    elif get_existing_username(db, user_create):
+    elif conflict_username:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Username already occupied"
+            detail="username conflict"
         )
     create_user(db, user_create)
