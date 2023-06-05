@@ -1,5 +1,5 @@
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.types import Boolean, Integer, String, Text, DateTime, BigInteger, Uuid
+from sqlalchemy.types import Boolean, Integer, String, Text, DateTime, Uuid
 from sqlalchemy.orm import declarative_base, relationship, Mapped
 
 Base = declarative_base()
@@ -8,7 +8,7 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(BigInteger, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     username = Column(String(length=100), unique=True, nullable=False)
     password = Column(String(length=255), nullable=False)
     email = Column(String(length=255), unique=True, nullable=False)
@@ -57,7 +57,7 @@ class PostContent(Base):
     date_upd = Column(DateTime, nullable=False)
     subject = Column(String, nullable=False)
     content = Column(Text, nullable=False)
-    id_post = Column(Integer, ForeignKey(Post.id), nullable=False)
+    id_post = Column(Uuid, ForeignKey(Post.id), nullable=False)
 
     post: Mapped['Post'] = relationship(back_populates='content')
 
@@ -67,7 +67,7 @@ class Comment(Base):
 
     id = Column(Uuid, primary_key=True, index=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
-    id_post = Column(Integer, ForeignKey(Post.id), nullable=False)
+    id_post = Column(Uuid, ForeignKey(Post.id), nullable=False)
     date_create = Column(DateTime, nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)
 
@@ -83,6 +83,6 @@ class CommentContent(Base):
     version = Column(Integer, nullable=False)
     date_upd = Column(DateTime, nullable=False)
     content = Column(Text, nullable=False)
-    id_comment = Column(Integer, ForeignKey(Comment.id), nullable=False)
+    id_comment = Column(Uuid, ForeignKey(Comment.id), nullable=False)
 
     comment: Mapped['Comment'] = relationship(back_populates='content')
