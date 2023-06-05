@@ -1,7 +1,7 @@
 import json
 
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.engine import URL, create_engine
+from sqlalchemy.engine import URL
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from addict import Dict
 
 from settings.config import get_config, mode, dir_config
@@ -21,17 +21,20 @@ SQLALCHEMY_DATABASE_URL = URL.create(
 )
 
 if str(SQLALCHEMY_DATABASE_URL).startswith("sqlite"):  # check_same_thread arg is only for SQLite
-    engine = create_engine(
+    engine = create_async_engine(
         SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
     )
 else:
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
 
 
-def get_db():
-    db = SessionLocal()
+async def get_db():
+    db = AsyncSession(bind=engine)
     try:
         yield db
     finally:
-        db.close()
+        await db.close()
+
+
+if __name__ == '__main__':
+    print(SQLALCHEMY_DATABASE_URL)

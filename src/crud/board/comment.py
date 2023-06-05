@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, aliased
 from src.models.models import Comment, CommentContent, User
 
 
-def get_comment_list(db: Session, id_post: UUID):
+async def get_comment_list(db: Session, id_post: UUID):
     content_subq = select(functions.max(CommentContent.version), CommentContent) \
         .group_by(CommentContent.id_comment) \
         .subquery(name="Content")
@@ -15,4 +15,5 @@ def get_comment_list(db: Session, id_post: UUID):
         .join(Content) \
         .join(User) \
         .where(Comment.id_post == id_post)
-    return db.execute(q).all()
+    res = await db.execute(q)
+    return res.all()

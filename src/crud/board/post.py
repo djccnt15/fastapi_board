@@ -6,11 +6,11 @@ from sqlalchemy.orm import Session, aliased
 from src.models.models import User, Post, PostCategory, PostContent
 
 
-def create_post(db: Session):
+async def create_post(db: Session):
     ...
 
 
-def get_post_list(db: Session, category: str, keyword: str, skip: int, limit: int):
+async def get_post_list(db: Session, category: str, keyword: str, skip: int, limit: int):
     category_tier_1 = aliased(PostCategory)
     category_subq = select(PostCategory) \
         .join(PostCategory.parent.of_type(category_tier_1)) \
@@ -34,10 +34,11 @@ def get_post_list(db: Session, category: str, keyword: str, skip: int, limit: in
             User.username.ilike(keyword)))
     q = q.order_by(Post.date_create.desc()) \
         .offset(skip).limit(limit)
-    return db.execute(q).all()
+    res = await db.execute(q)
+    return res.all()
 
 
-def get_post(db: Session, id: UUID):
+async def get_post(db: Session, id: UUID):
     content_subq = select(functions.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
         .subquery(name='Content')
@@ -48,12 +49,13 @@ def get_post(db: Session, id: UUID):
         .join(Category) \
         .join(User) \
         .where(Post.id == id)
-    return db.execute(q).first()
+    res = await db.execute(q)
+    return res.first()
 
 
-def update_post(db: Session):
+async def update_post(db: Session):
     ...
 
 
-def del_post(db: Session):
+async def del_post(db: Session):
     ...

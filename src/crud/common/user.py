@@ -10,7 +10,7 @@ from src.schemas.common.user import UserCreate
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def create_user(db: Session, user_create: UserCreate):
+async def create_user(db: Session, user_create: UserCreate):
     db_user = User(
         username=user_create.username,
         password=pwd_context.hash(user_create.password1),
@@ -18,10 +18,11 @@ def create_user(db: Session, user_create: UserCreate):
         email=user_create.email
     )
     db.add(db_user)
-    db.commit()
+    await db.commit()
 
 
-def get_existing_user(db: Session, user_create: UserCreate):
+async def get_existing_user(db: Session, user_create: UserCreate):
     q = select(User) \
         .where((User.email == user_create.email) | (User.username == user_create.username))
-    return db.execute(q).scalars().all()
+    res = await db.execute(q)
+    return res.scalars().all()

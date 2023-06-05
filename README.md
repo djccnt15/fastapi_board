@@ -41,8 +41,16 @@ alembic upgrade head
 {
     "db": {
         "dev": {
-            "drivername": "sqlite",
+            "drivername": "sqlite+aiosqlite",
             "database": "./sql_app.db"
+        },
+        "test": {
+            "drivername": "postgresql+asyncpg",
+            "username": "postgres",
+            "password": "****",
+            "host": "host.docker.internal",
+            "port": "5432",
+            "database": "fastapi"
         }
     }
 }

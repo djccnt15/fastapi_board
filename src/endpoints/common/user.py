@@ -12,8 +12,8 @@ router = APIRouter(
 
 
 @router.put("/create", status_code=status.HTTP_204_NO_CONTENT)
-def user_create(user_create: UserCreate, db: Session = Depends(get_db)):
-    existing_user = get_existing_user(db, user_create)
+async def user_create(user_create: UserCreate, db: Session = Depends(get_db)):
+    existing_user = await get_existing_user(db, user_create)
     conflict_email = [u for u in existing_user if u.email == user_create.email]
     conflict_username = [u for u in existing_user if u.username == user_create.username]
     if conflict_email:
@@ -26,4 +26,4 @@ def user_create(user_create: UserCreate, db: Session = Depends(get_db)):
             status_code=status.HTTP_409_CONFLICT,
             detail="username conflict"
         )
-    create_user(db, user_create)
+    await create_user(db, user_create)
