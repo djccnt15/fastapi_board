@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy.sql import select, or_, functions
+from sqlalchemy.sql import select, functions
 from sqlalchemy.orm import Session, aliased
 
 from src.models.models import User, Post, PostCategory, PostContent
@@ -27,11 +27,12 @@ async def get_post_list(db: Session, category: str, keyword: str, skip: int, lim
         .join(User) \
         .where(Post.is_active == True)
     if keyword:
-        keyword = f'%%{keyword}%%'
-        q = q.where(or_(
-            Content.subject.ilike(keyword),
-            Content.content.ilike(keyword),
-            User.username.ilike(keyword)))
+        keyword = f'%{keyword}%'
+        q = q.where(
+            Content.subject.ilike(keyword) |
+            Content.content.ilike(keyword) |
+            User.username.ilike(keyword)
+        )
     q = q.order_by(Post.date_create.desc()) \
         .offset(skip).limit(limit)
     res = await db.execute(q)

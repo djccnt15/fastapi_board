@@ -23,6 +23,9 @@ async def create_user(db: Session, user_create: UserCreate):
 
 async def get_existing_user(db: Session, user_create: UserCreate):
     q = select(User) \
-        .where((User.email == user_create.email) | (User.username == user_create.username))
+        .where(
+        (User.email == user_create.email) |
+        (User.username == user_create.username)
+        )
     res = await db.execute(q)
     return res.scalars().all()

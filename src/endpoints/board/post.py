@@ -16,7 +16,13 @@ router = APIRouter(
 
 
 @router.get("/{category}", response_model=PostList)
-async def post_list(category: str, keyword: str = '', page: int = 0, size: int = 10, db: Session = Depends(get_db)):
+async def post_list(
+    category: str,
+    keyword: str = '',
+    page: int = 0,
+    size: int = 10,
+    db: Session = Depends(get_db)
+):
     post_list = await get_post_list(db, category, keyword, page * size, size)
     total = len(post_list)
     if total == 0:
