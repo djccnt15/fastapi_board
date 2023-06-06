@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy.sql import select, functions
+from sqlalchemy.sql import select, functions, func
 from sqlalchemy.orm import Session, aliased
 
 from src.models.models import User, Post, PostCategory, PostContent
@@ -33,10 +33,11 @@ async def get_post_list(db: Session, category: str, keyword: str, skip: int, lim
             Content.content.ilike(keyword) |
             User.username.ilike(keyword)
         )
+    total = await db.execute(select(func.count()).select_from(q))
     q = q.order_by(Post.date_create.desc()) \
         .offset(skip).limit(limit)
     res = await db.execute(q)
-    return res.all()
+    return total.scalar(), res.all()
 
 
 async def get_post(db: Session, id: UUID):

@@ -23,8 +23,7 @@ async def post_list(
     size: int = 10,
     db: Session = Depends(get_db)
 ):
-    post_list = await get_post_list(db, category, keyword, page * size, size)
-    total = len(post_list)
+    total, post_list = await get_post_list(db, category, keyword, page * size, size)
     if total == 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
