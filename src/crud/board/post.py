@@ -1,16 +1,17 @@
 from uuid import UUID
 
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, functions, func
-from sqlalchemy.orm import Session, aliased
+from sqlalchemy.orm import aliased
 
 from src.models.models import User, Post, PostCategory, PostContent
 
 
-async def create_post(db: Session):
+async def create_post(db: AsyncSession):
     ...
 
 
-async def get_post_list(db: Session, category: str, keyword: str, skip: int, limit: int):
+async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int, limit: int):
     category_tier_1 = aliased(PostCategory)
     category_subq = select(PostCategory) \
         .join(PostCategory.parent.of_type(category_tier_1)) \
@@ -40,7 +41,7 @@ async def get_post_list(db: Session, category: str, keyword: str, skip: int, lim
     return total.scalar(), res.all()
 
 
-async def get_post(db: Session, id: UUID):
+async def get_post(db: AsyncSession, id: UUID):
     content_subq = select(functions.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
         .subquery(name='Content')
@@ -55,9 +56,9 @@ async def get_post(db: Session, id: UUID):
     return res.first()
 
 
-async def update_post(db: Session):
+async def update_post(db: AsyncSession):
     ...
 
 
-async def del_post(db: Session):
+async def del_post(db: AsyncSession):
     ...

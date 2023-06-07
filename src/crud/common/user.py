@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select
 from passlib.context import CryptContext
 
@@ -10,7 +10,7 @@ from src.schemas.common.user import UserCreate
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-async def create_user(db: Session, user_create: UserCreate):
+async def create_user(db: AsyncSession, user_create: UserCreate):
     db_user = User(
         username=user_create.username,
         password=pwd_context.hash(user_create.password1),
@@ -21,7 +21,7 @@ async def create_user(db: Session, user_create: UserCreate):
     await db.commit()
 
 
-async def get_existing_user(db: Session, user_create: UserCreate):
+async def get_existing_user(db: AsyncSession, user_create: UserCreate):
     q = select(User) \
         .where(
         (User.email == user_create.email) |

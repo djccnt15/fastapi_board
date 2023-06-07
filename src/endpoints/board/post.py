@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from settings.database import get_db
 from src.crud.board.post import *
@@ -21,7 +21,7 @@ async def post_list(
     keyword: str = '',
     page: int = 0,
     size: int = 10,
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_db)
 ):
     total, post_list = await get_post_list(db, category, keyword, page * size, size)
     if total == 0:
@@ -36,7 +36,7 @@ async def post_list(
 
 
 @router.get("/post/", response_model=PostDetailList)
-async def post_detail(id: UUID, db: Session = Depends(get_db)):
+async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
     post = await get_post(db, id)
     comment = await get_comment_list(db, id)
     if post is None or comment is None:

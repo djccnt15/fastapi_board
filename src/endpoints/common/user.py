@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from settings.database import get_db
@@ -12,7 +12,7 @@ router = APIRouter(
 
 
 @router.post("/create", status_code=status.HTTP_204_NO_CONTENT)
-async def user_create(user_create: UserCreate, db: Session = Depends(get_db)):
+async def user_create(user_create: UserCreate, db: AsyncSession = Depends(get_db)):
     existing_user = await get_existing_user(db, user_create)
     conflict_email = [u for u in existing_user if u.email == user_create.email]
     conflict_username = [u for u in existing_user if u.username == user_create.username]
