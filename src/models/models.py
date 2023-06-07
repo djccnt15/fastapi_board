@@ -5,6 +5,14 @@ from sqlalchemy.orm import declarative_base, relationship, Mapped
 Base = declarative_base()
 
 
+class Log(Base):
+    __tablename__ = 'log'
+
+    id = Column(Uuid, primary_key=True, index=True)
+    date_create = Column(DateTime, nullable=False)
+    log = Column(Text, nullable=False)
+
+
 class User(Base):
     __tablename__ = 'user'
 

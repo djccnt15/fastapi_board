@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from settings.config import get_config, mode
 from settings.routes import router
+from settings.database import engine
+
+from src.crud.common.log import create_log
 
 app = FastAPI()
 
@@ -18,6 +23,20 @@ app.add_middleware(  # allow CORS credential
 
 # Routers
 app.include_router(router)
+
+
+@app.middleware("http")
+async def logger(request: Request, call_next):
+    log = {
+        'req_url': str(request.url),
+        'req_method': str(request.method),
+        'param_query': str(dict(request.query_params)),
+        'param_path': str(request.path_params),
+        'client': str(request.client)
+    }
+    await create_log(AsyncSession(bind=engine), str(log))
+    response = await call_next(request)
+    return response
 
 
 @app.get("/")
