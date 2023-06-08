@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,6 +40,6 @@ async def logger(request: Request, call_next):
     return response
 
 
-@app.get("/")
-def index():
-    return {"message": "This is temporal index page"}
+@app.get("/", response_class=RedirectResponse, status_code=302)  # temporal index page redirect to swagger
+async def root():
+    return '/docs'
