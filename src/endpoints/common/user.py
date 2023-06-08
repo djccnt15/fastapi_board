@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.post("/create", status_code=status.HTTP_204_NO_CONTENT)
+@router.post("/create", status_code=status.HTTP_201_CREATED)
 async def user_create(user_create: UserCreate, db: AsyncSession = Depends(get_db)):
     existing_user = await get_existing_user(db, user_create)
     conflict_email = [u for u in existing_user if u.email == user_create.email]

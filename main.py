@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from starlette.middleware.cors import CORSMiddleware
@@ -7,7 +9,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from settings.config import get_config, mode
 from settings.routes import router
 from settings.database import engine
-
 from src.crud.common.log import create_log
 
 app = FastAPI()
@@ -35,11 +36,11 @@ async def logger(request: Request, call_next):
         'param_path': str(request.path_params),
         'client': str(request.client)
     }
-    await create_log(AsyncSession(bind=engine), str(log))
+    await create_log(AsyncSession(bind=engine), datetime.now(), str(log))
     response = await call_next(request)
     return response
 
 
-@app.get("/", response_class=RedirectResponse, status_code=302)  # temporal index page redirect to swagger
+@app.get("/", response_class=RedirectResponse)  # temporal index page redirect to swagger
 async def root():
     return '/docs'
