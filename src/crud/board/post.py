@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, functions, func
 from sqlalchemy.orm import aliased
 
-from src.models.models import User, Post, PostCategory, PostContent
+from src.models.models import User
+from src.models.post import *
 
 
 async def create_post(db: AsyncSession):

@@ -2,9 +2,12 @@ import json
 
 from sqlalchemy.engine import URL
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import declarative_base
 from addict import Dict
 
 from settings.config import get_config, mode, dir_config
+
+Base = declarative_base()
 
 db_key = dir_config / get_config()['DATABASE'].get('db')
 

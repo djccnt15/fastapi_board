@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, functions
 from sqlalchemy.orm import aliased
 
-from src.models.models import Comment, CommentContent, User
+from src.models.models import User
+from src.models.comment import *
 
 
 async def get_comment_list(db: AsyncSession, id_post: UUID):

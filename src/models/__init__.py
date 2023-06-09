@@ -1,1 +1,3 @@
-__all__ = ['models']
+from .models import *
+from .post import *
+from .comment import *
