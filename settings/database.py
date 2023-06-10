@@ -7,8 +7,6 @@ from addict import Dict
 
 from settings.config import get_config, mode, dir_config
 
-Base = declarative_base()
-
 db_key = dir_config / get_config()['DATABASE'].get('db')
 
 with open(file=db_key, mode='r') as f:
@@ -38,6 +36,8 @@ async def get_db():
     finally:
         await db.close()
 
+
+Base = declarative_base()
 
 if __name__ == '__main__':
     print(SQLALCHEMY_DATABASE_URL)
