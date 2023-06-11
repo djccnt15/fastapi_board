@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 
-@router.get("/{category}", response_model=PostList)
+@router.get("/list/{category}", response_model=PostList)
 async def post_list(
     category: str,
     keyword: str = '',
@@ -35,7 +35,7 @@ async def post_list(
     }
 
 
-@router.get("/post/", response_model=PostDetailList)
+@router.get("/post", response_model=PostDetailList)
 async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
     post = await get_post(db, id)
     comment = await get_comment_list(db, id)
