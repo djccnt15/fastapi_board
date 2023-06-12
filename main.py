@@ -19,15 +19,15 @@ app.add_middleware(  # allow CORS credential
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 # Routers
 app.include_router(router)
 
 
-@app.middleware("http")
+@app.middleware('http')
 async def logger(request: Request, call_next):
     log = {
         'req_url': str(request.url),
@@ -41,6 +41,6 @@ async def logger(request: Request, call_next):
     return response
 
 
-@app.get("/", response_class=RedirectResponse)  # temporal index page redirect to swagger
+@app.get('/', response_class=RedirectResponse)  # temporal index page redirect to swagger
 async def root():
     return '/docs'
