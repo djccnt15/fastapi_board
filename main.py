@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, PlainTextResponse
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,6 +39,12 @@ async def logger(request: Request, call_next):
     await create_log(AsyncSession(bind=engine), datetime.now(), str(log))
     response = await call_next(request)
     return response
+
+
+@app.get('/robots.txt', response_class=PlainTextResponse)
+def robots():
+    data = 'User-agent: *\nAllow: /'
+    return data
 
 
 @app.get('/', response_class=RedirectResponse)  # temporal index page redirect to swagger
