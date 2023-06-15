@@ -10,7 +10,7 @@ from src.models.post import *
 class Comment(Base):
     __tablename__ = 'comment'
 
-    id = Column(Uuid, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
     id_post = Column(Uuid, ForeignKey(Post.id), nullable=False)
     date_create = Column(DateTime, nullable=False)
@@ -24,7 +24,7 @@ class Comment(Base):
 class CommentContent(Base):
     __tablename__ = 'comment_content'
 
-    id = Column(Uuid, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True)
     version = Column(Integer, nullable=False)
     date_upd = Column(DateTime, nullable=False)
     content = Column(Text, nullable=False)

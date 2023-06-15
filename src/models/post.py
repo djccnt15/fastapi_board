@@ -9,7 +9,7 @@ from src.models.models import *
 class PostCategory(Base):
     __tablename__ = 'category'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     tier = Column(Integer, nullable=False)
     category = Column(String(length=255), nullable=False)
     id_parent = Column(Integer, ForeignKey('category.id'))
@@ -21,7 +21,7 @@ class PostCategory(Base):
 class Post(Base):
     __tablename__ = 'post'
 
-    id = Column(Uuid, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
     id_category = Column(Integer, ForeignKey(PostCategory.id), nullable=False)
     date_create = Column(DateTime, nullable=False)
@@ -36,7 +36,7 @@ class Post(Base):
 class PostContent(Base):
     __tablename__ = 'post_content'
 
-    id = Column(Uuid, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True)
     version = Column(Integer, nullable=False)
     date_upd = Column(DateTime, nullable=False)
     subject = Column(String, nullable=False)

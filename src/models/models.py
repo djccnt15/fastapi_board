@@ -8,7 +8,7 @@ from settings.database import Base
 class Log(Base):
     __tablename__ = 'log'
 
-    id = Column(Uuid, primary_key=True, index=True)
+    id = Column(Uuid, primary_key=True)
     date_create = Column(DateTime, nullable=False)
     log = Column(Text, nullable=False)
 
@@ -16,7 +16,7 @@ class Log(Base):
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     username = Column(String(length=100), unique=True, nullable=False)
     password = Column(String(length=255), nullable=False)
     email = Column(String(length=255), unique=True, nullable=False)

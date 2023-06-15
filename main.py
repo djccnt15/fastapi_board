@@ -37,8 +37,7 @@ async def logger(request: Request, call_next):
         'client': str(request.client)
     }
     await create_log(AsyncSession(bind=engine), datetime.now(), str(log))
-    response = await call_next(request)
-    return response
+    return await call_next(request)
 
 
 @app.get('/robots.txt', response_class=PlainTextResponse)
