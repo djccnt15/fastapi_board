@@ -1,9 +1,14 @@
-from pydantic import BaseModel
+from typing import Generic, TypeVar
+from uuid import UUID
+
+from pydantic.generics import GenericModel
+
+ID = TypeVar("ID", int, UUID)
 
 
-class Id(BaseModel):
-    id: int
+class Id(GenericModel, Generic[ID]):
+    id: ID
 
 
-class IdList(BaseModel):
-    list_id: list[int] = []
+class IdList(GenericModel, Generic[ID]):
+    id_list: list[ID]
