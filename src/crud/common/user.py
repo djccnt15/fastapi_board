@@ -29,3 +29,10 @@ async def get_existing_user(db: AsyncSession, user_create: UserCreate):
         )
     res = await db.execute(q)
     return res.scalars().all()
+
+
+async def get_user(db: AsyncSession, username: str):
+    q = select(User) \
+        .where(User.username == username)
+    res = await db.execute(q)
+    return res.scalar()

@@ -41,3 +41,9 @@ class User(UserName):
 
 class UserInfo(User, UserEmail):
     date_create: date
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    username: str

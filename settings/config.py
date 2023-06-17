@@ -1,5 +1,8 @@
+import json
 from pathlib import Path
 from configparser import ConfigParser
+
+from addict import Dict
 
 dir_config = Path('settings')
 
@@ -11,3 +14,8 @@ def get_config() -> ConfigParser:
 
 
 mode = get_config()['DEFAULT'].get('mode')
+
+auth_config = dir_config / get_config()['AUTH'].get('secret')
+
+with open(file=auth_config, mode='r') as f:
+    auth_config = Dict(json.load(fp=f)).auth

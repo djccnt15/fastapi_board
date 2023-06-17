@@ -5,3 +5,6 @@ SQLAlchemy==2.0.9
 alembic==1.10.3
 email-validator==2.0.0.post2
 asyncpg==0.27.0
+passlib[bcrypt]
+python-multipart
+python-jose[cryptography]

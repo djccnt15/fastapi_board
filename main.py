@@ -42,8 +42,7 @@ async def logger(request: Request, call_next):
 
 @app.get('/robots.txt', response_class=PlainTextResponse)
 def robots():
-    data = 'User-agent: *\nAllow: /'
-    return data
+    return 'User-agent: *\nAllow: /'
 
 
 @app.get('/', response_class=RedirectResponse)  # temporal index page redirect to swagger
