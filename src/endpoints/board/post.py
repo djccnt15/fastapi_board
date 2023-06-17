@@ -29,7 +29,7 @@ async def post_list(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Query Result is Empty'
         )
-    return PostList(total=total, post_list=post_list)
+    return PostList(total=total, post_list=post_list)  # type: ignore
 
 
 @router.get('/post', response_model=PostDetailList)
@@ -41,4 +41,4 @@ async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='No such ID'
         )
-    return PostDetailList(post=post, comment=comment)
+    return PostDetailList(post=post, comment=comment)  # type: ignore

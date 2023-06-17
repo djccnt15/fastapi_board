@@ -18,7 +18,7 @@ class UserCreate(UserName, UserEmail):
     @validator('username', 'password1', 'password2', 'email')
     def not_empty(cls, v):
         if not v or not v.strip():
-            raise ValueError('empty space is not allowed for password')
+            raise ValueError('empty space is not allowed')
         return v
 
     @validator('password2')
