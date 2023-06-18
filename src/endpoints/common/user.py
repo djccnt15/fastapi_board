@@ -46,7 +46,7 @@ async def user_login(
 
     # check user and password
     user = await get_user(db, form_data.username)
-    if not user or not pwd_context.verify(form_data.password, user.password):  # type: ignore
+    if user is None or not pwd_context.verify(form_data.password, user.password):  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Incorrect username or password',
