@@ -6,7 +6,7 @@ from jose import jwt, JWTError
 
 from settings.config import auth_config
 from settings.database import get_db
-from src.crud.common.user import get_user
+from src.crud import get_user
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/user/login')
 

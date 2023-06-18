@@ -2,7 +2,7 @@ from datetime import date
 
 from pydantic import BaseModel, EmailStr, validator
 
-from src.schemas.common.common import no_empty_val
+from .common import no_empty_val
 
 
 class UserName(BaseModel):

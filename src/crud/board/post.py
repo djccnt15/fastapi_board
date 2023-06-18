@@ -5,9 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, functions, func
 from sqlalchemy.orm import aliased
 
-from src.models.models import User
-from src.models.post import *
-from src.schemas.board.post import PostCreate
+from src.models import User, PostCategory, Post, PostContent
+from src.schemas import PostCreate
 
 
 async def get_category_id(db: AsyncSession, category: str):

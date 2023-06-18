@@ -5,9 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, functions
 from sqlalchemy.orm import aliased
 
-from src.models.models import User
-from src.models.post import *
-from src.schemas.board.comment import CommentCreate
+from src.models import User, Post, Comment, CommentContent
+from src.schemas import CommentCreate
 
 
 async def create_comment(

@@ -6,13 +6,10 @@ from starlette import status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from settings.database import get_db
-from src.crud.board.post import *
-from src.crud.board.comment import *
-from src.schemas.board.post import *
-from src.schemas.board.comment import *
-from src.schemas.common.common import CreateSuccess, no_id
-from src.models import User as UserDao
-from src.app.auth import get_current_user
+from src.crud.board import *
+from src.schemas import CreateSuccess, PostList, PostDetailList, no_id
+from src.models import User
+from src.app import get_current_user
 
 router = APIRouter(
     prefix='/api/board',
@@ -23,7 +20,7 @@ router = APIRouter(
 async def post_create(
         post: PostCreate,
         db: AsyncSession = Depends(get_db),
-        current_user: UserDao = Depends(get_current_user)
+        current_user: User = Depends(get_current_user)
 ):
     category = await get_category_id(db, post.category)
     if category is None:

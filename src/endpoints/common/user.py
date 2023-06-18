@@ -8,9 +8,8 @@ from jose import jwt
 
 from settings.config import get_config, auth_config
 from settings.database import get_db
-from src.schemas.common.user import UserCreate, Token
-from src.schemas.common.common import CreateSuccess
-from src.crud.common.user import *
+from src.schemas import UserCreate, Token, CreateSuccess
+from src.crud import get_existing_user, create_user, get_user
 
 router = APIRouter(
     prefix='/api/user',

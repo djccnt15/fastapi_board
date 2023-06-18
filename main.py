@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from settings.config import get_config, mode
 from settings.routes import router
 from settings.database import engine
-from src.crud.common.log import create_log
+from src.crud import create_log
 
 app = FastAPI()
 

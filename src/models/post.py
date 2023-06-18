@@ -3,7 +3,7 @@ from sqlalchemy.types import Boolean, Integer, String, Text, DateTime, Uuid
 from sqlalchemy.orm import relationship
 
 from settings.database import Base
-from src.models.models import *
+from src.models import User
 
 
 class PostCategory(Base):
