@@ -4,6 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
 
+no_id = 'no such id'
 no_empty_val = 'empty value is not allowed'
 
 ID = TypeVar("ID", int, UUID)

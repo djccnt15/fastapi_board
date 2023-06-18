@@ -1,10 +1,11 @@
 from uuid import UUID
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from src.schemas.common.user import User
 from src.schemas.common.category import Category
+from src.schemas.common.common import no_empty_val
 from src.schemas.board.comment import CommentDetail
 
 
@@ -37,7 +38,7 @@ class PostSumm(BaseModel):
 
 
 class PostList(BaseModel):
-    total: int = 0
+    total: int
     post_list: list[PostSumm]
 
 
@@ -54,3 +55,15 @@ class PostDetail(BaseModel):
 class PostDetailList(BaseModel):
     post: PostDetail
     comment: list[CommentDetail]
+
+
+class PostCreate(BaseModel):
+    category: str
+    subject: str
+    content: str
+
+    @validator('category', 'subject', 'content')
+    def not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError(no_empty_val)
+        return v

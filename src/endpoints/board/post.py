@@ -1,4 +1,5 @@
-from uuid import UUID
+from uuid import UUID, uuid4
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
@@ -9,10 +10,33 @@ from src.crud.board.post import *
 from src.crud.board.comment import *
 from src.schemas.board.post import *
 from src.schemas.board.comment import *
+from src.schemas.common.common import CreateSuccess, no_id
+from src.models import User as UserDao
+from src.app.auth import get_current_user
 
 router = APIRouter(
     prefix='/api/board',
 )
+
+
+@router.post('/post/create', status_code=status.HTTP_201_CREATED, response_model=CreateSuccess)
+async def post_create(
+        post: PostCreate,
+        db: AsyncSession = Depends(get_db),
+        current_user: UserDao = Depends(get_current_user)
+):
+    category = await get_category_id(db, post.category)
+    if category is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='no such category'
+        )
+
+    now = datetime.now()
+    id_post = uuid4()
+    await create_post(db, id_post, category.id, current_user, now)  # type: ignore
+    await create_post_detail(db, post, id_post, now)
+    return CreateSuccess()
 
 
 @router.get('/list/{category}', response_model=PostList)
@@ -39,6 +63,6 @@ async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
     if post is None or comment is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail='No such ID'
+            detail=no_id
         )
     return PostDetailList(post=post, comment=comment)  # type: ignore
