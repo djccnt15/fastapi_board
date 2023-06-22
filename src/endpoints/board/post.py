@@ -72,11 +72,11 @@ async def post_list(
 
 @router.get('/post', tags=[Tags.board], response_model=PostDetailList)
 async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
-    post = await get_post(db, id)
-    comment = await get_comment_list(db, id)
+    post_detail = await get_post(db, id)
+    comment_list = await get_comment_list(db, id)
     if post is None or comment is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=no_id
         )
-    return PostDetailList(post=post, comment=comment)
+    return PostDetailList(post_detail=post_detail, comment_list=comment_list)

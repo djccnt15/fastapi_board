@@ -2,10 +2,10 @@ from uuid import UUID
 from datetime import datetime
 from enum import Enum
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, Field, validator
 
 from .common import no_empty_val
-from .user import User
+from .user import User as UserRec
 
 
 class CategoryEnum(Enum):
@@ -13,14 +13,15 @@ class CategoryEnum(Enum):
     community = 'community'
 
 
-class Category(BaseModel):
-    category: str
+class CategoryRec(BaseModel):
+    category: str = Field(alias='name')
 
     class Config:
         orm_mode = True
+        allow_population_by_field_name = True
 
 
-class Comment(BaseModel):
+class CommentRec(BaseModel):
     id: UUID
     date_create: datetime
 
@@ -38,12 +39,13 @@ class CommentContent(BaseModel):
 
 
 class CommentDetail(BaseModel):
-    Comment: Comment
-    Content: CommentContent
-    User: User
+    Comment: CommentRec = Field(alias='comment')
+    Content: CommentContent = Field(alias='content')
+    User: UserRec = Field(alias='user')
 
     class Config:
         orm_mode = True
+        allow_population_by_field_name = True
 
 
 class CommentCreate(BaseModel):
@@ -56,7 +58,7 @@ class CommentCreate(BaseModel):
         return v
 
 
-class Post(BaseModel):
+class PostRec(BaseModel):
     id: UUID
     date_create: datetime
 
@@ -75,13 +77,14 @@ class PostContent(BaseModel):
 
 
 class PostSumm(BaseModel):
-    Post: Post
-    Content: PostContent
-    Category: Category
-    User: User
+    Post: PostRec = Field(alias='post')
+    Content: PostContent = Field(alias='content')
+    Category: CategoryRec = Field(alias='category')
+    User: UserRec = Field(alias='user')
 
     class Config:
         orm_mode = True
+        allow_population_by_field_name = True
 
 
 class PostList(BaseModel):
@@ -90,18 +93,22 @@ class PostList(BaseModel):
 
 
 class PostDetail(BaseModel):
-    Post: Post
-    Content: PostContent
-    Category: Category
-    User: User
+    Post: PostRec = Field(alias='post')
+    Content: PostContent = Field(alias='content')
+    Category: CategoryRec = Field(alias='category')
+    User: UserRec = Field(alias='user')
 
     class Config:
         orm_mode = True
+        allow_population_by_field_name = True
 
 
 class PostDetailList(BaseModel):
-    post: PostDetail
-    comment: list[CommentDetail]
+    post_detail: PostDetail
+    comment_list: list[CommentDetail]
+
+    class Config:
+        allow_population_by_field_name = True
 
 
 class PostCreate(BaseModel):
