@@ -42,7 +42,7 @@ async def create_comment_detail(
 async def get_comment_list(db: AsyncSession, id_post: UUID):
     content_subq = select(functions.max(CommentContent.version), CommentContent) \
         .group_by(CommentContent.id_comment) \
-        .subquery(name="Content")
+        .subquery(name='Content')
     Content = aliased(CommentContent, content_subq, name='Content')
     q = select(Comment, Content, User) \
         .join(Content) \

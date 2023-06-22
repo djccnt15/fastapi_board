@@ -21,9 +21,9 @@ SQLALCHEMY_DATABASE_URL = URL.create(
     database=db_key.database,
 )
 
-if str(SQLALCHEMY_DATABASE_URL).startswith("sqlite"):  # check_same_thread arg is only for SQLite
+if str(SQLALCHEMY_DATABASE_URL).startswith('sqlite'):  # check_same_thread arg is only for SQLite
     engine = create_async_engine(
-        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+        SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False}
     )
 else:
     engine = create_async_engine(SQLALCHEMY_DATABASE_URL)

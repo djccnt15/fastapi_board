@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from src.models import User
 from src.schemas import UserCreate
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
 async def create_user(db: AsyncSession, user_create: UserCreate):
