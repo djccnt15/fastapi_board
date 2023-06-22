@@ -9,6 +9,22 @@ from src.models import User, PostCategory, Post, PostContent
 from src.schemas import PostCreate
 
 
+async def read_category_t1_list(db: AsyncSession):
+    q = select(PostCategory) \
+        .where(PostCategory.tier == 1)
+    res = await db.execute(q)
+    return res.scalars().all()
+
+
+async def read_category_list(db: AsyncSession, parent: str):
+    tier_1 = aliased(PostCategory)
+    q = select(PostCategory) \
+        .join(PostCategory.parent.of_type(tier_1)) \
+        .where(tier_1.category == parent)
+    res = await db.execute(q)
+    return res.scalars().all()
+
+
 async def get_category_id(db: AsyncSession, category: str):
     q = select(PostCategory) \
         .where(PostCategory.category == category)

@@ -16,6 +16,18 @@ router = APIRouter(
 )
 
 
+@router.get('/list', tags=[Tags.board], response_model=list)
+async def board_list(db: AsyncSession = Depends(get_db)):
+    board_list = await read_category_t1_list(db)
+    return [i.category for i in board_list]
+
+
+@router.get('/category/list', tags=[Tags.board], response_model=list)
+async def category_list(category: CategoryEnum, db: AsyncSession = Depends(get_db)):
+    category_list = await read_category_list(db, category.name)
+    return [i.category for i in category_list]
+
+
 @router.post(
         '/post/create',
         tags=[Tags.board],
