@@ -6,12 +6,49 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from settings.config import get_config, mode
+from settings.config import get_config, mode, dir_config
 from settings.routes import router
 from settings.database import engine
 from src.crud import create_log
 
-app = FastAPI()
+metadata = get_config()['DEFAULT']
+
+with open(file=dir_config / metadata.get('description'), mode='r') as f:
+    description = f.read()
+
+tags_metadata = [
+    {
+        'name': 'default',
+        'externalDocs': {
+            'description': 'External docs',
+            'url': f'{metadata.get("url")}',
+        },
+    },
+    {
+        'name': 'Auth',
+        'description': 'Operations with users, Such as **SignUp**, **LogIn** logics',
+    },
+    {
+        'name': 'Board',
+        'description': 'CRUD Post, Comments',
+    },
+]
+
+app = FastAPI(
+    title=metadata.get('title'),
+    version=metadata.get('version'),
+    contact={
+        'name': metadata.get('name'),
+        'url': metadata.get('url'),
+        'email': metadata.get('email')
+    },
+    license_info={
+        'name': metadata.get('license_name'),
+        'url': metadata.get('license_url')
+    },
+    description=description,
+    openapi_tags=tags_metadata
+)
 
 origins = get_config()['CORSLIST'].get(mode).split()  # get CORS allow list
 

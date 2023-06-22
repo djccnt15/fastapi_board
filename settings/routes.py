@@ -6,6 +6,6 @@ from src.endpoints.common.user import router as router_user
 
 router = APIRouter()
 
+router.include_router(router_user)
 router.include_router(router_post)
 router.include_router(router_comment)
-router.include_router(router_user)

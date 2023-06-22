@@ -1,5 +1,6 @@
 from typing import Generic, TypeVar
 from uuid import UUID
+from enum import Enum
 
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
@@ -16,6 +17,11 @@ class Id(GenericModel, Generic[ID]):
 
 class IdList(GenericModel, Generic[ID]):
     id_list: list[ID]
+
+
+class Tags(Enum):
+    board = 'Board'
+    auth = 'Auth'
 
 
 class CreateSuccess(BaseModel):

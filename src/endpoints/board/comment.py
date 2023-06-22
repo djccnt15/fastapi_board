@@ -7,7 +7,7 @@ from starlette import status
 
 from settings.database import get_db
 from src.crud import get_post, create_comment, create_comment_detail
-from src.schemas import CreateSuccess, no_id, CommentCreate
+from src.schemas import Tags, CreateSuccess, no_id, CommentCreate
 from src.models import User
 from src.app import get_current_user
 
@@ -16,7 +16,12 @@ router = APIRouter(
 )
 
 
-@router.post('/create', status_code=status.HTTP_201_CREATED, response_model=CreateSuccess)
+@router.post(
+        '/create',
+        tags=[Tags.board],
+        status_code=status.HTTP_201_CREATED,
+        response_model=CreateSuccess
+)
 async def comment_create(
         id: UUID,
         comment: CommentCreate,

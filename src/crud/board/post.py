@@ -70,7 +70,7 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
             Content.content.ilike(keyword) |
             User.username.ilike(keyword)
         )
-    total = await db.execute(select(func.count()).select_from(q))  # type: ignore
+    total = await db.execute(select(func.count()).select_from(q))
     q = q.order_by(Post.date_create.desc()) \
         .offset(skip).limit(limit)
     res = await db.execute(q)

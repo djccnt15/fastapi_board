@@ -1,10 +1,16 @@
 from uuid import UUID
 from datetime import datetime
+from enum import Enum
 
 from pydantic import BaseModel, validator
 
 from .common import no_empty_val
 from .user import User
+
+
+class CategoryEnum(Enum):
+    qna = 'qna'
+    community = 'community'
 
 
 class Category(BaseModel):
