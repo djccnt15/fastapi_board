@@ -4,8 +4,8 @@ from enum import Enum
 
 from pydantic import BaseModel, Field, validator
 
-from .common import no_empty_val
-from .user import User as UserRec
+from .dto_common import no_empty_val
+from .dto_user import User as UserRec, Id
 
 
 class CategoryEnum(Enum):
@@ -21,16 +21,14 @@ class CategoryRec(BaseModel):
         allow_population_by_field_name = True
 
 
-class CommentRec(BaseModel):
-    id: UUID
+class CommentRec(Id[UUID]):
     date_create: datetime
 
     class Config:
         orm_mode = True
 
 
-class CommentContent(BaseModel):
-    id: UUID
+class CommentContent(Id[UUID]):
     date_upd: datetime
     content: str
 
@@ -66,8 +64,7 @@ class PostRec(BaseModel):
         orm_mode = True
 
 
-class PostContent(BaseModel):
-    id: UUID
+class PostContent(Id[UUID]):
     date_upd: datetime
     subject: str
     content: str

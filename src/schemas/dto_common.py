@@ -24,5 +24,17 @@ class Tags(Enum):
     auth = 'Auth'
 
 
-class CreateSuccess(BaseModel):
+class SuccessMsg(BaseModel):
+    detail: str
+
+
+class SuccessCreate(SuccessMsg):
     detail: str = 'create success'
+
+
+class SuccessUpdate(SuccessMsg):
+    detail: str = 'update success'
+
+
+class SuccessDel(SuccessMsg):
+    detail: str = 'delete success'

@@ -108,9 +108,9 @@ async def get_post(db: AsyncSession, id: UUID):
     return res.first()
 
 
-async def update_post(db: AsyncSession):
+async def update_post(db: AsyncSession):  # WIP
     ...
 
 
-async def del_post(db: AsyncSession):
+async def del_post(db: AsyncSession):  # WIP
     ...

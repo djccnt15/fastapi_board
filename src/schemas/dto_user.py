@@ -2,7 +2,7 @@ from datetime import date
 
 from pydantic import BaseModel, EmailStr, validator
 
-from .common import no_empty_val
+from .dto_common import no_empty_val, Id
 
 
 class UserName(BaseModel):
@@ -30,8 +30,7 @@ class UserCreate(UserName, UserEmail):
         return v
 
 
-class User(UserName):
-    id: int
+class User(Id[int], UserName):
     is_superuser: bool | None = None
     is_staff: bool | None = None
     is_blocked: bool | None = None

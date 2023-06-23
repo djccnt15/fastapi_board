@@ -1,2 +1,2 @@
-from .post import *
-from .comment import *
+from .con_post import *
+from .con_comment import *

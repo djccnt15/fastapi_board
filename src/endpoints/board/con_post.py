@@ -6,8 +6,8 @@ from starlette import status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from settings.database import get_db
-from src.crud.board import *
-from src.schemas import CreateSuccess, PostList, PostDetailList, no_id, CategoryEnum
+from src.crud import *
+from src.schemas import *
 from src.models import User
 from src.app import get_current_user
 
@@ -26,7 +26,7 @@ async def category_list(category: CategoryEnum, db: AsyncSession = Depends(get_d
     return [i.category for i in category_list]
 
 
-@router.post('/post/create', status_code=status.HTTP_201_CREATED, response_model=CreateSuccess)
+@router.post('/post/create', status_code=status.HTTP_201_CREATED, response_model=SuccessCreate)
 async def post_create(
         post: PostCreate,
         db: AsyncSession = Depends(get_db),
@@ -43,7 +43,7 @@ async def post_create(
     id_post = uuid4()
     await create_post(db, id_post, category.id, current_user, now)
     await create_post_detail(db, post, id_post, now)
-    return CreateSuccess()
+    return SuccessCreate()
 
 
 @router.get('/list/{category}', response_model=PostList)
@@ -67,7 +67,7 @@ async def post_list(
 async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
     post_detail = await get_post(db, id)
     comment_list = await get_comment_list(db, id)
-    if post is None or comment is None:
+    if post_detail is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=no_id

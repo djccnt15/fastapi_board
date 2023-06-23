@@ -47,6 +47,7 @@ async def get_comment_list(db: AsyncSession, id_post: UUID):
     q = select(Comment, Content, User) \
         .join(Content) \
         .join(User) \
-        .where(Comment.id_post == id_post)
+        .where(Comment.id_post == id_post) \
+        .order_by(Comment.date_create)
     res = await db.execute(q)
     return res.all()
