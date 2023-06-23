@@ -7,33 +7,26 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from settings.database import get_db
 from src.crud.board import *
-from src.schemas import Tags, CreateSuccess, PostList, PostDetailList, no_id, CategoryEnum
+from src.schemas import CreateSuccess, PostList, PostDetailList, no_id, CategoryEnum
 from src.models import User
 from src.app import get_current_user
 
-router = APIRouter(
-    prefix='/api/board',
-)
+router = APIRouter()
 
 
-@router.get('/list', tags=[Tags.board], response_model=list)
+@router.get('/list', response_model=list)
 async def board_list(db: AsyncSession = Depends(get_db)):
     board_list = await read_category_t1_list(db)
     return [i.category for i in board_list]
 
 
-@router.get('/category/list', tags=[Tags.board], response_model=list)
+@router.get('/category/list', response_model=list)
 async def category_list(category: CategoryEnum, db: AsyncSession = Depends(get_db)):
     category_list = await read_category_list(db, category.name)
     return [i.category for i in category_list]
 
 
-@router.post(
-        '/post/create',
-        tags=[Tags.board],
-        status_code=status.HTTP_201_CREATED,
-        response_model=CreateSuccess
-)
+@router.post('/post/create', status_code=status.HTTP_201_CREATED, response_model=CreateSuccess)
 async def post_create(
         post: PostCreate,
         db: AsyncSession = Depends(get_db),
@@ -53,7 +46,7 @@ async def post_create(
     return CreateSuccess()
 
 
-@router.get('/list/{category}', tags=[Tags.board], response_model=PostList)
+@router.get('/list/{category}', response_model=PostList)
 async def post_list(
         category: CategoryEnum,
         keyword: str = '',
@@ -70,7 +63,7 @@ async def post_list(
     return PostList(total=total, post_list=post_list)
 
 
-@router.get('/post', tags=[Tags.board], response_model=PostDetailList)
+@router.get('/post', response_model=PostDetailList)
 async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
     post_detail = await get_post(db, id)
     comment_list = await get_comment_list(db, id)

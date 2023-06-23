@@ -8,20 +8,13 @@ from jose import jwt
 
 from settings.config import get_config, auth_config
 from settings.database import get_db
-from src.schemas import Tags, UserCreate, Token, CreateSuccess, Tags
+from src.schemas import UserCreate, Token, CreateSuccess, Tags
 from src.crud import get_existing_user, create_user, get_user, pwd_context
 
-router = APIRouter(
-    prefix='/api/user',
-)
+router = APIRouter()
 
 
-@router.post(
-        '/create',
-        tags=[Tags.auth],
-        status_code=status.HTTP_201_CREATED,
-        response_model=CreateSuccess
-)
+@router.post('/create', status_code=status.HTTP_201_CREATED, response_model=CreateSuccess)
 async def user_create(user_create: UserCreate, db: AsyncSession = Depends(get_db)):
     '''
     - one email can be use by only one user
@@ -48,7 +41,7 @@ async def user_create(user_create: UserCreate, db: AsyncSession = Depends(get_db
     return CreateSuccess()
 
 
-@router.post('/login', tags=[Tags.auth], response_model=Token)
+@router.post('/login', response_model=Token)
 async def user_login(
         form_data: OAuth2PasswordRequestForm = Depends(),
         db: AsyncSession = Depends(get_db)
