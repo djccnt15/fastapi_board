@@ -28,7 +28,6 @@ async def comment_create(
             detail=no_id
         )
 
-    post = post._asdict()['Post']
     id_comment = uuid4()
     now = datetime.now()
     await create_comment(db, id_comment, post, now, current_user)

@@ -65,7 +65,7 @@ async def post_list(
 
 @router.get('/post', response_model=PostDetailList)
 async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
-    post_detail = await get_post(db, id)
+    post_detail = await get_post_detail(db, id)
     comment_list = await get_comment_list(db, id)
     if post_detail is None:
         raise HTTPException(
@@ -73,3 +73,27 @@ async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
             detail=no_id
         )
     return PostDetailList(post_detail=post_detail, comment_list=comment_list)
+
+
+@router.put('/update', response_model=SuccessUpdate)
+async def post_update(
+        id: UUID,
+        post_content: PostContentBase,
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    post = await get_post(db, id)
+    if post is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=no_id
+        )
+    elif post.id_user != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=not_val_user
+        )
+
+    ver: int = await get_content_ver(db, id)
+    await update_post(db, id, ver + 1, post_content)
+    return SuccessUpdate()

@@ -6,7 +6,7 @@ from sqlalchemy.sql import select, functions, func
 from sqlalchemy.orm import aliased
 
 from src.models import User, PostCategory, Post, PostContent
-from src.schemas import PostCreate
+from src.schemas import PostCreate, PostContentBase
 
 
 async def read_category_t1_list(db: AsyncSession):
@@ -93,7 +93,7 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
     return total.scalar(), res.all()
 
 
-async def get_post(db: AsyncSession, id: UUID):
+async def get_post_detail(db: AsyncSession, id: UUID):
     content_subq = select(functions.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
         .subquery(name='Content')
@@ -108,8 +108,31 @@ async def get_post(db: AsyncSession, id: UUID):
     return res.first()
 
 
-async def update_post(db: AsyncSession):  # WIP
-    ...
+async def get_content_ver(db: AsyncSession, id: UUID) -> int:
+    q = select(functions.max(PostContent.version)) \
+        .where(PostContent.id_post == id)
+    res = await db.execute(q)
+    return res.scalar()
+
+
+async def get_post(db: AsyncSession, id: UUID):
+    q = select(Post) \
+        .where(Post.id == id)
+    res = await db.execute(q)
+    return res.scalar()
+
+
+async def update_post(db: AsyncSession, id: UUID, ver: int, post_content: PostContentBase):
+    q = PostContent(
+        id=uuid4(),
+        version=ver,
+        date_upd=datetime.now(),
+        subject=post_content.subject,
+        content=post_content.content,
+        id_post=id
+    )
+    db.add(q)
+    await db.commit()
 
 
 async def del_post(db: AsyncSession):  # WIP

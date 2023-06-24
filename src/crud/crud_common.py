@@ -46,7 +46,6 @@ async def get_conflict_user(db: AsyncSession, user_create: UserCreate, id):
             ((User.email == user_create.email) |
             (User.username == user_create.username))
         )
-    print(q)
     res = await db.execute(q)
     return res.scalars().all()
 

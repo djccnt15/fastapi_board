@@ -7,6 +7,7 @@ from pydantic.generics import GenericModel
 
 no_id = 'no such id'
 no_empty_val = 'empty value is not allowed'
+not_val_user = 'not validate user'
 
 ID = TypeVar('ID', int, UUID)
 

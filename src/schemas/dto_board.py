@@ -64,10 +64,19 @@ class PostRec(BaseModel):
         orm_mode = True
 
 
-class PostContent(Id[UUID]):
-    date_upd: datetime
+class PostContentBase(BaseModel):
     subject: str
     content: str
+
+    @validator('subject', 'content')
+    def not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError(no_empty_val)
+        return v
+
+
+class PostContent(Id[UUID], PostContentBase):
+    date_upd: datetime
 
     class Config:
         orm_mode = True
