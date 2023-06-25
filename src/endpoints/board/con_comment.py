@@ -79,3 +79,9 @@ async def comment_del(
 
     await del_comment(db, id_comment)
     return SuccessDel()
+
+
+@router.get('/his', response_model=CommentHis)
+async def comment_his(id_comment: UUID, db: AsyncSession = Depends(get_db)):
+    comment_his = await get_comment_his(db, id_comment)
+    return CommentHis(comment_his=comment_his)

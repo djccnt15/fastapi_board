@@ -120,3 +120,7 @@ class PostCreate(SubjectBase, CategoryBase):
 
 class PostHis(BaseModel):
     post_his: list[PostContent]
+
+
+class CommentHis(BaseModel):
+    comment_his: list[CommentContent]

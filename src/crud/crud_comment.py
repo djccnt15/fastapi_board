@@ -85,3 +85,10 @@ async def del_comment(db: AsyncSession, id: UUID):
         .values(is_active = False)
     await db.execute(q)
     await db.commit()
+
+
+async def get_comment_his(db: AsyncSession, id: UUID):
+    q = select(CommentContent) \
+        .where(CommentContent.id_comment == id)
+    res = await db.execute(q)
+    return res.scalars().all()
