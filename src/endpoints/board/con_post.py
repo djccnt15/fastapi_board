@@ -119,3 +119,9 @@ async def post_del(
 
     await del_post(db, id_post)
     return SuccessDel()
+
+
+@router.get('/post/his', response_model=PostHis)
+async def post_his(id_post: UUID, db: AsyncSession = Depends(get_db)):
+    post_his = await get_post_his(db, id_post)
+    return PostHis(post_his=post_his)

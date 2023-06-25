@@ -116,3 +116,7 @@ class PostDetailList(BaseModel):
 
 class PostCreate(SubjectBase, CategoryBase):
     ...
+
+
+class PostHis(BaseModel):
+    post_his: list[PostContent]

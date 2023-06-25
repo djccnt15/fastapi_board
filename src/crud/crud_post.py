@@ -141,3 +141,10 @@ async def del_post(db: AsyncSession, id: UUID):
         .values(is_active = False)
     await db.execute(q)
     await db.commit()
+
+
+async def get_post_his(db: AsyncSession, id: UUID):
+    q = select(PostContent) \
+        .where(PostContent.id_post == id)
+    res = await db.execute(q)
+    return res.scalars().all()
