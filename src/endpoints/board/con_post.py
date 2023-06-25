@@ -97,3 +97,25 @@ async def post_update(
     ver = await get_post_ver(db, id_post)
     await update_post(db, id_post, ver + 1, post_content)
     return SuccessUpdate()
+
+
+@router.delete('/post/del', response_model=SuccessDel)
+async def post_del(
+        id_post: UUID,
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    post = await get_post(db, id_post)
+    if post is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=no_id
+        )
+    elif post.id_user != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=not_val_user
+        )
+
+    await del_post(db, id_post)
+    return SuccessDel()

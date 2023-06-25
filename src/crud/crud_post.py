@@ -2,7 +2,7 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import select, functions, func
+from sqlalchemy.sql import select, update, functions, func
 from sqlalchemy.orm import aliased
 
 from src.models import User, PostCategory, Post, PostContent
@@ -135,5 +135,9 @@ async def update_post(db: AsyncSession, id: UUID, ver: int, post_content: Subjec
     await db.commit()
 
 
-async def del_post(db: AsyncSession):  # WIP
-    ...
+async def del_post(db: AsyncSession, id: UUID):
+    q = update(Post) \
+        .where(Post.id == id) \
+        .values(is_active = False)
+    await db.execute(q)
+    await db.commit()
