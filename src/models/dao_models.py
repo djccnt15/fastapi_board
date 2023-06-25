@@ -21,9 +21,9 @@ class User(Base):
     password = Column(String(length=255), nullable=False)
     email = Column(String(length=255), unique=True, nullable=False)
     date_create = Column(DateTime, nullable=False)
-    is_superuser = Column(Boolean, default=None)
-    is_staff = Column(Boolean, default=None)
-    is_blocked = Column(Boolean, default=None)
+    is_superuser = Column(Boolean, default=False)
+    is_staff = Column(Boolean, default=False)
+    is_blocked = Column(Boolean, default=False)
     is_active = Column(Boolean, nullable=False, default=True)
 
     post = relationship('Post', back_populates='user')
