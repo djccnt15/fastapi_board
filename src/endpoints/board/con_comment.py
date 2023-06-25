@@ -7,7 +7,7 @@ from starlette import status
 
 from settings.database import get_db
 from src.crud import *
-from src.schemas import SuccessCreate, SuccessUpdate, no_id, not_val_user, ContentBase
+from src.schemas import *
 from src.models import User
 from src.app import get_current_user
 
@@ -57,3 +57,25 @@ async def comment_upd(
     ver = await get_comment_ver(db, id_comment)
     await update_comment(db, id_comment, ver + 1, comment_content)
     return SuccessUpdate()
+
+
+@router.delete('/del', response_model=SuccessDel)
+async def comment_del(
+        id_comment: UUID,
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    comment = await get_comment(db, id_comment)
+    if comment is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=no_id
+        )
+    elif comment.id_user != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=not_val_user
+        )
+
+    await del_comment(db, id_comment)
+    return SuccessDel()
