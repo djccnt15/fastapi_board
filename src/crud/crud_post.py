@@ -6,7 +6,7 @@ from sqlalchemy.sql import select, functions, func
 from sqlalchemy.orm import aliased
 
 from src.models import User, PostCategory, Post, PostContent
-from src.schemas import PostCreate, PostContentBase
+from src.schemas import PostCreate, SubjectBase
 
 
 async def read_category_t1_list(db: AsyncSession):
@@ -108,7 +108,7 @@ async def get_post_detail(db: AsyncSession, id: UUID):
     return res.first()
 
 
-async def get_content_ver(db: AsyncSession, id: UUID) -> int:
+async def get_post_ver(db: AsyncSession, id: UUID) -> int:
     q = select(functions.max(PostContent.version)) \
         .where(PostContent.id_post == id)
     res = await db.execute(q)
@@ -122,7 +122,7 @@ async def get_post(db: AsyncSession, id: UUID):
     return res.scalar()
 
 
-async def update_post(db: AsyncSession, id: UUID, ver: int, post_content: PostContentBase):
+async def update_post(db: AsyncSession, id: UUID, ver: int, post_content: SubjectBase):
     q = PostContent(
         id=uuid4(),
         version=ver,

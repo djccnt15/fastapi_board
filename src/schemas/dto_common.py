@@ -1,6 +1,7 @@
 from typing import Generic, TypeVar
 from uuid import UUID
 from enum import Enum
+from datetime import datetime
 
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
@@ -39,3 +40,11 @@ class SuccessUpdate(SuccessMsg):
 
 class SuccessDel(SuccessMsg):
     detail: str = 'delete success'
+
+
+class DateCreate(BaseModel):
+    date_create: datetime
+
+
+class DateUpd(BaseModel):
+    date_upd: datetime

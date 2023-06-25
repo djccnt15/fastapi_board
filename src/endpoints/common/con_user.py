@@ -30,12 +30,12 @@ async def user_create(user_create: UserCreate, db: AsyncSession = Depends(get_db
     if conflict_email:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail='email conflict'
+            detail=conflict_email
         )
     elif conflict_username:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail='username conflict'
+            detail=conflict_username
         )
 
     await create_user(db, user_create)
@@ -85,12 +85,12 @@ async def user_update(
     if conflict_email:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail='email conflict'
+            detail=conflict_email
         )
     elif conflict_username:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail='username conflict'
+            detail=conflict_username
         )
 
     await update_user(db, user_update, current_user.id)

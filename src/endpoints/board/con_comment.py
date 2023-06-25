@@ -7,7 +7,7 @@ from starlette import status
 
 from settings.database import get_db
 from src.crud import get_post, create_comment, create_comment_detail
-from src.schemas import SuccessCreate, no_id, CommentCreate
+from src.schemas import SuccessCreate, no_id, ContentBase
 from src.models import User
 from src.app import get_current_user
 
@@ -16,12 +16,12 @@ router = APIRouter()
 
 @router.post('/create', status_code=status.HTTP_201_CREATED, response_model=SuccessCreate)
 async def comment_create(
-        id: UUID,
-        comment: CommentCreate,
+        id_post: UUID,
+        comment: ContentBase,
         db: AsyncSession = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    post = await get_post(db, id)
+    post = await get_post(db, id_post)
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

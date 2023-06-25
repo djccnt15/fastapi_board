@@ -14,16 +14,33 @@ from src.app import get_current_user
 router = APIRouter()
 
 
-@router.get('/list', response_model=list)
+@router.get('/boards', response_model=list)
 async def board_list(db: AsyncSession = Depends(get_db)):
     board_list = await read_category_t1_list(db)
     return [i.category for i in board_list]
 
 
-@router.get('/category/list', response_model=list)
+@router.get('/categories', response_model=list)
 async def category_list(category: CategoryEnum, db: AsyncSession = Depends(get_db)):
     category_list = await read_category_list(db, category.name)
     return [i.category for i in category_list]
+
+
+@router.get('/list/{category}', response_model=PostList)
+async def post_list(
+        category: CategoryEnum,
+        keyword: str = '',
+        page: int = 0,
+        size: int = 10,
+        db: AsyncSession = Depends(get_db)
+):
+    total, post_list = await get_post_list(db, category.name, keyword, page * size, size)
+    if total == 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Query Result is Empty'
+        )
+    return PostList(total=total, post_list=post_list)
 
 
 @router.post('/post/create', status_code=status.HTTP_201_CREATED, response_model=SuccessCreate)
@@ -46,27 +63,10 @@ async def post_create(
     return SuccessCreate()
 
 
-@router.get('/list/{category}', response_model=PostList)
-async def post_list(
-        category: CategoryEnum,
-        keyword: str = '',
-        page: int = 0,
-        size: int = 10,
-        db: AsyncSession = Depends(get_db)
-):
-    total, post_list = await get_post_list(db, category.name, keyword, page * size, size)
-    if total == 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Query Result is Empty'
-        )
-    return PostList(total=total, post_list=post_list)
-
-
-@router.get('/post', response_model=PostDetailList)
-async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
-    post_detail = await get_post_detail(db, id)
-    comment_list = await get_comment_list(db, id)
+@router.get('/post/detail', response_model=PostDetailList)
+async def post_detail(id_post: UUID, db: AsyncSession = Depends(get_db)):
+    post_detail = await get_post_detail(db, id_post)
+    comment_list = await get_comment_list(db, id_post)
     if post_detail is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -75,14 +75,14 @@ async def post_detail(id: UUID, db: AsyncSession = Depends(get_db)):
     return PostDetailList(post_detail=post_detail, comment_list=comment_list)
 
 
-@router.put('/update', response_model=SuccessUpdate)
+@router.put('/post/upd', response_model=SuccessUpdate)
 async def post_update(
-        id: UUID,
-        post_content: PostContentBase,
+        id_post: UUID,
+        post_content: SubjectBase,
         db: AsyncSession = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    post = await get_post(db, id)
+    post = await get_post(db, id_post)
     if post is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -94,6 +94,6 @@ async def post_update(
             detail=not_val_user
         )
 
-    ver: int = await get_content_ver(db, id)
-    await update_post(db, id, ver + 1, post_content)
+    ver = await get_post_ver(db, id_post)
+    await update_post(db, id_post, ver + 1, post_content)
     return SuccessUpdate()

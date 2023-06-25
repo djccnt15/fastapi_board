@@ -1,10 +1,9 @@
 from uuid import UUID
-from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel, Field, validator
 
-from .dto_common import no_empty_val
+from .dto_common import no_empty_val, DateCreate, DateUpd
 from .dto_user import User as UserRec, Id
 
 
@@ -13,24 +12,36 @@ class CategoryEnum(Enum):
     community = 'community'
 
 
-class CategoryRec(BaseModel):
-    category: str = Field(alias='name')
+class CategoryBase(BaseModel):
+    category: str
+
+    @validator('category')
+    def not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError(no_empty_val)
+        return v
 
     class Config:
         orm_mode = True
-        allow_population_by_field_name = True
 
 
-class CommentRec(Id[UUID]):
-    date_create: datetime
+class CommentRec(Id[UUID], DateCreate):
 
     class Config:
         orm_mode = True
 
 
-class CommentContent(Id[UUID]):
-    date_upd: datetime
+class ContentBase(BaseModel):
     content: str
+
+    @validator('content')
+    def not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError(no_empty_val)
+        return v
+
+
+class CommentContent(ContentBase, DateUpd):
 
     class Config:
         orm_mode = True
@@ -46,37 +57,23 @@ class CommentDetail(BaseModel):
         allow_population_by_field_name = True
 
 
-class CommentCreate(BaseModel):
-    content: str
-
-    @validator('content')
-    def not_empty(cls, v):
-        if not v or not v.strip():
-            raise ValueError(no_empty_val)
-        return v
-
-
-class PostRec(BaseModel):
-    id: UUID
-    date_create: datetime
+class PostRec(Id[UUID], DateCreate):
 
     class Config:
         orm_mode = True
 
 
-class PostContentBase(BaseModel):
+class SubjectBase(ContentBase):
     subject: str
-    content: str
 
-    @validator('subject', 'content')
+    @validator('subject')
     def not_empty(cls, v):
         if not v or not v.strip():
             raise ValueError(no_empty_val)
         return v
 
 
-class PostContent(Id[UUID], PostContentBase):
-    date_upd: datetime
+class PostContent(SubjectBase, DateUpd):
 
     class Config:
         orm_mode = True
@@ -85,7 +82,7 @@ class PostContent(Id[UUID], PostContentBase):
 class PostSumm(BaseModel):
     Post: PostRec = Field(alias='post')
     Content: PostContent = Field(alias='content')
-    Category: CategoryRec = Field(alias='category')
+    Category: CategoryBase = Field(alias='category')
     User: UserRec = Field(alias='user')
 
     class Config:
@@ -101,7 +98,7 @@ class PostList(BaseModel):
 class PostDetail(BaseModel):
     Post: PostRec = Field(alias='post')
     Content: PostContent = Field(alias='content')
-    Category: CategoryRec = Field(alias='category')
+    Category: CategoryBase = Field(alias='category')
     User: UserRec = Field(alias='user')
 
     class Config:
@@ -117,13 +114,5 @@ class PostDetailList(BaseModel):
         allow_population_by_field_name = True
 
 
-class PostCreate(BaseModel):
-    category: str
-    subject: str
-    content: str
-
-    @validator('category', 'subject', 'content')
-    def not_empty(cls, v):
-        if not v or not v.strip():
-            raise ValueError(no_empty_val)
-        return v
+class PostCreate(SubjectBase, CategoryBase):
+    ...

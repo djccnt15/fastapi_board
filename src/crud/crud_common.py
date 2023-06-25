@@ -39,7 +39,7 @@ async def get_user(db: AsyncSession, username: str):
     return res.scalar()
 
 
-async def get_conflict_user(db: AsyncSession, user_create: UserCreate, id):
+async def get_conflict_user(db: AsyncSession, user_create: UserCreate, id: int):
     q = select(User) \
         .where(
             (User.id != id) &
@@ -50,7 +50,7 @@ async def get_conflict_user(db: AsyncSession, user_create: UserCreate, id):
     return res.scalars().all()
 
 
-async def update_user(db: AsyncSession, user_update: UserCreate, id):
+async def update_user(db: AsyncSession, user_update: UserCreate, id: int):
     q = update(User) \
         .where(User.id == id) \
         .values({
@@ -62,7 +62,7 @@ async def update_user(db: AsyncSession, user_update: UserCreate, id):
     await db.commit()
 
 
-async def del_user(db: AsyncSession, id):
+async def del_user(db: AsyncSession, id: int):
     q = update(User) \
         .where(User.id == id) \
         .values(is_active=False)

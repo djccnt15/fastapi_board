@@ -6,7 +6,7 @@ from sqlalchemy.sql import select, functions
 from sqlalchemy.orm import aliased
 
 from src.models import User, Post, Comment, CommentContent
-from src.schemas import CommentCreate
+from src.schemas import ContentBase
 
 
 async def create_comment(
@@ -23,7 +23,7 @@ async def create_comment(
 
 async def create_comment_detail(
         db: AsyncSession,
-        comment_detail: CommentCreate,
+        comment_detail: ContentBase,
         id_comment: UUID,
         date_upd: datetime = datetime.now(),
         version: int = 0
@@ -39,7 +39,7 @@ async def create_comment_detail(
     await db.commit()
 
 
-async def get_comment_list(db: AsyncSession, id_post: UUID):
+async def get_comment_list(db: AsyncSession, id: UUID):
     content_subq = select(functions.max(CommentContent.version), CommentContent) \
         .group_by(CommentContent.id_comment) \
         .subquery(name='Content')
@@ -47,7 +47,7 @@ async def get_comment_list(db: AsyncSession, id_post: UUID):
     q = select(Comment, Content, User) \
         .join(Content) \
         .join(User) \
-        .where(Comment.id_post == id_post) \
+        .where(Comment.id_post == id) \
         .order_by(Comment.date_create)
     res = await db.execute(q)
     return res.all()

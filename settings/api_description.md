@@ -2,9 +2,11 @@
 
 You r be able to:
 
-- Create user
+- CUD user
 - Authorize user
 
 ## Board
 
 You can CRUD **post** and **comments**.
+
+---

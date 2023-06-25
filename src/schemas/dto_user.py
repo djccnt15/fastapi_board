@@ -1,12 +1,13 @@
-from datetime import date
-
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, validator, Field
 
 from .dto_common import no_empty_val, Id
 
+conflict_email = 'email conflict'
+conflict_username = 'user name conflict'
+
 
 class UserName(BaseModel):
-    username: str
+    username: str = Field(max_length=50)
 
 
 class UserEmail(BaseModel):
@@ -14,8 +15,8 @@ class UserEmail(BaseModel):
 
 
 class UserCreate(UserName, UserEmail):
-    password1: str
-    password2: str
+    password1: str = Field(max_length=100, min_length=8)
+    password2: str = Field(max_length=100, min_length=8)
 
     @validator('username', 'password1', 'password2', 'email')
     def not_empty(cls, v):
@@ -38,10 +39,6 @@ class User(Id[int], UserName):
 
     class Config:
         orm_mode = True
-
-
-class UserInfo(User, UserEmail):
-    date_create: date
 
 
 class Token(BaseModel):
