@@ -51,3 +51,29 @@ async def get_comment_list(db: AsyncSession, id: UUID):
         .order_by(Comment.date_create)
     res = await db.execute(q)
     return res.all()
+
+
+async def get_comment_ver(db: AsyncSession, id: UUID) -> int:
+    q = select(functions.max(CommentContent.version)) \
+        .where(CommentContent.id_comment == id)
+    res = await db.execute(q)
+    return res.scalar()
+
+
+async def get_comment(db: AsyncSession, id: UUID):
+    q = select(Comment) \
+        .where(Comment.id == id)
+    res = await db.execute(q)
+    return res.scalar()
+
+
+async def update_comment(db: AsyncSession, id: UUID, ver: int, comment_content: ContentBase):
+    q = CommentContent(
+        id=uuid4(),
+        version=ver,
+        date_upd=datetime.now(),
+        content=comment_content.content,
+        id_comment=id
+    )
+    db.add(q)
+    await db.commit()

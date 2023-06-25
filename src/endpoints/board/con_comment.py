@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from settings.database import get_db
-from src.crud import get_post, create_comment, create_comment_detail
-from src.schemas import SuccessCreate, no_id, ContentBase
+from src.crud import *
+from src.schemas import SuccessCreate, SuccessUpdate, no_id, not_val_user, ContentBase
 from src.models import User
 from src.app import get_current_user
 
@@ -33,3 +33,27 @@ async def comment_create(
     await create_comment(db, id_comment, post, now, current_user)
     await create_comment_detail(db, comment, id_comment, now)
     return SuccessCreate()
+
+
+@router.put('/upd', response_model=SuccessUpdate)
+async def comment_upd(
+        id_comment: UUID,
+        comment_content: ContentBase,
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    comment = await get_comment(db, id_comment)
+    if comment is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=no_id
+        )
+    elif comment.id_user != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=not_val_user
+        )
+
+    ver = await get_comment_ver(db, id_comment)
+    await update_comment(db, id_comment, ver + 1, comment_content)
+    return SuccessUpdate()
