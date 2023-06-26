@@ -60,6 +60,13 @@ async def get_comment_ver(db: AsyncSession, id: UUID) -> int:
     return res.scalar()
 
 
+async def get_commented_post(db: AsyncSession, id: UUID):
+    q = select(Comment) \
+        .where(Comment.id_post == id)
+    res = await db.execute(q)
+    return res.scalar()
+
+
 async def get_comment(db: AsyncSession, id: UUID):
     q = select(Comment) \
         .where(Comment.id == id)
