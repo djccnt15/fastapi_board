@@ -47,7 +47,10 @@ async def get_comment_list(db: AsyncSession, id: UUID):
     q = select(Comment, Content, User) \
         .join(Content) \
         .join(User) \
-        .where(Comment.id_post == id) \
+        .where(
+            Comment.id_post == id,
+            Comment.is_active == True
+        ) \
         .order_by(Comment.date_create)
     res = await db.execute(q)
     return res.all()
@@ -62,14 +65,20 @@ async def get_comment_ver(db: AsyncSession, id: UUID) -> int:
 
 async def get_commented_post(db: AsyncSession, id: UUID):
     q = select(Comment) \
-        .where(Comment.id_post == id)
+        .where(
+            Comment.id_post == id,
+            Comment.is_active == True
+        )
     res = await db.execute(q)
     return res.scalar()
 
 
 async def get_comment(db: AsyncSession, id: UUID):
     q = select(Comment) \
-        .where(Comment.id == id)
+        .where(
+            Comment.id == id,
+            Comment.is_active == True
+        )
     res = await db.execute(q)
     return res.scalar()
 

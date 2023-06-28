@@ -103,7 +103,10 @@ async def get_post_detail(db: AsyncSession, id: UUID):
         .join(Content) \
         .join(Category) \
         .join(User) \
-        .where(Post.id == id)
+        .where(
+            Post.id == id,
+            Post.is_active == True
+        )
     res = await db.execute(q)
     return res.first()
 
@@ -117,7 +120,10 @@ async def get_post_ver(db: AsyncSession, id: UUID) -> int:
 
 async def get_post(db: AsyncSession, id: UUID):
     q = select(Post) \
-        .where(Post.id == id)
+        .where(
+            Post.id == id,
+            Post.is_active == True
+        )
     res = await db.execute(q)
     return res.scalar()
 
