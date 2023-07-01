@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from fastapi import FastAPI
@@ -16,23 +17,8 @@ metadata = get_config()['DEFAULT']
 with open(dir_config / metadata.get('description')) as f:
     description = f.read()
 
-tags_metadata = [
-    {
-        'name': 'default',
-        'externalDocs': {
-            'description': 'External docs',
-            'url': f'{metadata.get("url")}',
-        },
-    },
-    {
-        'name': 'Auth',
-        'description': 'Operations with users, Such as **SignUp**, **LogIn** logics',
-    },
-    {
-        'name': 'Board',
-        'description': 'CRUD Post, Comments',
-    },
-]
+with open(dir_config / metadata.get('tags_metadata')) as f:
+    tags_metadata = json.load(f)['tags']
 
 app = FastAPI(
     title=metadata.get('title'),
