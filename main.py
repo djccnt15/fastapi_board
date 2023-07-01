@@ -13,7 +13,7 @@ from src.crud import create_log
 
 metadata = get_config()['DEFAULT']
 
-with open(file=dir_config / metadata.get('description'), mode='r') as f:
+with open(dir_config / metadata.get('description')) as f:
     description = f.read()
 
 tags_metadata = [

@@ -17,5 +17,5 @@ mode = get_config()['DEFAULT'].get('mode')
 
 auth_config = dir_config / get_config()['AUTH'].get('secret')
 
-with open(file=auth_config, mode='r') as f:
+with open(auth_config) as f:
     auth_config = Dict(json.load(fp=f)).auth

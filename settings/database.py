@@ -9,7 +9,7 @@ from settings.config import get_config, mode, dir_config
 
 db_key = dir_config / get_config()['DATABASE'].get('db')
 
-with open(file=db_key, mode='r') as f:
+with open(db_key) as f:
     db_key = Dict(json.load(fp=f)).db[mode]
 
 SQLALCHEMY_DATABASE_URL = URL.create(
