@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from jose import jwt, JWTError
 
-from settings.config import auth_config
-from settings.database import get_db
+from env.database import get_db
+from env.config import get_key
 from src.crud import get_user
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/user/login')
@@ -20,8 +20,9 @@ async def get_current_user(
         detail='Could not validate credentials',
         headers={'WWW-Authenticate': 'Bearer'},
     )
+    auth_config = get_key().auth
     try:
-        payload = jwt.decode(token, auth_config.secret_key, algorithms=[auth_config.algorithm])
+        payload = jwt.decode(token, auth_config.secret_key, auth_config.algorithm)
         username: str = str(payload.get('sub'))
         if username is None:
             raise credentials_exception

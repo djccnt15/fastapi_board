@@ -7,9 +7,9 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from settings.config import get_config, mode, dir_config
-from settings.routes import router
-from settings.database import engine
+from env.config import get_config, mode, dir_config
+from env.database import engine
+from src.app import router
 from src.crud import create_log
 
 metadata = get_config()['DEFAULT']

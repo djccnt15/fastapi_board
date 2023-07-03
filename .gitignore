@@ -105,7 +105,7 @@ celerybeat.pid
 .env
 .venv
 venv/
-ENV/
+# ENV/
 env.bak/
 venv.bak/
 
@@ -132,7 +132,7 @@ include/
 scripts/
 pyvenv.cfg
 note.py
-keys.json
+key.json
 key.bin
 alembic.ini
 migrations/

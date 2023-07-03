@@ -1,16 +1,10 @@
-import json
-
 from sqlalchemy.engine import URL
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import declarative_base
-from addict import Dict
 
-from settings.config import get_config, mode, dir_config
+from env.config import mode, get_key
 
-db_key = dir_config / get_config()['DATABASE'].get('db')
-
-with open(db_key) as f:
-    db_key = Dict(json.load(fp=f)).db[mode]
+db_key = get_key().db[mode]
 
 SQLALCHEMY_DATABASE_URL = URL.create(
     drivername=db_key.drivername,

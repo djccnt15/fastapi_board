@@ -3,12 +3,10 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, update
-from passlib.context import CryptContext
 
+from env.security import pwd_context
 from src.models import User, Log
 from src.schemas import UserCreate
-
-pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
 async def create_user(db: AsyncSession, user_create: UserCreate):

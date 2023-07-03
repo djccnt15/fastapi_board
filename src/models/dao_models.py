@@ -2,7 +2,7 @@ from sqlalchemy.schema import Column
 from sqlalchemy.types import Boolean, Integer, String, Text, DateTime, Uuid
 from sqlalchemy.orm import relationship
 
-from settings.database import Base
+from env.database import Base
 
 
 class Log(Base):

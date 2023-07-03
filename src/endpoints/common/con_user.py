@@ -6,8 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from jose import jwt
 
-from settings.config import get_config, auth_config
-from settings.database import get_db
+from env.config import get_config, get_key
+from env.database import get_db
+from env.security import pwd_context
 from src.schemas import *
 from src.crud import *
 from src.app import get_current_user
@@ -47,7 +48,6 @@ async def user_login(
         form_data: OAuth2PasswordRequestForm = Depends(),
         db: AsyncSession = Depends(get_db)
 ):
-
     # check user and password
     user = await get_user(db, form_data.username)
     if user is None or not pwd_context.verify(form_data.password, user.password):
@@ -63,11 +63,8 @@ async def user_login(
         'exp': datetime.utcnow() +
             timedelta(minutes=int(get_config()['AUTH'].get('token_expire_minutes')))
     }
-    access_token = jwt.encode(
-        claims=data,
-        key=auth_config.secret_key,
-        algorithm=auth_config.algorithm
-    )
+    auth_config = get_key().auth
+    access_token = jwt.encode(data, auth_config.secret_key, auth_config.algorithm)
 
     return Token(access_token=access_token, token_type='bearer', username=user.username)
 
