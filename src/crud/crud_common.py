@@ -2,7 +2,7 @@ from uuid import uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import select, update
+from sqlalchemy.sql import insert, select, update
 
 from env.security import pwd_context
 from src.models import User, Log
@@ -10,13 +10,14 @@ from src.schemas import UserCreate
 
 
 async def create_user(db: AsyncSession, user_create: UserCreate):
-    db_user = User(
-        username=user_create.username,
-        password=pwd_context.hash(user_create.password1),
-        date_create=datetime.now(),
-        email=user_create.email
-    )
-    db.add(db_user)
+    q = insert(User) \
+        .values(
+            username=user_create.username,
+            password=pwd_context.hash(user_create.password1),
+            date_create=datetime.now(),
+            email=user_create.email
+        )
+    await db.execute(q)
     await db.commit()
 
 
@@ -73,7 +74,7 @@ async def create_log(db: AsyncSession, date_create: datetime, log: str):
     you must close Session
     cause this func can't use Depends method of FastAPI for not being used by FastAPI func
     '''
-    q = Log(id=uuid4(), date_create=date_create, log=log)
-    db.add(q)
+    q = insert(Log).values(id=uuid4(), date_create=date_create, log=log)
+    await db.execute(q)
     await db.commit()
     await db.close()

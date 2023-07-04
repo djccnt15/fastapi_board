@@ -2,7 +2,7 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import select, update, functions
+from sqlalchemy.sql import insert, select, update, functions
 from sqlalchemy.orm import aliased
 
 from src.models import User, Post, Comment, CommentContent
@@ -16,8 +16,9 @@ async def create_comment(
         date_create: datetime,
         user: User
 ):
-    q = Comment(id=id, user=user, post=post, date_create=date_create)
-    db.add(q)
+    q = insert(Comment) \
+        .values(id=id, id_user=user.id, id_post=post.id, date_create=date_create)
+    await db.execute(q)
     await db.commit()
 
 
@@ -28,14 +29,15 @@ async def create_comment_detail(
         date_upd: datetime = datetime.now(),
         version: int = 0
 ):
-    q = CommentContent(
-        id=uuid4(),
-        version=version,
-        date_upd=date_upd,
-        content=comment_detail.content,
-        id_comment=id_comment,
-    )
-    db.add(q)
+    q = insert(CommentContent) \
+        .values(
+            id=uuid4(),
+            version=version,
+            date_upd=date_upd,
+            content=comment_detail.content,
+            id_comment=id_comment
+        )
+    await db.execute(q)
     await db.commit()
 
 
@@ -84,14 +86,15 @@ async def get_comment(db: AsyncSession, id: UUID):
 
 
 async def update_comment(db: AsyncSession, id: UUID, ver: int, comment_content: ContentBase):
-    q = CommentContent(
-        id=uuid4(),
-        version=ver,
-        date_upd=datetime.now(),
-        content=comment_content.content,
-        id_comment=id
-    )
-    db.add(q)
+    q = insert(CommentContent) \
+        .values(
+            id=uuid4(),
+            version=ver,
+            date_upd=datetime.now(),
+            content=comment_content.content,
+            id_comment=id
+        )
+    await db.execute(q)
     await db.commit()
 
 

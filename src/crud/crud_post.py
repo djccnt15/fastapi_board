@@ -2,7 +2,7 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import select, update, functions, func
+from sqlalchemy.sql import insert, select, update, functions, func
 from sqlalchemy.orm import aliased
 
 from src.models import User, PostCategory, Post, PostContent
@@ -39,8 +39,9 @@ async def create_post(
         user: User,
         date_create: datetime
 ):
-    q = Post(id=id, id_category=id_category, date_create=date_create, user=user)
-    db.add(q)
+    q = insert(Post) \
+        .values(id=id, id_user=user.id, id_category=id_category, date_create=date_create)
+    await db.execute(q)
     await db.commit()
 
 
@@ -51,15 +52,16 @@ async def create_post_detail(
         date_upd: datetime = datetime.now(),
         version: int = 0
 ):
-    q = PostContent(
-        id=uuid4(),
-        version=version,
-        date_upd=date_upd,
-        subject=post_detail.subject,
-        content=post_detail.content,
-        id_post=id_post
-    )
-    db.add(q)
+    q = insert(PostContent) \
+        .values(
+            id=uuid4(),
+            version=version,
+            date_upd=date_upd,
+            subject=post_detail.subject,
+            content=post_detail.content,
+            id_post=id_post
+        )
+    await db.execute(q)
     await db.commit()
 
 
@@ -129,15 +131,16 @@ async def get_post(db: AsyncSession, id: UUID):
 
 
 async def update_post(db: AsyncSession, id: UUID, ver: int, post_content: SubjectBase):
-    q = PostContent(
-        id=uuid4(),
-        version=ver,
-        date_upd=datetime.now(),
-        subject=post_content.subject,
-        content=post_content.content,
-        id_post=id
-    )
-    db.add(q)
+    q = insert(PostContent) \
+        .values(
+            id=uuid4(),
+            version=ver,
+            date_upd=datetime.now(),
+            subject=post_content.subject,
+            content=post_content.content,
+            id_post=id
+        )
+    await db.execute(q)
     await db.commit()
 
 
