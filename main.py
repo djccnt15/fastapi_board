@@ -2,8 +2,8 @@ import json
 from datetime import datetime
 
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse, PlainTextResponse
 from starlette.middleware.cors import CORSMiddleware
+from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.requests import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 

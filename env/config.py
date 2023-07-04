@@ -19,7 +19,7 @@ mode = get_config()['DEFAULT'].get('mode')
 
 
 def get_key(
-        file_name: Path | str = dir_config / 'key.bin',
-        private_key: Path | str = dir_config / 'private.pem'
+        file_name: Path | str = dir_config / get_config()['DEFAULT'].get('key'),
+        private_key: Path | str = dir_config / get_config()['DEFAULT'].get('private_key')
 ):
     return Dict(literal_eval(decrypt_rsa(file_name, private_key)))

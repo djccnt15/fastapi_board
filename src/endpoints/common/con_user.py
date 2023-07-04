@@ -18,22 +18,22 @@ router = APIRouter()
 
 @router.post('/create', status_code=status.HTTP_201_CREATED, response_model=SuccessCreate)
 async def user_create(user_create: UserCreate, db: AsyncSession = Depends(get_db)):
-    '''
+    """
     - one email can be use by only one user
     - user name cannot be used if one is occupied
     - PW1 and PW2 mush be same
-    '''
+    """
 
     existing_user = await get_existing_user(db, user_create)
 
-    conflict_email = [u for u in existing_user if user_create.email == u.email]
-    conflict_username = [u for u in existing_user if user_create.username == u.username]
-    if conflict_email:
+    email = [u for u in existing_user if user_create.email == u.email]
+    username = [u for u in existing_user if user_create.username == u.username]
+    if email:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=conflict_email
         )
-    elif conflict_username:
+    elif username:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=conflict_username
@@ -77,14 +77,14 @@ async def user_update(
 ):
     existing_user = await get_conflict_user(db, user_update, current_user.id)
 
-    conflict_email = [u for u in existing_user if user_update.email == u.email]
-    conflict_username = [u for u in existing_user if user_update.username == u.username]
-    if conflict_email:
+    email = [u for u in existing_user if user_update.email == u.email]
+    conflict = [u for u in existing_user if user_update.username == u.username]
+    if email:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=conflict_email
         )
-    elif conflict_username:
+    elif conflict:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=conflict_username

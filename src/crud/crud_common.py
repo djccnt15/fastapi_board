@@ -70,10 +70,10 @@ async def del_user(db: AsyncSession, id: int):
 
 
 async def create_log(db: AsyncSession, date_create: datetime, log: str):
-    '''
+    """
     you must close Session
     cause this func can't use Depends method of FastAPI for not being used by FastAPI func
-    '''
+    """
     q = insert(Log).values(id=uuid4(), date_create=date_create, log=log)
     await db.execute(q)
     await db.commit()
