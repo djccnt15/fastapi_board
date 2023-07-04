@@ -30,18 +30,18 @@ def encrypt_rsa(
         public_key: Path | str = 'public.pem'
 ):
     encoded_data = data.encode('utf-8')
+    session_key = get_random_bytes(16)
+
+    # Encrypt the session key with the public RSA key
+    with open(public_key) as key:
+        cipher_rsa = PKCS1_OAEP.new(RSA.import_key(key.read()))
+    enc_session_key = cipher_rsa.encrypt(session_key)
+
+    # Encrypt the data with the AES session key
+    cipher_aes = AES.new(session_key, AES.MODE_EAX)
+    ciphertext, tag = cipher_aes.encrypt_and_digest(encoded_data)
+
     with open(file_name, 'wb') as f:
-        with open(public_key) as key:
-            recipient_key = RSA.import_key(key.read())
-        session_key = get_random_bytes(16)
-
-        # Encrypt the session key with the public RSA key
-        cipher_rsa = PKCS1_OAEP.new(recipient_key)
-        enc_session_key = cipher_rsa.encrypt(session_key)
-
-        # Encrypt the data with the AES session key
-        cipher_aes = AES.new(session_key, AES.MODE_EAX)
-        ciphertext, tag = cipher_aes.encrypt_and_digest(encoded_data)
         for x in (enc_session_key, cipher_aes.nonce, tag, ciphertext):
             f.write(x)
 
@@ -50,9 +50,10 @@ def decrypt_rsa(
         file_name: Path | str = 'encrypted.bin',
         private_key: Path | str = 'private.pem'
 ):
+    with open(private_key) as k:
+        private = RSA.import_key(k.read())
+
     with open(file_name, 'rb') as f:
-        with open(private_key) as k:
-            private = RSA.import_key(k.read())
         enc_session_key, nonce, tag, ciphertext = [f.read(x) for x in (private.size_in_bytes(), 16, 16, -1)]
 
     # Decrypt the session key with the private RSA key
