@@ -29,7 +29,6 @@ def encrypt_rsa(
         file_name: Path | str = 'encrypted.bin',
         public_key: Path | str = 'public.pem'
 ):
-    encoded_data = data.encode('utf-8')
     session_key = get_random_bytes(16)
 
     # Encrypt the session key with the public RSA key
@@ -39,7 +38,7 @@ def encrypt_rsa(
 
     # Encrypt the data with the AES session key
     cipher_aes = AES.new(session_key, AES.MODE_EAX)
-    ciphertext, tag = cipher_aes.encrypt_and_digest(encoded_data)
+    ciphertext, tag = cipher_aes.encrypt_and_digest(data.encode('utf-8'))
 
     with open(file_name, 'wb') as f:
         for x in (enc_session_key, cipher_aes.nonce, tag, ciphertext):
@@ -73,17 +72,16 @@ if __name__ == '__main__':
 
     private_key = dir_config / 'private.pem'
     public_key = dir_config / 'public.pem'
+    key = get_config()['DEFAULT'].get('key')
 
     # # create RSA key
     # create_keys_rsa(private_key, public_key)
 
     # # encrypt key data
-    # dir = get_config()['DIRS'].get('dir_config')
-    # key = get_config()['DEFAULT'].get('key')
-    # with open(Path(dir, key)) as f:
+    # with open(dir_config / 'key.json') as f:
     #     key_json = json.load(f)
-    # encrypt_rsa(str(key_json), dir_config / 'key.bin', public_key)
+    # encrypt_rsa(str(key_json), dir_config / key, public_key)
 
     # decrypt key data
-    key = literal_eval(decrypt_rsa(dir_config / 'key.bin', private_key))
+    key = literal_eval(decrypt_rsa(dir_config / key, private_key))
     print(key, type(key))
