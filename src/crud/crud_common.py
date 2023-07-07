@@ -1,7 +1,7 @@
 from uuid import uuid4
 from datetime import datetime
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine
 from sqlalchemy.sql import insert, select, update
 
 from env.security import pwd_context
@@ -69,12 +69,8 @@ async def del_user(db: AsyncSession, id: int):
     await db.commit()
 
 
-async def create_log(db: AsyncSession, date_create: datetime, log: str):
-    """
-    you must close Session
-    cause this func can't use Depends method of FastAPI for not being used by FastAPI func
-    """
-    q = insert(Log).values(id=uuid4(), date_create=date_create, log=log)
-    await db.execute(q)
-    await db.commit()
-    await db.close()
+async def create_log(engine: AsyncEngine, date_create: datetime, log: str):
+    async with engine.connect() as conn:
+        q = insert(Log).values(id=uuid4(), date_create=date_create, log=log)
+        await conn.execute(q)
+        await conn.commit()

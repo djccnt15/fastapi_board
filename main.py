@@ -5,7 +5,6 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.requests import Request
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from env.config import get_config, mode, dir_config
 from env.database import engine
@@ -59,7 +58,7 @@ async def logger(request: Request, call_next):
         'param_path': str(request.path_params),
         'client': str(request.client)
     }
-    await create_log(AsyncSession(bind=engine), datetime.now(), str(log))
+    await create_log(engine, datetime.now(), str(log))
     return await call_next(request)
 
 
