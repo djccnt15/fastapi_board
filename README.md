@@ -34,8 +34,7 @@ alembic upgrade head
 
 - `config.ini` 파일을 통해 각종 환경 설정 제어
 - `DEFAULT` 섹션의 `mode`는 개발과 운용의 차이가 있는 환경에서 설정을 관리하기 위해 사용
-- `CORSLIST` 섹션은 CORS 목록 관리용 섹션
-- 비밀번호 등 외부 저장소에 저장해서는 안 되는 정보는 `keys.json`으로 별도 관리
+- 비밀번호 등 외부 저장소에 저장해서는 안 되는 정보는 `key.json`으로 별도 관리 + 암호화
 
 ```json
 {
