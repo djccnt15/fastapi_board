@@ -2,7 +2,7 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import insert, select, update, functions
+from sqlalchemy.sql import insert, select, update, func
 from sqlalchemy.orm import aliased
 
 from src.models import User, Post, Comment, CommentContent
@@ -42,7 +42,7 @@ async def create_comment_detail(
 
 
 async def get_comment_list(db: AsyncSession, id: UUID):
-    content_subq = select(functions.max(CommentContent.version), CommentContent) \
+    content_subq = select(func.max(CommentContent.version), CommentContent) \
         .group_by(CommentContent.id_comment) \
         .subquery(name='Content')
     Content = aliased(CommentContent, content_subq, name='Content')
@@ -59,7 +59,7 @@ async def get_comment_list(db: AsyncSession, id: UUID):
 
 
 async def get_comment_ver(db: AsyncSession, id: UUID) -> int:
-    q = select(functions.max(CommentContent.version)) \
+    q = select(func.max(CommentContent.version)) \
         .where(CommentContent.id_comment == id)
     res = await db.execute(q)
     return res.scalar()

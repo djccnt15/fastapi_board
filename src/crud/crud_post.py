@@ -2,7 +2,7 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import insert, select, update, functions, func
+from sqlalchemy.sql import insert, select, update, func
 from sqlalchemy.orm import aliased
 
 from src.models import User, PostCategory, Post, PostContent
@@ -72,7 +72,7 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
         .where(category_tier_1.category == category) \
         .subquery(name='category_subq')
     Category = aliased(PostCategory, category_subq, name='Category')
-    content_subq = select(functions.max(PostContent.version), PostContent) \
+    content_subq = select(func.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
         .subquery(name='Content')
     Content = aliased(PostContent, content_subq, name='Content')
@@ -114,7 +114,7 @@ async def get_post_detail(db: AsyncSession, id: UUID):
 
 
 async def get_post_ver(db: AsyncSession, id: UUID) -> int:
-    q = select(functions.max(PostContent.version)) \
+    q = select(func.max(PostContent.version)) \
         .where(PostContent.id_post == id)
     res = await db.execute(q)
     return res.scalar()

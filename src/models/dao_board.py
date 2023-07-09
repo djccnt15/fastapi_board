@@ -39,7 +39,7 @@ class PostContent(Base):
     id = Column(Uuid, primary_key=True)
     version = Column(Integer, nullable=False, default=0)
     date_upd = Column(DateTime, nullable=False)
-    subject = Column(String, nullable=False)
+    subject = Column(String(length=255), nullable=False)
     content = Column(Text, nullable=False)
     id_post = Column(Uuid, ForeignKey(Post.id), nullable=False)
 

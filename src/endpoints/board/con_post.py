@@ -63,7 +63,7 @@ async def post_create(
     return SuccessCreate()
 
 
-@router.get('/post/detail', response_model=PostDetailList)
+@router.get('/post/detail', response_model=PostDetail)
 async def post_detail(id_post: UUID, db: AsyncSession = Depends(get_db)):
     post_detail = await get_post_detail(db, id_post)
     comment_list = await get_comment_list(db, id_post)
@@ -72,7 +72,7 @@ async def post_detail(id_post: UUID, db: AsyncSession = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=no_id
         )
-    return PostDetailList(post_detail=post_detail, comment_list=comment_list)
+    return PostDetail(post_detail=post_detail, comment_list=comment_list)
 
 
 @router.put('/post/upd', response_model=SuccessUpdate)

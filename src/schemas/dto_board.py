@@ -95,7 +95,7 @@ class PostList(BaseModel):
     post_list: list[PostSumm]
 
 
-class PostDetail(BaseModel):
+class PostDetailBase(BaseModel):
     Post: PostRec = Field(alias='post')
     Content: PostContent = Field(alias='content')
     Category: CategoryBase = Field(alias='category')
@@ -106,12 +106,9 @@ class PostDetail(BaseModel):
         allow_population_by_field_name = True
 
 
-class PostDetailList(BaseModel):
-    post_detail: PostDetail
+class PostDetail(BaseModel):
+    post_detail: PostDetailBase
     comment_list: list[CommentDetail]
-
-    class Config:
-        allow_population_by_field_name = True
 
 
 class PostCreate(SubjectBase, CategoryBase):
