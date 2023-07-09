@@ -84,6 +84,7 @@ class PostSumm(BaseModel):
     Content: PostContent = Field(alias='content')
     Category: CategoryBase = Field(alias='category')
     User: UserRec = Field(alias='user')
+    count_comment: int | None
 
     class Config:
         orm_mode = True

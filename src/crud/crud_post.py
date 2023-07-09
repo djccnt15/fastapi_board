@@ -2,10 +2,10 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import insert, select, update, func
+from sqlalchemy.sql import insert, select, update, func, label
 from sqlalchemy.orm import aliased
 
-from src.models import User, PostCategory, Post, PostContent
+from src.models import *
 from src.schemas import PostCreate, SubjectBase
 
 
@@ -76,10 +76,15 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
         .group_by(PostContent.id_post) \
         .subquery(name='Content')
     Content = aliased(PostContent, content_subq, name='Content')
-    q = select(Post, Content, Category, User) \
+    comment_subq = select(label('count_comment', func.count(Comment.id_post)), Comment.id_post) \
+        .where(Comment.is_active == True) \
+        .group_by(Comment.id_post) \
+        .subquery()
+    q = select(Post, Content, Category, User, comment_subq) \
         .join(Content) \
         .join(Category) \
         .join(User) \
+        .outerjoin(comment_subq) \
         .where(Post.is_active == True)
     if keyword:
         keyword = f'%{keyword}%'
@@ -88,15 +93,18 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
             Content.content.ilike(keyword) |
             User.username.ilike(keyword)
         )
-    total = await db.execute(select(func.count()).select_from(q))
     q = q.order_by(Post.date_create.desc()) \
         .offset(skip).limit(limit)
     res = await db.execute(q)
+    q_t = select(Post, Category) \
+        .join(Category) \
+        .where(Post.is_active == True)
+    total = await db.execute(select(func.count()).select_from(q_t))
     return total.scalar(), res.all()
 
 
 async def get_post_detail(db: AsyncSession, id: UUID):
-    content_subq = select(functions.max(PostContent.version), PostContent) \
+    content_subq = select(func.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
         .subquery(name='Content')
     Category = aliased(PostCategory, name='Category')
