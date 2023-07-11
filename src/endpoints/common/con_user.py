@@ -19,8 +19,8 @@ router = APIRouter()
 @router.post('/create', status_code=status.HTTP_201_CREATED, response_model=SuccessCreate)
 async def user_create(user_create: UserCreate, db: AsyncSession = Depends(get_db)):
     """
-    - one email can be use by only one user
-    - user name cannot be used if one is occupied
+    - one email can be used by only one user
+    - username cannot be used if one is occupied
     - PW1 and PW2 mush be same
     """
 

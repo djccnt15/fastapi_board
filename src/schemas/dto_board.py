@@ -49,7 +49,7 @@ class CommentContent(ContentBase, DateUpd):
 
 class CommentDetail(BaseModel):
     Comment: CommentRec = Field(alias='comment')
-    Content: CommentContent = Field(alias='content')
+    content: CommentContent
     User: UserRec = Field(alias='user')
 
     class Config:
@@ -81,8 +81,8 @@ class PostContent(SubjectBase, DateUpd):
 
 class PostSumm(BaseModel):
     Post: PostRec = Field(alias='post')
-    Content: PostContent = Field(alias='content')
-    Category: CategoryBase = Field(alias='category')
+    content: PostContent
+    category: CategoryBase
     User: UserRec = Field(alias='user')
     count_comment: int | None
 
@@ -98,8 +98,8 @@ class PostList(BaseModel):
 
 class PostDetailBase(BaseModel):
     Post: PostRec = Field(alias='post')
-    Content: PostContent = Field(alias='content')
-    Category: CategoryBase = Field(alias='category')
+    content: PostContent
+    category: CategoryBase
     User: UserRec = Field(alias='user')
 
     class Config:

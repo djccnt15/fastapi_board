@@ -70,34 +70,34 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
     category_subq = select(PostCategory) \
         .join(PostCategory.parent.of_type(category_tier_1)) \
         .where(category_tier_1.category == category) \
-        .subquery(name='category_subq')
-    Category = aliased(PostCategory, category_subq, name='Category')
+        .subquery()
+    category = aliased(PostCategory, category_subq, name='category')
     content_subq = select(func.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
-        .subquery(name='Content')
-    Content = aliased(PostContent, content_subq, name='Content')
+        .subquery()
+    content = aliased(PostContent, content_subq, name='content')
     comment_subq = select(label('count_comment', func.count(Comment.id_post)), Comment.id_post) \
         .where(Comment.is_active == True) \
         .group_by(Comment.id_post) \
         .subquery()
-    q = select(Post, Content, Category, User, comment_subq) \
-        .join(Content) \
-        .join(Category) \
+    q = select(Post, content, category, User, comment_subq) \
+        .join(content) \
+        .join(category) \
         .join(User) \
         .outerjoin(comment_subq) \
         .where(Post.is_active == True)
     if keyword:
         keyword = f'%{keyword}%'
         q = q.where(
-            Content.subject.ilike(keyword) |
-            Content.content.ilike(keyword) |
+            content.subject.ilike(keyword) |
+            content.content.ilike(keyword) |
             User.username.ilike(keyword)
         )
     q = q.order_by(Post.date_create.desc()) \
         .offset(skip).limit(limit)
     res = await db.execute(q)
-    q_t = select(Post, Category) \
-        .join(Category) \
+    q_t = select(Post, category) \
+        .join(category) \
         .where(Post.is_active == True)
     total = await db.execute(select(func.count()).select_from(q_t))
     return total.scalar(), res.all()
@@ -106,12 +106,12 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
 async def get_post_detail(db: AsyncSession, id: UUID):
     content_subq = select(func.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
-        .subquery(name='Content')
-    Category = aliased(PostCategory, name='Category')
-    Content = aliased(PostContent, content_subq, name='Content')
-    q = select(Post, Content, Category, User) \
-        .join(Content) \
-        .join(Category) \
+        .subquery()
+    category = aliased(PostCategory, name='category')
+    content = aliased(PostContent, content_subq, name='content')
+    q = select(Post, content, category, User) \
+        .join(content) \
+        .join(category) \
         .join(User) \
         .where(
             Post.id == id,
