@@ -78,7 +78,7 @@ async def post_detail(id_post: UUID, db: AsyncSession = Depends(get_db)):
 @router.put('/post/upd', response_model=SuccessUpdate)
 async def post_update(
         id_post: UUID,
-        post_content: SubjectBase,
+        post_content: PostCreate,
         db: AsyncSession = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
@@ -95,7 +95,7 @@ async def post_update(
         )
 
     ver = await get_post_ver(db, id_post)
-    await update_post(db, id_post, ver + 1, post_content)
+    await create_post_detail(db, post_content, id_post, version=ver+1)
     return SuccessUpdate()
 
 

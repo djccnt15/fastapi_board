@@ -85,19 +85,6 @@ async def get_comment(db: AsyncSession, id: UUID):
     return res.scalar()
 
 
-async def update_comment(db: AsyncSession, id: UUID, ver: int, comment_content: ContentBase):
-    q = insert(CommentContent) \
-        .values(
-            id=uuid4(),
-            version=ver,
-            date_upd=datetime.now(),
-            content=comment_content.content,
-            id_comment=id
-        )
-    await db.execute(q)
-    await db.commit()
-
-
 async def del_comment(db: AsyncSession, id: UUID):
     q = update(Comment) \
         .where(Comment.id == id) \

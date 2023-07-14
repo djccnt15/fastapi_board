@@ -138,20 +138,6 @@ async def get_post(db: AsyncSession, id: UUID):
     return res.scalar()
 
 
-async def update_post(db: AsyncSession, id: UUID, ver: int, post_content: SubjectBase):
-    q = insert(PostContent) \
-        .values(
-            id=uuid4(),
-            version=ver,
-            date_upd=datetime.now(),
-            subject=post_content.subject,
-            content=post_content.content,
-            id_post=id
-        )
-    await db.execute(q)
-    await db.commit()
-
-
 async def del_post(db: AsyncSession, id: UUID):
     q = update(Post) \
         .where(Post.id == id) \

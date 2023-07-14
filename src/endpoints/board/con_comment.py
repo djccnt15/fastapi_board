@@ -55,7 +55,7 @@ async def comment_upd(
         )
 
     ver = await get_comment_ver(db, id_comment)
-    await update_comment(db, id_comment, ver + 1, comment_content)
+    await create_comment_detail(db, comment_content, id_comment, version=ver+1)
     return SuccessUpdate()
 
 
