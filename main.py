@@ -11,7 +11,7 @@ from env.database import engine
 from src.app import router
 from src.crud import create_log
 
-metadata = get_config()['DEFAULT']
+metadata = get_config()['SWAGGER']
 
 with open(dir_config / metadata.get('description')) as f:
     description = f.read()
