@@ -44,13 +44,17 @@ alembic upgrade head
             "database": "./sql_app.db"
         },
         "test": {
-            "drivername": "postgresql+asyncpg",
-            "username": "postgres",
+            "drivername": "mysql+aiomysql",
+            "username": "root",
             "password": "****",
             "host": "host.docker.internal",
-            "port": "5432",
+            "port": "3306",
             "database": "fastapi"
         }
+    },
+    "auth": {
+        "secret_key": "****",
+        "algorithm": "****"
     }
 }
 ```
