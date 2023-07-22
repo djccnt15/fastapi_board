@@ -70,8 +70,8 @@ if __name__ == '__main__':
 
     from env.config import dir_config, get_config
 
-    private_key = dir_config / 'private.pem'
-    public_key = dir_config / 'public.pem'
+    private_key = dir_config / get_config()['DEFAULT'].get('private_key')
+    public_key = dir_config / get_config()['DEFAULT'].get('public_key')
     key = get_config()['DEFAULT'].get('key')
 
     # # create RSA key
