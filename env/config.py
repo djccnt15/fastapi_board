@@ -4,7 +4,7 @@ from ast import literal_eval
 
 from addict import Dict
 
-from env.security import decrypt_rsa
+from env.security import rsa_from_file, decrypt_rsa
 
 dir_config = Path('env')
 
@@ -22,4 +22,5 @@ def get_key(
         file_name: Path | str = dir_config / get_config()['DEFAULT'].get('key'),
         private_key: Path | str = dir_config / get_config()['DEFAULT'].get('private_key')
 ):
-    return Dict(literal_eval(decrypt_rsa(file_name, private_key)))
+    enc_session_key, nonce, tag, ciphertext = rsa_from_file(private_key, file_name)
+    return Dict(literal_eval(decrypt_rsa(enc_session_key, nonce, tag, ciphertext, private_key)))
