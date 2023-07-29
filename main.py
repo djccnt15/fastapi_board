@@ -8,7 +8,7 @@ from starlette.requests import Request
 
 from env.config import get_config, mode, dir_config
 from env.database import engine
-from src.app import router
+from src.routes import router
 from src.crud import create_log
 
 metadata = get_config()['SWAGGER']
@@ -46,7 +46,7 @@ app.add_middleware(  # allow CORS credential
 )
 
 # Routers
-app.include_router(router)
+app.include_router(router, prefix='/api')
 
 
 @app.middleware('http')
