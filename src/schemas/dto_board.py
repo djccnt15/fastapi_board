@@ -25,6 +25,10 @@ class CategoryBase(BaseModel):
         orm_mode = True
 
 
+class Category(CategoryBase):
+    category_t1: str
+
+
 class CommentRec(Id[UUID], DateCreate):
 
     class Config:
@@ -79,10 +83,9 @@ class PostContent(SubjectBase, DateUpd):
         orm_mode = True
 
 
-class PostSumm(BaseModel):
+class PostSumm(Category):
     Post: PostRec = Field(alias='post')
     content: PostContent
-    category: CategoryBase
     User: UserRec = Field(alias='user')
     count_comment: int | None
 
@@ -96,10 +99,9 @@ class PostList(BaseModel):
     post_list: list[PostSumm]
 
 
-class PostDetailBase(BaseModel):
+class PostDetailBase(Category):
     Post: PostRec = Field(alias='post')
     content: PostContent
-    category: CategoryBase
     User: UserRec = Field(alias='user')
 
     class Config:

@@ -6,7 +6,7 @@ from sqlalchemy.sql import insert, select, update, func, label
 from sqlalchemy.orm import aliased
 
 from src.models import *
-from src.schemas import PostCreate, SubjectBase
+from src.schemas import PostCreate
 
 
 async def read_category_t1_list(db: AsyncSession):
@@ -66,12 +66,15 @@ async def create_post_detail(
 
 
 async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int, limit: int):
-    category_tier_1 = aliased(PostCategory)
-    category_subq = select(PostCategory) \
-        .join(PostCategory.parent.of_type(category_tier_1)) \
-        .where(category_tier_1.category == category) \
+    category_t1 = aliased(PostCategory)
+    category_subq = select(
+        label('category', PostCategory.category),
+        label('id', PostCategory.id),
+        label('category_t1', category_t1.category)
+    ) \
+        .join(PostCategory.parent.of_type(category_t1)) \
+        .where(category_t1.category == category) \
         .subquery()
-    category = aliased(PostCategory, category_subq, name='category')
     content_subq = select(func.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
         .subquery()
@@ -80,9 +83,9 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
         .where(Comment.is_active == True) \
         .group_by(Comment.id_post) \
         .subquery()
-    q = select(Post, content, category, User, comment_subq) \
+    q = select(Post, content, category_subq, User, comment_subq) \
         .join(content) \
-        .join(category) \
+        .join(category_subq) \
         .join(User) \
         .outerjoin(comment_subq) \
         .where(Post.is_active == True)
@@ -96,8 +99,8 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
     q = q.order_by(Post.date_create.desc()) \
         .offset(skip).limit(limit)
     res = await db.execute(q)
-    q_t = select(Post, category) \
-        .join(category) \
+    q_t = select(Post) \
+        .join(category_subq) \
         .where(Post.is_active == True)
     total = await db.execute(select(func.count()).select_from(q_t))
     return total.scalar(), res.all()
@@ -107,11 +110,18 @@ async def get_post_detail(db: AsyncSession, id: UUID):
     content_subq = select(func.max(PostContent.version), PostContent) \
         .group_by(PostContent.id_post) \
         .subquery()
-    category = aliased(PostCategory, name='category')
+    category_t1 = aliased(PostCategory)
+    category_subq = select(
+        label('category', PostCategory.category),
+        label('id', PostCategory.id),
+        label('category_t1', category_t1.category)
+    ) \
+        .join(PostCategory.parent.of_type(category_t1)) \
+        .subquery()
     content = aliased(PostContent, content_subq, name='content')
-    q = select(Post, content, category, User) \
+    q = select(Post, content, category_subq, User) \
         .join(content) \
-        .join(category) \
+        .join(category_subq) \
         .join(User) \
         .where(
             Post.id == id,
