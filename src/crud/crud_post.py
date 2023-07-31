@@ -32,6 +32,15 @@ async def get_category_id(db: AsyncSession, category: str):
     return res.scalar()
 
 
+async def get_category_parent(db: AsyncSession, category: str):
+    parent = aliased(PostCategory)
+    q = select(parent) \
+        .join(PostCategory.parent.of_type(parent)) \
+        .where(PostCategory.category == category)
+    res = await db.execute(q)
+    return res.scalar()
+
+
 async def create_post(
         db: AsyncSession,
         id: UUID,

@@ -26,6 +26,17 @@ async def category_list(category: CategoryEnum, db: AsyncSession = Depends(get_d
     return [i.category for i in category_list]
 
 
+@router.get('/category', response_model=CategoryBase)
+async def category_parent(category: str, db: AsyncSession = Depends(get_db)):
+    category_upper = await get_category_parent(db, category)
+    if category_upper is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='no parent category'
+        )
+    return CategoryBase.from_orm(category_upper)
+
+
 @router.get('/list/{category}', response_model=PostList)
 async def post_list(
         category: CategoryEnum,
