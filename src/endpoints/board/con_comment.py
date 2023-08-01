@@ -35,6 +35,12 @@ async def comment_create(
     return SuccessCreate()
 
 
+@router.get('/detail', response_model=CommentSumm)
+async def comment_detail(id_comment: UUID, db: AsyncSession = Depends(get_db)):
+    detail = await get_comment_detail(db, id_comment)
+    return CommentSumm.from_orm(detail)
+
+
 @router.put('/upd', response_model=SuccessUpdate)
 async def comment_upd(
         id_comment: UUID,

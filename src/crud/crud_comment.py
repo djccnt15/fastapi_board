@@ -58,6 +58,19 @@ async def get_comment_list(db: AsyncSession, id: UUID):
     return res.all()
 
 
+async def get_comment_detail(db: AsyncSession, id: UUID):
+    content_subq = select(func.max(CommentContent.version), CommentContent) \
+        .group_by(CommentContent.id) \
+        .subquery()
+    content = aliased(CommentContent, content_subq, name='content')
+    q = select(Comment, content, Post) \
+        .join(content) \
+        .join(Post) \
+        .where(Comment.id == id)
+    res = await db.execute(q)
+    return res.first()
+
+
 async def get_comment_ver(db: AsyncSession, id: UUID) -> int:
     q = select(func.max(CommentContent.version)) \
         .where(CommentContent.id_comment == id)

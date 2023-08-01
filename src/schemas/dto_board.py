@@ -51,9 +51,12 @@ class CommentContent(ContentBase, DateUpd):
         orm_mode = True
 
 
-class CommentDetail(BaseModel):
+class CommentBase(BaseModel):
     Comment: CommentRec = Field(alias='comment')
     content: CommentContent
+
+
+class CommentDetail(CommentBase):
     User: UserRec = Field(alias='user')
 
     class Config:
@@ -65,6 +68,14 @@ class PostRec(Id[UUID], DateCreate):
 
     class Config:
         orm_mode = True
+
+
+class CommentSumm(CommentBase):
+    Post: PostRec = Field(alias='post')
+
+    class Config:
+        orm_mode = True
+        allow_population_by_field_name = True
 
 
 class SubjectBase(ContentBase):
