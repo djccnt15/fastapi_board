@@ -49,7 +49,7 @@ app.add_middleware(  # allow CORS credential
 app.include_router(router, prefix='/api')
 
 
-@app.middleware('http')
+# @app.middleware('http')
 async def logger(request: Request, call_next):
     log = {
         'req_url': str(request.url),
