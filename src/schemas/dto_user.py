@@ -24,6 +24,12 @@ class UserCreate(UserName, UserEmail):
             raise ValueError(no_empty_val)
         return v
 
+    @validator('username')
+    def no_whitespace(cls, v):
+        if v != v.replace(' ', ''):
+            raise ValueError('whitespace is not allowed')
+        return v
+
     @validator('password2')
     def passwords_match(cls, v, values):
         if 'password1' in values and v != values['password1']:
