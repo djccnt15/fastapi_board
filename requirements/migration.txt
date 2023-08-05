@@ -1,0 +1,6 @@
+wheel
+addict
+SQLAlchemy==2.0.9
+alembic==1.10.3
+PyMySQL==1.1.0
+pycryptodome
