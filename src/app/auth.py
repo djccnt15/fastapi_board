@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 from jose import jwt, JWTError
 
-from env.database import get_db
-from env.config import get_key
+from common.database import get_db
+from common.config import get_key
 from src.crud import get_user
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/user/login')

@@ -4,9 +4,9 @@ from ast import literal_eval
 
 from addict import Dict
 
-from env.security import rsa_from_file, decrypt_rsa
+from common.security import rsa_from_file, decrypt_rsa
 
-dir_config = Path('env')
+dir_config = Path('common')
 
 
 def get_config() -> ConfigParser:

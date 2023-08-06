@@ -6,8 +6,8 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.requests import Request
 
-from env.config import get_config, mode, dir_config
-from env.database import engine
+from common.config import get_config, mode, dir_config
+from common.database import engine
 from src.routes import router
 from src.crud import create_log
 

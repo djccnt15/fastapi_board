@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from env.database import get_db
+from common.database import get_db
 from src.crud import *
 from src.schemas import *
 from src.models import User
