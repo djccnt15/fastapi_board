@@ -92,11 +92,15 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
         .where(Comment.is_active == True) \
         .group_by(Comment.id_post) \
         .subquery()
-    q = select(Post, content, category_subq, User, comment_subq) \
+    vote_subq = select(label('count_vote', func.count(PostVoter.id_post)), PostVoter.id_post) \
+        .group_by(PostVoter.id_post) \
+        .subquery()
+    q = select(Post, content, category_subq, User, comment_subq, vote_subq) \
         .join(content) \
         .join(category_subq) \
         .join(User) \
         .outerjoin(comment_subq) \
+        .outerjoin(vote_subq) \
         .where(Post.is_active == True)
     if keyword:
         keyword = f'%{keyword}%'

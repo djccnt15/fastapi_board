@@ -99,6 +99,7 @@ class PostSumm(Category):
     content: PostContent
     User: UserRec = Field(alias='user')
     count_comment: int | None
+    count_vote: int | None
 
     class Config:
         orm_mode = True
