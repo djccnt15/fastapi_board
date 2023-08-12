@@ -143,7 +143,7 @@ async def post_his(id_post: UUID, db: AsyncSession = Depends(get_db)):
     return PostHis(post_his=post_his)
 
 
-@router.post("/post/vote", status_code=status.HTTP_204_NO_CONTENT)
+@router.post('/post/vote', status_code=status.HTTP_204_NO_CONTENT)
 async def post_vote(
     id_post: UUID,
     db: AsyncSession = Depends(get_db),
