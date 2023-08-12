@@ -132,9 +132,13 @@ async def get_post_detail(db: AsyncSession, id: UUID):
         .join(PostCategory.parent.of_type(category_t1)) \
         .subquery()
     content = aliased(PostContent, content_subq, name='content')
-    q = select(Post, content, category_subq, User) \
+    vote_subq = select(label('count_vote', func.count(PostVoter.id_post)), PostVoter.id_post) \
+        .group_by(PostVoter.id_post) \
+        .subquery()
+    q = select(Post, content, category_subq, vote_subq, User) \
         .join(content) \
         .join(category_subq) \
+        .join(vote_subq) \
         .join(User) \
         .where(
             Post.id == id,
