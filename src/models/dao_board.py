@@ -31,6 +31,7 @@ class Post(Base):
     category = relationship('PostCategory', back_populates='post')
     content = relationship('PostContent', back_populates='post')
     comment = relationship('Comment', back_populates='post')
+    voter = relationship('User', secondary='voter_post', back_populates='vote_post')
 
 
 class PostContent(Base):
@@ -70,3 +71,10 @@ class CommentContent(Base):
     id_comment = Column(Uuid, ForeignKey(Comment.id), nullable=False)
 
     comment = relationship('Comment', back_populates='content')
+
+
+class PostVoter(Base):
+    __tablename__ = 'voter_post'
+
+    id_user = Column(Integer, ForeignKey(User.id), primary_key=True)
+    id_post = Column(Uuid, ForeignKey(Post.id), primary_key=True)

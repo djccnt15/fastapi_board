@@ -28,3 +28,4 @@ class User(Base):
 
     post = relationship('Post', back_populates='user')
     comment = relationship('Comment', back_populates='user')
+    vote_post = relationship('Post', secondary='voter_post', back_populates='voter')

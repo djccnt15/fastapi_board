@@ -170,3 +170,10 @@ async def get_post_his(db: AsyncSession, id: UUID):
         .where(PostContent.id_post == id)
     res = await db.execute(q)
     return res.scalars().all()
+
+
+async def vote_post(db: AsyncSession, id: UUID, user: User):
+    q = insert(PostVoter) \
+        .values(id_user=user.id, id_post=id)
+    await db.execute(q)
+    await db.commit()

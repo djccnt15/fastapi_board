@@ -141,3 +141,18 @@ async def post_del(
 async def post_his(id_post: UUID, db: AsyncSession = Depends(get_db)):
     post_his = await get_post_his(db, id_post)
     return PostHis(post_his=post_his)
+
+
+@router.post("/post/vote", status_code=status.HTTP_204_NO_CONTENT)
+async def post_vote(
+    id_post: UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    post = await get_post(db, id_post)
+    if not post:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=no_id
+        )
+    await vote_post(db, id_post, current_user)
