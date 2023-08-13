@@ -135,11 +135,11 @@ async def get_post_detail(db: AsyncSession, id: UUID):
     vote_subq = select(label('count_vote', func.count(PostVoter.id_post)), PostVoter.id_post) \
         .group_by(PostVoter.id_post) \
         .subquery()
-    q = select(Post, content, category_subq, vote_subq, User) \
+    q = select(Post, content, category_subq, User, vote_subq) \
         .join(content) \
         .join(category_subq) \
-        .join(vote_subq) \
         .join(User) \
+        .outerjoin(vote_subq) \
         .where(
             Post.id == id,
             Post.is_active == True
