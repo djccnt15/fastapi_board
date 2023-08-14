@@ -4,6 +4,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import SQLAlchemyError
 
 from common.database import get_db
 from src.crud import *
@@ -145,9 +146,9 @@ async def post_his(id_post: UUID, db: AsyncSession = Depends(get_db)):
 
 @router.post('/post/vote', status_code=status.HTTP_204_NO_CONTENT)
 async def post_vote(
-    id_post: UUID,
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+        id_post: UUID,
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_user)
 ):
     post = await get_post(db, id_post)
     if not post:
@@ -155,4 +156,7 @@ async def post_vote(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=no_id
         )
-    await vote_post(db, id_post, current_user)
+    try:
+        await vote_post(db, id_post, current_user)
+    except SQLAlchemyError:
+        await vote_post_revoke(db, id_post, current_user)

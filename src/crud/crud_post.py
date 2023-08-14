@@ -2,7 +2,7 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import insert, select, update, func, label
+from sqlalchemy.sql import insert, select, update, delete, func, label
 from sqlalchemy.orm import aliased
 
 from src.models import *
@@ -183,5 +183,12 @@ async def get_post_his(db: AsyncSession, id: UUID):
 async def vote_post(db: AsyncSession, id: UUID, user: User):
     q = insert(PostVoter) \
         .values(id_user=user.id, id_post=id)
+    await db.execute(q)
+    await db.commit()
+
+
+async def vote_post_revoke(db: AsyncSession, id: UUID, user: User):
+    q = delete(PostVoter) \
+        .where(PostVoter.id_user == user.id, PostVoter.id_post == id)
     await db.execute(q)
     await db.commit()
