@@ -109,13 +109,10 @@ async def get_post_list(db: AsyncSession, category: str, keyword: str, skip: int
             content.content.ilike(keyword) |
             User.username.ilike(keyword)
         )
+    total = await db.execute(select(func.count()).select_from(q))
     q = q.order_by(Post.date_create.desc()) \
         .offset(skip).limit(limit)
     res = await db.execute(q)
-    q_t = select(Post) \
-        .join(category_subq) \
-        .where(Post.is_active == True)
-    total = await db.execute(select(func.count()).select_from(q_t))
     return total.scalar(), res.all()
 
 

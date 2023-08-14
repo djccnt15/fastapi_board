@@ -10,3 +10,4 @@ passlib[bcrypt]
 python-multipart
 python-jose[cryptography]
 pycryptodome
+gunicorn
