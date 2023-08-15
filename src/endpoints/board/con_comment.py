@@ -4,6 +4,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import SQLAlchemyError
 
 from common.database import get_db
 from src.crud import *
@@ -91,3 +92,21 @@ async def comment_del(
 async def comment_his(id_comment: UUID, db: AsyncSession = Depends(get_db)):
     comment_his = await get_comment_his(db, id_comment)
     return CommentHis(comment_his=comment_his)
+
+
+@router.post('/vote', status_code=status.HTTP_204_NO_CONTENT)
+async def comment_vote(
+        id_comment: UUID,
+        db: AsyncSession = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    comment = await get_comment(db, id_comment)
+    if not comment:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=no_id
+        )
+    try:
+        await vote_comment(db, id_comment, current_user)
+    except SQLAlchemyError:
+        await vote_comment_revoke(db, id_comment, current_user)

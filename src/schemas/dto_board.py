@@ -58,6 +58,7 @@ class CommentBase(BaseModel):
 
 class CommentDetail(CommentBase):
     User: UserRec = Field(alias='user')
+    count_vote: int | None
 
     class Config:
         orm_mode = True

@@ -2,10 +2,10 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import insert, select, update, func
+from sqlalchemy.sql import insert, select, update, delete, func, label
 from sqlalchemy.orm import aliased
 
-from src.models import User, Post, Comment, CommentContent
+from src.models import *
 from src.schemas import ContentBase
 
 
@@ -46,9 +46,13 @@ async def get_comment_list(db: AsyncSession, id: UUID):
         .group_by(CommentContent.id_comment) \
         .subquery()
     content = aliased(CommentContent, content_subq, name='content')
-    q = select(Comment, content, User) \
+    vote_subq = select(label('count_vote', func.count(CommentVoter.id_comment)), CommentVoter.id_comment) \
+        .group_by(CommentVoter.id_comment) \
+        .subquery()
+    q = select(Comment, content, User, vote_subq) \
         .join(content) \
         .join(User) \
+        .outerjoin(vote_subq) \
         .where(
             Comment.id_post == id,
             Comment.is_active == True
@@ -111,3 +115,17 @@ async def get_comment_his(db: AsyncSession, id: UUID):
         .where(CommentContent.id_comment == id)
     res = await db.execute(q)
     return res.scalars().all()
+
+
+async def vote_comment(db: AsyncSession, id: UUID, user: User):
+    q = insert(CommentVoter) \
+        .values(id_user=user.id, id_comment=id)
+    await db.execute(q)
+    await db.commit()
+
+
+async def vote_comment_revoke(db: AsyncSession, id: UUID, user: User):
+    q = delete(CommentVoter) \
+        .where(CommentVoter.id_user == user.id, CommentVoter.id_comment == id)
+    await db.execute(q)
+    await db.commit()
