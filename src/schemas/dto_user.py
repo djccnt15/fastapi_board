@@ -38,10 +38,6 @@ class UserCreate(UserName, UserEmail):
 
 
 class User(Id[int], UserName):
-    is_superuser: bool | None = None
-    is_staff: bool | None = None
-    is_blocked: bool | None = None
-    is_active: bool
 
     class Config:
         orm_mode = True
