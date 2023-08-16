@@ -66,7 +66,9 @@ async def user_login(
     auth_config = get_key().auth
     access_token = jwt.encode(data, auth_config.secret_key, auth_config.algorithm)
 
-    return Token(access_token=access_token, token_type='bearer', username=user.username)
+    token = Token(access_token=access_token, token_type='bearer', username=user.username)
+    await create_login_his(db, user)
+    return token
 
 
 @router.put('/update', response_model=SuccessUpdate)

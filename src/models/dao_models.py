@@ -44,3 +44,13 @@ class UserRole(Base):
 
     id_user = Column(Integer, ForeignKey(User.id), primary_key=True)
     id_role = Column(Integer, ForeignKey(Role.id), primary_key=True)
+
+
+class LoggedIn(Base):
+    __tablename__ = 'logged_in'
+
+    id = Column(Uuid, primary_key=True)
+    id_user = Column(Integer, ForeignKey(User.id), nullable=False)
+    date_create = Column(DateTime, nullable=False)
+
+    user = relationship('User', back_populates='logged_in')

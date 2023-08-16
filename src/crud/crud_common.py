@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine
 from sqlalchemy.sql import insert, select, update
 
 from common.security import pwd_context
-from src.models import User, Log
+from src.models import User, Log, LoggedIn
 from src.schemas import UserCreate
 
 
@@ -74,3 +74,14 @@ async def create_log(engine: AsyncEngine, date_create: datetime, log: str):
         q = insert(Log).values(id=uuid4(), date_create=date_create, log=log)
         await conn.execute(q)
         await conn.commit()
+
+
+async def create_login_his(db: AsyncSession, user: User):
+    q = insert(LoggedIn) \
+        .values(
+            id=uuid4(),
+            id_user=user.id,
+            date_create=datetime.now()
+        )
+    await db.execute(q)
+    await db.commit()
