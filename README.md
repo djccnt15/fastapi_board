@@ -58,3 +58,17 @@ alembic upgrade head
     }
 }
 ```
+
+## Docker
+
+- Dockerfile build
+
+```
+docker build -t fastboard .
+```
+
+- Docker container run
+
+```
+docker run -itd -p 8000:8000 --name fastboard fastboard
+```
