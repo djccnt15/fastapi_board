@@ -96,10 +96,13 @@ async def user_update(
     return SuccessUpdate()
 
 
-@router.delete('/delete', response_model=SuccessDel)
-async def user_delete(
+@router.delete('/resign', response_model=SuccessDel)
+async def user_resign(
         db: AsyncSession = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    await del_user(db, current_user.id)
+    id_user = current_user.id
+    manage = await get_manage(db, 'resign')
+    await create_user_manage(db, id_user, manage.id)
+    await del_user(db, id_user)
     return SuccessDel()

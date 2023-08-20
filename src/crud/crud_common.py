@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine
 from sqlalchemy.sql import insert, select, update
 
 from common.security import pwd_context
-from src.models import User, Log, LoggedIn
+from src.models import *
 from src.schemas import UserCreate
 
 
@@ -64,7 +64,32 @@ async def update_user(db: AsyncSession, user_update: UserCreate, id: int):
 async def del_user(db: AsyncSession, id: int):
     q = update(User) \
         .where(User.id == id) \
-        .values(is_active=False)
+        .values(username=None, email=None)
+    await db.execute(q)
+    await db.commit()
+
+
+async def get_manage(db: AsyncSession, name: str):
+    q = select(Manage) \
+        .where(Manage.name == name)
+    res = await db.execute(q)
+    return res.scalar()
+
+
+async def create_user_manage(
+        db: AsyncSession,
+        id_user: int,
+        id_manage: int,
+        detail: str | None = None
+):
+    q = insert(UserManage) \
+        .values(
+            id=uuid4(),
+            id_user=id_user,
+            id_manage=id_manage,
+            detail=detail,
+            date_create=datetime.now()
+        )
     await db.execute(q)
     await db.commit()
 

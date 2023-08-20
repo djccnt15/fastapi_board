@@ -7,11 +7,11 @@ conflict_username = 'user name conflict'
 
 
 class UserName(BaseModel):
-    username: str = Field(max_length=50)
+    username: str | None = Field(max_length=50)
 
 
 class UserEmail(BaseModel):
-    email: EmailStr
+    email: EmailStr | None
 
 
 class UserCreate(UserName, UserEmail):
