@@ -32,8 +32,18 @@ alembic upgrade head
 
 ## configuration 관련
 
-- `config.ini` 파일을 통해 각종 환경 설정 제어
-- `DEFAULT` 섹션의 `mode`는 개발과 운용의 차이가 있는 환경에서 설정을 관리하기 위해 사용
+- `config.ini`, `.env` 파일을 통해 각종 환경 설정 제어
+
+```ini
+# DEFAULT
+mode = dev
+
+# AUTH
+token_expire_minutes = 0000
+secret_key = ****
+algorithm = ****
+```
+
 - 비밀번호 등 외부 저장소에 저장해서는 안 되는 정보는 `key.json`으로 별도 관리 + 암호화
 
 ```json
@@ -51,10 +61,6 @@ alembic upgrade head
             "port": "3306",
             "database": "fastapi"
         }
-    },
-    "auth": {
-        "secret_key": "****",
-        "algorithm": "****"
     }
 }
 ```

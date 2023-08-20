@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine
 from sqlalchemy.sql import insert, select, update
 
-from common.security import pwd_context
+from conf.security import pwd_context
 from src.models import *
 from src.schemas import UserCreate
 

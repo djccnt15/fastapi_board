@@ -6,9 +6,9 @@ from starlette import status
 from sqlalchemy.ext.asyncio import AsyncSession
 from jose import jwt
 
-from common.config import get_config, get_key
-from common.database import get_db
-from common.security import pwd_context
+from conf.config import get_config, get_key, config
+from conf.database import get_db
+from conf.security import pwd_context
 from src.schemas import *
 from src.crud import *
 from src.app import get_current_user
@@ -61,10 +61,9 @@ async def user_login(
     data = {
         'sub': user.username,
         'exp': datetime.utcnow() +
-            timedelta(minutes=int(get_config()['AUTH'].get('token_expire_minutes')))
+            timedelta(minutes=int(config('token_expire_minutes')))
     }
-    auth_config = get_key().auth
-    access_token = jwt.encode(data, auth_config.secret_key, auth_config.algorithm)
+    access_token = jwt.encode(data, config('secret_key'), config('algorithm'))
 
     token = Token(access_token=access_token, token_type='bearer', username=user.username)
     await create_login_his(db, user)

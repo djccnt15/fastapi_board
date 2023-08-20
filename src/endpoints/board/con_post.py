@@ -6,7 +6,7 @@ from starlette import status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
-from common.database import get_db
+from conf.database import get_db
 from src.crud import *
 from src.schemas import *
 from src.models import User

@@ -3,10 +3,11 @@ from configparser import ConfigParser
 from ast import literal_eval
 
 from addict import Dict
+from starlette.config import Config
 
-from common.security import rsa_from_file, decrypt_rsa
+from conf.security import rsa_from_file, decrypt_rsa
 
-dir_config = Path('common')
+dir_config = Path('conf')
 
 
 def get_config() -> ConfigParser:
@@ -15,7 +16,8 @@ def get_config() -> ConfigParser:
     return config
 
 
-mode = get_config()['DEFAULT'].get('mode')
+config = Config('.env')
+mode = config('mode')
 
 
 def get_key(

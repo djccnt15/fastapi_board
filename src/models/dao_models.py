@@ -2,7 +2,7 @@ from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, String, Text, DateTime, Uuid
 from sqlalchemy.orm import relationship
 
-from common.database import Base
+from conf.database import Base
 
 
 class Log(Base):

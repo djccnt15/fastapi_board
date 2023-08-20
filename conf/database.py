@@ -2,7 +2,7 @@ from sqlalchemy.engine import URL
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import declarative_base
 
-from common.config import mode, get_key
+from conf.config import mode, get_key
 
 db_key = get_key().db[mode]
 

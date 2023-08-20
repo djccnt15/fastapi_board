@@ -90,7 +90,7 @@ if __name__ == '__main__':
     import json
     from ast import literal_eval
 
-    from common.config import dir_config, get_config
+    from conf.config import dir_config, get_config
 
     private_key = dir_config / get_config()['DEFAULT'].get('private_key')
     public_key = dir_config / get_config()['DEFAULT'].get('public_key')
