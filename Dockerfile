@@ -13,6 +13,7 @@ WORKDIR fastboard/
 
 COPY ./ ./
 
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r ./requirements/test.txt
 
 # ENTRYPOINT [ "uvicorn", "--host", "0.0.0.0", "main:app", "--reload" ]
