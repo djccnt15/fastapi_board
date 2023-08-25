@@ -57,16 +57,26 @@ async def user_login(
             headers={'WWW-Authenticate': 'Bearer'},
         )
 
+    id_user = user.id
+    await create_login_his(db, id_user)
+    manage = await get_user_manage(db, id_user)
+    if manage:
+        if manage.name == 'blocked':
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='blocked user cannot login'
+            )
+        elif manage.name == 'inactive': ...
+
     # create access token
     data = {
         'sub': user.username,
-        'exp': datetime.utcnow() +
-            timedelta(minutes=int(config('token_expire_minutes')))
+        'exp': datetime.utcnow()
+            + timedelta(minutes=int(config('token_expire_minutes')))
     }
     access_token = jwt.encode(data, config('secret_key'), config('algorithm'))
 
     token = Token(access_token=access_token, token_type='bearer', username=user.username)
-    await create_login_his(db, user)
     return token
 
 

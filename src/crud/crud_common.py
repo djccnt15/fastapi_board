@@ -94,6 +94,14 @@ async def create_user_manage(
     await db.commit()
 
 
+async def get_user_manage(db: AsyncSession, id: str):
+    q = select(Manage) \
+        .join(UserManage) \
+        .where(UserManage.id_user == id)
+    res = await db.execute(q)
+    return res.scalar()
+
+
 async def create_log(engine: AsyncEngine, date_create: datetime, log: str):
     async with engine.connect() as conn:
         q = insert(Log).values(id=uuid4(), date_create=date_create, log=log)
@@ -101,11 +109,11 @@ async def create_log(engine: AsyncEngine, date_create: datetime, log: str):
         await conn.commit()
 
 
-async def create_login_his(db: AsyncSession, user: User):
+async def create_login_his(db: AsyncSession, id_user: int):
     q = insert(LoggedIn) \
         .values(
             id=uuid4(),
-            id_user=user.id,
+            id_user=id_user,
             date_create=datetime.now()
         )
     await db.execute(q)
