@@ -20,7 +20,7 @@ if str(SQLALCHEMY_DATABASE_URL).startswith('sqlite'):  # check_same_thread arg i
         SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False}
     )
 else:
-    engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
+    engine = create_async_engine(SQLALCHEMY_DATABASE_URL, pool_recycle=3600, pool_pre_ping=True)
 
 
 async def get_db():
