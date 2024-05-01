@@ -1,0 +1,29 @@
+uvicorn:
+  host: "0.0.0.0"
+  port: 8000
+  # reload: true
+  log_config: "src/resources/log.ini"
+
+fastapi:
+  title: Python FastAPI Server
+  version: 0.0.1
+  contact:
+    name: djccnt15
+    url: https://djccnt15.github.io/
+    email: djccnt15@gmail.com
+  license_info:
+    name: MIT
+    url: https://en.wikipedia.org/wiki/MIT_License
+  description: FastAPI Server
+  openapi_tags:
+    - name: default
+      externalDocs:
+        description: External docs
+        url: https://djccnt15.github.io/tags#FastAPI
+    - name: Auth
+      description: Operations with users, Such as **SignUp**, **LogIn** logics
+    - name: Board
+      description: CRUD Post, Comments
+  cors_orign:
+    - http://localhost:5173
+    - http://127.0.0.1:5173
