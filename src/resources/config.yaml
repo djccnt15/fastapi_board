@@ -27,3 +27,16 @@ fastapi:
   cors_orign:
     - http://localhost:5173
     - http://127.0.0.1:5173
+
+db:
+  url:
+    drivername: mysql+aiomysql
+    username: qwer
+    password: asdf
+    host: localhost
+    port: 3306
+    database: test
+  engine:
+    pool_pre_ping: true
+    pool_recycle: 3600
+    echo: false
