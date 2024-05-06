@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from src import configs
+from src.common import configs
 from src.common.exception import handlers as exception_handler
 from src.routes import default
 
