@@ -1,3 +1,4 @@
-class QueryResultEmptyError(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
+class InternalServerError(Exception): ...
+
+
+class QueryResultEmptyError(Exception): ...
