@@ -91,10 +91,6 @@ class PostEntity(BaseEntity):
 class PostContentEntity(BaseEntity):
     __tablename__ = "post_content"
 
-    id = Column(
-        BigInteger,
-        primary_key=True,
-    )
     version = Column(
         Integer,
         nullable=False,
