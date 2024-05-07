@@ -104,7 +104,7 @@ class PostContentEntity(BaseEntity):
         DateTime,
         nullable=False,
     )
-    subject = Column(
+    title = Column(
         String(length=PostContentEnum.SUBJECT.value),
         nullable=False,
     )
