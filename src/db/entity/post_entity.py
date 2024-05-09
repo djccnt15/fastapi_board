@@ -20,7 +20,7 @@ class PostCategoryEntity(BaseEntity):
         Integer,
         nullable=False,
     )
-    category = Column(
+    name = Column(
         String(length=PostCategoryEntityEnum.CATEGORY.value),
         nullable=False,
     )
