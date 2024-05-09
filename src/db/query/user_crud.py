@@ -26,7 +26,7 @@ async def create_user(
         email=email,
         created_datetime=datetime.now(KST),
     )
-    await db.execute(q)
+    await db.execute(statement=q)
     await db.commit()
 
 
@@ -42,7 +42,7 @@ async def read_user_by_name_email(
             UserEntity.email == email,
         )
     )
-    res = await db.execute(q)
+    res = await db.execute(statement=q)
     return res.scalars().all()
 
 
@@ -52,7 +52,7 @@ async def read_user_by_name(
     name: str,
 ) -> UserEntity | None:
     q = select(UserEntity).where(UserEntity.name == name)
-    res = await db.execute(q)
+    res = await db.execute(statement=q)
     return res.scalar()
 
 
@@ -68,7 +68,7 @@ async def update_user(
         .where(UserEntity.id == user_id)
         .values(name=name, email=email)
     )
-    await db.execute(q)
+    await db.execute(statement=q)
     await db.commit()
 
 
@@ -79,7 +79,7 @@ async def update_password(
     password: str,
 ) -> None:
     q = update(UserEntity).where(UserEntity.id == user_id).values(password=password)
-    await db.execute(q)
+    await db.execute(statement=q)
     await db.commit()
 
 
@@ -93,7 +93,7 @@ async def delete_user(
         .where(UserEntity.id == user_id)
         .values(name=None, password=None, email=None)
     )
-    await db.execute(q)
+    await db.execute(statement=q)
     await db.commit()
 
 
@@ -107,7 +107,7 @@ async def read_user_state(
         .join(UserStateEntity)
         .where(UserStateEntity.user_id == user_id)
     )
-    res = await db.execute(q)
+    res = await db.execute(statement=q)
     return res.scalar()
 
 
@@ -120,5 +120,5 @@ async def create_login_his(
         user_id=user_id,
         created_datetime=datetime.now(KST),
     )
-    await db.execute(q)
+    await db.execute(statement=q)
     await db.commit()
