@@ -41,3 +41,13 @@ async def read_parent_category(
     )
     res = await db.execute(q)
     return res.scalar()
+
+
+async def read_category_id(
+    *,
+    db: AsyncSession,
+    category: str,
+) -> PostCategoryEntity | None:
+    q = select(PostCategoryEntity).where(PostCategoryEntity.name == category)
+    res = await db.execute(statement=q)
+    return res.scalar()
