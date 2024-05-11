@@ -2,7 +2,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import BigInteger, DateTime, String
 
-from .base_entity import BaseEntity
+from .base_entity import BaseEntity, BigintIdEntity
 from .enum.user_enum import (
     RoleEntityEnum,
     StateEntityEnum,
@@ -11,7 +11,7 @@ from .enum.user_enum import (
 )
 
 
-class UserEntity(BaseEntity):
+class UserEntity(BigintIdEntity):
     __tablename__ = "user"
 
     name = Column(
@@ -65,7 +65,7 @@ class UserEntity(BaseEntity):
     )
 
 
-class RoleEntity(BaseEntity):
+class RoleEntity(BigintIdEntity):
     __tablename__ = "role"
 
     name = Column(
@@ -96,7 +96,7 @@ class UserRoleEntity(BaseEntity):
     )
 
 
-class StateEntity(BaseEntity):
+class StateEntity(BigintIdEntity):
     __tablename__ = "state"
 
     name = Column(
@@ -140,7 +140,7 @@ class UserStateEntity(BaseEntity):
     )
 
 
-class LoggedInEntity(BaseEntity):
+class LoggedInEntity(BigintIdEntity):
     __tablename__ = "logged_in"
 
     user_id = Column(

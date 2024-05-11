@@ -2,12 +2,12 @@ from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import BigInteger, Boolean, DateTime, Integer, String, Text
 
-from .base_entity import BaseEntity
+from .base_entity import BaseEntity, BigintIdEntity
 from .enum.post_enum import PostCategoryEntityEnum, PostContentEnum
 from .user_entity import UserEntity
 
 
-class PostCategoryEntity(BaseEntity):
+class PostCategoryEntity(BigintIdEntity):
     __tablename__ = "category"
 
     id = mapped_column(
@@ -39,7 +39,7 @@ class PostCategoryEntity(BaseEntity):
     )
 
 
-class PostEntity(BaseEntity):
+class PostEntity(BigintIdEntity):
     __tablename__ = "post"
 
     user_id = Column(
@@ -88,7 +88,7 @@ class PostEntity(BaseEntity):
     )
 
 
-class PostContentEntity(BaseEntity):
+class PostContentEntity(BigintIdEntity):
     __tablename__ = "post_content"
 
     version = Column(
@@ -128,7 +128,7 @@ class PostVoterEntity(BaseEntity):
         ForeignKey(UserEntity.id),
         primary_key=True,
     )
-    psot_id = Column(
+    post_id = Column(
         BigInteger,
         ForeignKey(PostEntity.id),
         primary_key=True,

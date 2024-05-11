@@ -2,12 +2,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import BigInteger, Boolean, DateTime, Integer, Text
 
-from .base_entity import BaseEntity
+from .base_entity import BaseEntity, BigintIdEntity
 from .post_entity import PostEntity
 from .user_entity import UserEntity
 
 
-class CommentEntity(BaseEntity):
+class CommentEntity(BigintIdEntity):
     __tablename__ = "comment"
 
     user_id = Column(
@@ -49,7 +49,7 @@ class CommentEntity(BaseEntity):
     )
 
 
-class CommentContentEntity(BaseEntity):
+class CommentContentEntity(BigintIdEntity):
     __tablename__ = "comment_content"
 
     version = Column(
