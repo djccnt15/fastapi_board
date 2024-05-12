@@ -11,7 +11,7 @@ async def create_user(
     request: user_request.UserCreateRequest,
 ) -> None:
     await create_logic.verify_user(db=db, user=request)
-    await create_logic.create_user(db=db, user_create=request)
+    await create_logic.create_user(db=db, data=request)
 
 
 async def login_user(

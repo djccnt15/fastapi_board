@@ -6,7 +6,7 @@ from starlette import status
 
 from src.common import configs
 from src.db import database
-from src.db.query import user_crud
+from src.db.query.user import user_read
 
 config = configs.config.fastapi
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/user/login")
@@ -34,7 +34,7 @@ async def get_current_user(
     except JWTError:
         raise credentials_exception
     else:
-        user = await user_crud.read_user_by_name(db=db, name=username)
+        user = await user_read.read_user_by_name(db=db, name=username)
         if user is None:
             raise credentials_exception
         return user

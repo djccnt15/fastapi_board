@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.common.exception import NotUniqueError
-from src.db.query import user_crud
+from src.db.query.user import user_read, user_update
 
 from ..model import user_request
 
@@ -11,7 +11,7 @@ async def verify_user(
     db: AsyncSession,
     user: user_request.UserCurrent,
 ) -> None:
-    user_list = await user_crud.read_user_by_name_email(
+    user_list = await user_read.read_user_by_name_email(
         db=db,
         name=user.name,
         email=user.email,
@@ -32,7 +32,7 @@ async def update_user(
     update_info: user_request.UserBase,
     current_user: user_request.UserCurrent,
 ) -> None:
-    await user_crud.update_user(
+    await user_update.update_user(
         db=db,
         user_id=current_user.id,
         name=update_info.name,

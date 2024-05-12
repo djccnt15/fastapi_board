@@ -9,7 +9,7 @@ from starlette import status
 from src.common import configs
 from src.common.configs import KST
 from src.db.entity.user_entity import UserEntity
-from src.db.query import user_crud
+from src.db.query.user import user_create, user_read
 
 from ..model import user_response
 from ..model.enums import UserStateEnum
@@ -22,7 +22,7 @@ async def identify_user(
     db: AsyncSession,
     form_data: OAuth2PasswordRequestForm,
 ) -> UserEntity:
-    user = await user_crud.read_user_by_name(
+    user = await user_read.read_user_by_name(
         db=db,
         name=form_data.username,
     )
@@ -36,7 +36,7 @@ async def identify_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user_state = await user_crud.read_user_state(db=db, user_id=user.id)
+    user_state = await user_read.read_user_state(db=db, user_id=user.id)
     if user_state:
         if str(user_state.name) == UserStateEnum.BLOCKED:
             raise HTTPException(
@@ -55,7 +55,7 @@ async def create_login_history(
     db: AsyncSession,
     user_id: int,
 ) -> None:
-    await user_crud.create_login_his(db=db, user_id=user_id)
+    await user_create.create_login_his(db=db, user_id=user_id)
 
 
 async def create_access_token(
