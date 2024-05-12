@@ -1,13 +1,12 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.common.configs import pwd_context
 from src.common.exception import NotUniqueError
-from src.db.query.user import user_create, user_read
+from src.db.query.user import user_read
 
 from ..model import user_request
 
 
-async def verify_user(
+async def verify_user_info(
     *,
     db: AsyncSession,
     user: user_request.UserCreateRequest,
@@ -27,14 +26,21 @@ async def verify_user(
         raise NotUniqueError(field=user.email)
 
 
-async def create_user(
+async def verify_user(
     *,
     db: AsyncSession,
-    data: user_request.UserCreateRequest,
+    user: user_request.UserCurrent,
 ) -> None:
-    await user_create.create_user(
+    user_list = await user_read.read_user_by_name_email(
         db=db,
-        name=data.name,
-        password=pwd_context.hash(data.password1),
-        email=data.email,
+        name=user.name,
+        email=user.email,
     )
+
+    email_conflict = [u for u in user_list if user.email == u.email and user.id != u.id]
+    if email_conflict:
+        raise NotUniqueError(field=user.email)
+
+    name_conflict = [u for u in user_list if user.name == u.name and user.id != u.id]
+    if name_conflict:
+        raise NotUniqueError(field=user.name)

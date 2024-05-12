@@ -55,7 +55,11 @@ async def create_login_history(
     db: AsyncSession,
     user_id: int,
 ) -> None:
-    await user_create.create_login_his(db=db, user_id=user_id)
+    await user_create.create_login_his(
+        db=db,
+        user_id=user_id,
+        created_datetime=datetime.now(KST),
+    )
 
 
 async def create_access_token(
