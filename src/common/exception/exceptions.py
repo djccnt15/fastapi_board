@@ -1,6 +1,3 @@
-class InternalServerError(Exception): ...
-
-
 class QueryResultEmptyError(Exception): ...
 
 

@@ -5,7 +5,6 @@ from starlette.responses import JSONResponse
 
 from .exceptions import (
     AlphanumericError,
-    InternalServerError,
     NotUniqueError,
     PasswordNotMatchError,
     QueryResultEmptyError,
@@ -14,18 +13,6 @@ from .exceptions import (
 
 
 def add_handlers(app: FastAPI) -> None:
-    @app.exception_handler(InternalServerError)
-    async def internel_error_handler(
-        request: Request,
-        exc: InternalServerError,
-    ):
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={
-                "detail": "internal server error, contact to admin",
-            },
-        )
-
     @app.exception_handler(QueryResultEmptyError)
     async def empty_query_handler(
         request: Request,
