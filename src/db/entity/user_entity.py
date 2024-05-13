@@ -40,29 +40,6 @@ class UserEntity(BigintIdEntity):
         argument="CommentEntity",
         back_populates="user",
     )
-    vote_post = relationship(
-        argument="PostEntity",
-        secondary="voter_post",
-        back_populates="voter",
-    )
-    vote_comment = relationship(
-        argument="CommentEntity",
-        secondary="voter_comment",
-        back_populates="voter",
-    )
-    role = relationship(
-        argument="RoleEntity",
-        secondary="user_role",
-        back_populates="user",
-    )
-    user_state = relationship(
-        argument="UserStateEntity",
-        back_populates="user",
-    )
-    logged_in = relationship(
-        argument="LoggedInEntity",
-        back_populates="user",
-    )
 
 
 class RoleEntity(BigintIdEntity):
@@ -72,12 +49,6 @@ class RoleEntity(BigintIdEntity):
         String(length=RoleEntityEnum.NAME.value),
         unique=True,
         nullable=False,
-    )
-
-    user = relationship(
-        argument="UserEntity",
-        secondary="user_role",
-        back_populates="role",
     )
 
 
@@ -105,11 +76,6 @@ class StateEntity(BigintIdEntity):
         nullable=False,
     )
 
-    user_state = relationship(
-        argument="UserStateEntity",
-        back_populates="state",
-    )
-
 
 class UserStateEntity(BaseEntity):
     __tablename__ = "user_state"
@@ -130,15 +96,6 @@ class UserStateEntity(BaseEntity):
         nullable=False,
     )
 
-    user = relationship(
-        argument="UserEntity",
-        back_populates="user_state",
-    )
-    state = relationship(
-        argument="StateEntity",
-        back_populates="user_state",
-    )
-
 
 class LoggedInEntity(BigintIdEntity):
     __tablename__ = "logged_in"
@@ -151,9 +108,4 @@ class LoggedInEntity(BigintIdEntity):
     created_datetime = Column(
         DateTime,
         nullable=False,
-    )
-
-    user = relationship(
-        argument="UserEntity",
-        back_populates="logged_in",
     )

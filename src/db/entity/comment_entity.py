@@ -33,19 +33,7 @@ class CommentEntity(BigintIdEntity):
     user = relationship(
         argument="UserEntity",
         back_populates="comment",
-    )
-    post = relationship(
-        argument="PostEntity",
-        back_populates="comment",
-    )
-    content = relationship(
-        argument="CommentContentEntity",
-        back_populates="comment",
-    )
-    voter = relationship(
-        argument="UserEntity",
-        secondary="voter_comment",
-        back_populates="vote_comment",
+        lazy="selectin",
     )
 
 
@@ -69,11 +57,6 @@ class CommentContentEntity(BigintIdEntity):
         BigInteger,
         ForeignKey(CommentEntity.id),
         nullable=False,
-    )
-
-    comment = relationship(
-        argument="CommentEntity",
-        back_populates="content",
     )
 
 

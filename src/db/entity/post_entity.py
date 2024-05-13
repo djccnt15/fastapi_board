@@ -33,10 +33,6 @@ class PostCategoryEntity(BigintIdEntity):
         argument="PostCategoryEntity",
         remote_side=[id],
     )
-    post = relationship(
-        argument="PostEntity",
-        back_populates="category",
-    )
 
 
 class PostEntity(BigintIdEntity):
@@ -68,23 +64,7 @@ class PostEntity(BigintIdEntity):
     user = relationship(
         argument="UserEntity",
         back_populates="post",
-    )
-    category = relationship(
-        argument="PostCategoryEntity",
-        back_populates="post",
-    )
-    content = relationship(
-        argument="PostContentEntity",
-        back_populates="post",
-    )
-    comment = relationship(
-        argument="CommentEntity",
-        back_populates="post",
-    )
-    voter = relationship(
-        argument="UserEntity",
-        secondary="voter_post",
-        back_populates="vote_post",
+        lazy="selectin",
     )
 
 
@@ -112,11 +92,6 @@ class PostContentEntity(BigintIdEntity):
         BigInteger,
         ForeignKey(PostEntity.id),
         nullable=False,
-    )
-
-    post = relationship(
-        argument="PostEntity",
-        back_populates="content",
     )
 
 
