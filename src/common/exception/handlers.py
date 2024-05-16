@@ -5,6 +5,7 @@ from starlette.responses import JSONResponse
 
 from .exceptions import (
     AlphanumericError,
+    InvalidUserError,
     NotUniqueError,
     PasswordNotMatchError,
     QueryResultEmptyError,
@@ -73,5 +74,17 @@ def add_handlers(app: FastAPI) -> None:
             content={
                 "field": exc.field,
                 "detail": "field must be unique",
+            },
+        )
+
+    @app.exception_handler(InvalidUserError)
+    async def invalid_user_handler(
+        request: Request,
+        exc: InvalidUserError,
+    ):
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                "detail": "invalid user",
             },
         )
