@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from ..domain.board.endpoint import board_controller
+from ..domain.post.endpoint import post_controller
 from ..domain.user.endpoint import user_controller
 from .enums.tag import RouterTagEnum
 
@@ -14,4 +15,9 @@ router.include_router(
 router.include_router(
     board_controller.router,
     tags=[RouterTagEnum.BOARD],
+)
+
+router.include_router(
+    post_controller.router,
+    tags=[RouterTagEnum.POST],
 )
