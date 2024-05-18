@@ -42,3 +42,9 @@ db:
     pool_pre_ping: true
     pool_recycle: 3600
     echo: false
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  decode_responses: true
+  db: 0
