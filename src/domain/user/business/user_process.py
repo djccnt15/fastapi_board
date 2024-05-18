@@ -40,6 +40,19 @@ async def update_user(
     )
 
 
+async def update_password(
+    *,
+    db: AsyncSession,
+    current_user: user_request.UserCurrent,
+    data: user_request.Password,
+) -> None:
+    await user_logic.update_password(
+        db=db,
+        current_user=current_user,
+        data=data,
+    )
+
+
 async def resign_user(
     *,
     db: AsyncSession,

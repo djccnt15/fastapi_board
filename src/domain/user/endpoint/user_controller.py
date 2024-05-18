@@ -50,6 +50,18 @@ async def update_user(
     return ResponseEnum.UPDATE
 
 
+@router.put(path="/password")
+async def update_password(
+    request: user_request.Password,
+    db: AsyncSession = Depends(get_db),
+) -> ResponseEnum:
+    await user_process.update_password(
+        db=db,
+        data=request,
+    )
+    return ResponseEnum.UPDATE
+
+
 @router.delete(path="")
 async def resign_user(
     db: AsyncSession = Depends(get_db),

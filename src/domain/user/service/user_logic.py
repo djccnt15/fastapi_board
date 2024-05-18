@@ -36,6 +36,19 @@ async def update_user(
     )
 
 
+async def update_password(
+    *,
+    db: AsyncSession,
+    current_user: user_request.UserCurrent,
+    data: user_request.Password,
+) -> None:
+    await user_update.update_password(
+        db=db,
+        user_id=current_user.id,
+        password=pwd_context.hash(secret=data.password1),
+    )
+
+
 async def delete_user(
     *,
     db: AsyncSession,
