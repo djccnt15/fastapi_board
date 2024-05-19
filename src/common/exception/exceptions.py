@@ -23,3 +23,6 @@ class NotUniqueError(Exception):
 
 
 class InvalidUserError(Exception): ...
+
+
+class BlockedUserError(Exception): ...

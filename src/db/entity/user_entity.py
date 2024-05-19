@@ -40,6 +40,12 @@ class UserEntity(BigintIdEntity):
         argument="CommentEntity",
         back_populates="user",
     )
+    state = relationship(
+        argument="StateEntity",
+        secondary="user_state",
+        back_populates="user",
+        lazy="selectin",
+    )
 
 
 class RoleEntity(BigintIdEntity):
@@ -74,6 +80,13 @@ class StateEntity(BigintIdEntity):
         String(length=StateEntityEnum.NAME.value),
         unique=True,
         nullable=False,
+    )
+
+    user = relationship(
+        argument="UserEntity",
+        secondary="user_state",
+        back_populates="state",
+        lazy="selectin",
     )
 
 

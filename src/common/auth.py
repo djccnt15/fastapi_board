@@ -12,6 +12,15 @@ config = configs.config.fastapi
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/user/login")
 
 
+async def verify_user_state(*, user: UserEntity):
+    for state in user.state:
+        if str(state.name) == user_enum.UserStateEnum.BLOCKED:
+            raise BlockedUserError
+        elif str(state.name) == user_enum.UserStateEnum.INACTIVATE:
+            # TODO
+            ...
+
+
 async def get_current_user(
     *,
     token: str = Depends(oauth2_scheme),

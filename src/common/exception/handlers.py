@@ -5,6 +5,7 @@ from starlette.responses import JSONResponse
 
 from .exceptions import (
     AlphanumericError,
+    BlockedUserError,
     InvalidUserError,
     NotUniqueError,
     PasswordNotMatchError,
@@ -86,5 +87,17 @@ def add_handlers(app: FastAPI) -> None:
             status_code=status.HTTP_403_FORBIDDEN,
             content={
                 "detail": "invalid user",
+            },
+        )
+
+    @app.exception_handler(BlockedUserError)
+    async def blocked_user_handler(
+        request: Request,
+        exc: BlockedUserError,
+    ):
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                "detail": "you are blocked",
             },
         )
