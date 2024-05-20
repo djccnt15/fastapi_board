@@ -17,6 +17,16 @@ async def read_comment_by_id(
     return res.scalar()
 
 
+async def read_comment_by_post_id(
+    *,
+    db: AsyncSession,
+    post_id: int,
+) -> Sequence[CommentEntity]:
+    q = select(CommentEntity).where(CommentEntity.post_id == post_id)
+    res = await db.execute(statement=q)
+    return res.scalars().all()
+
+
 async def read_comment_list(
     *,
     db: AsyncSession,
