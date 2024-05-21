@@ -54,9 +54,11 @@ async def update_user(
 async def update_password(
     request: user_request.Password,
     db: AsyncSession = Depends(get_db),
+    current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
     await user_process.update_password(
         db=db,
+        current_user=current_user,
         data=request,
     )
     return ResponseEnum.UPDATE
