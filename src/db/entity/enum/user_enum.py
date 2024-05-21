@@ -2,7 +2,7 @@ from enum import IntEnum
 
 
 class UserEntityEnum(IntEnum):
-    USERNAME = 100
+    NAME = 100
     EMAIL = 255
     PASSWORDMAX = 255
     PASSWORDMIN = 8
@@ -17,4 +17,4 @@ class StateEntityEnum(IntEnum):
 
 
 class UserStateEntityEnum(IntEnum):
-    DETAIL = 20
+    DETAIL = 500

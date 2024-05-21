@@ -20,7 +20,7 @@ from src.db.entity.enum.user_enum import UserEntityEnum
 
 
 class UserBase(BaseModel):
-    name: str = Field(max_length=UserEntityEnum.USERNAME)
+    name: str = Field(max_length=UserEntityEnum.NAME)
     email: EmailStr = Field(max_length=UserEntityEnum.EMAIL)
 
     @field_validator("name", "email")

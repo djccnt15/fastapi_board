@@ -1,5 +1,7 @@
-from sqlalchemy.orm import relationship
-from sqlalchemy.schema import Column, ForeignKey
+from datetime import datetime
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.schema import ForeignKey
 from sqlalchemy.types import BigInteger, DateTime, String
 
 from .base_entity import BaseEntity, BigintIdEntity
@@ -14,20 +16,20 @@ from .enum.user_enum import (
 class UserEntity(BigintIdEntity):
     __tablename__ = "user"
 
-    name = Column(
-        String(length=UserEntityEnum.USERNAME.value),
+    name: Mapped[str | None] = mapped_column(
+        String(length=UserEntityEnum.NAME.value),
         unique=True,
         index=True,
     )
-    password = Column(
+    password: Mapped[str | None] = mapped_column(
         String(length=UserEntityEnum.PASSWORDMAX.value),
     )
-    email = Column(
+    email: Mapped[str | None] = mapped_column(
         String(length=UserEntityEnum.EMAIL.value),
         unique=True,
         index=True,
     )
-    created_datetime = Column(
+    created_datetime: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
     )
@@ -51,7 +53,7 @@ class UserEntity(BigintIdEntity):
 class RoleEntity(BigintIdEntity):
     __tablename__ = "role"
 
-    name = Column(
+    name: Mapped[str] = mapped_column(
         String(length=RoleEntityEnum.NAME.value),
         unique=True,
         nullable=False,
@@ -61,12 +63,12 @@ class RoleEntity(BigintIdEntity):
 class UserRoleEntity(BaseEntity):
     __tablename__ = "user_role"
 
-    user_id = Column(
+    user_id: Mapped["UserEntity"] = mapped_column(
         BigInteger,
         ForeignKey(UserEntity.id),
         primary_key=True,
     )
-    role_id = Column(
+    role_id: Mapped["RoleEntity"] = mapped_column(
         BigInteger,
         ForeignKey(RoleEntity.id),
         primary_key=True,
@@ -76,7 +78,7 @@ class UserRoleEntity(BaseEntity):
 class StateEntity(BigintIdEntity):
     __tablename__ = "state"
 
-    name = Column(
+    name: Mapped[str] = mapped_column(
         String(length=StateEntityEnum.NAME.value),
         unique=True,
         nullable=False,
@@ -93,18 +95,18 @@ class StateEntity(BigintIdEntity):
 class UserStateEntity(BaseEntity):
     __tablename__ = "user_state"
 
-    user_id = Column(
+    user_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey(UserEntity.id),
         primary_key=True,
     )
-    state_id = Column(
+    state_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey(StateEntity.id),
         primary_key=True,
     )
-    detail = Column(String(length=UserStateEntityEnum.DETAIL.value))
-    created_datetime = Column(
+    detail: Mapped[str] = mapped_column(String(length=UserStateEntityEnum.DETAIL.value))
+    created_datetime: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
     )
@@ -113,12 +115,12 @@ class UserStateEntity(BaseEntity):
 class LoggedInEntity(BigintIdEntity):
     __tablename__ = "logged_in"
 
-    user_id = Column(
+    user_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey(UserEntity.id),
         nullable=False,
     )
-    created_datetime = Column(
+    created_datetime: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
     )

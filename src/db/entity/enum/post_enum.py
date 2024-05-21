@@ -5,5 +5,5 @@ class PostCategoryEntityEnum(IntEnum):
     CATEGORY = 255
 
 
-class PostContentEnum(IntEnum):
-    SUBJECT = 255
+class PostContentEntityEnum(IntEnum):
+    TITLE = 255

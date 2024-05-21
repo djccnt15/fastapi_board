@@ -27,7 +27,7 @@ async def identify_user(
     )
     if user is None or not configs.pwd_context.verify(
         secret=form_data.password,
-        hash=str(user.password),
+        hash=user.password,
     ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

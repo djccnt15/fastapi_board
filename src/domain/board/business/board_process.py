@@ -14,7 +14,7 @@ from ..service import board_logic
 
 async def get_board_list(db: AsyncSession) -> Iterable[str]:
     category_list = await board_logic.get_board_list(db=db)
-    result = (str(i.name) for i in category_list)
+    result = (i.name for i in category_list)
     return result
 
 
@@ -24,7 +24,7 @@ async def get_category_list(
     board: str,
 ) -> Iterable[str]:
     category_list = await board_logic.get_category_list(db=db, board=board)
-    result = (str(i.name) for i in category_list)
+    result = (i.name for i in category_list)
     return result
 
 
