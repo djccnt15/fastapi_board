@@ -7,3 +7,4 @@ class PostCategoryEntityEnum(IntEnum):
 
 class PostContentEntityEnum(IntEnum):
     TITLE = 255
+    CONTENT = 5000

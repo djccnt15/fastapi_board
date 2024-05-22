@@ -7,7 +7,10 @@ from src.domain.post.model import post_response
 
 
 class Category(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        validate_assignment=True,
+        from_attributes=True,
+    )
 
     name: str
 
@@ -19,5 +22,7 @@ class Category(BaseModel):
 
 
 class PostListResponse(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+
     total: int
     post_list: Iterable[post_response.BoardPostResponse]

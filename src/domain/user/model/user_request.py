@@ -20,6 +20,8 @@ from src.db.entity.enum.user_enum import UserEntityEnum
 
 
 class UserBase(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+
     name: str = Field(max_length=UserEntityEnum.NAME)
     email: EmailStr = Field(max_length=UserEntityEnum.EMAIL)
 
@@ -40,6 +42,8 @@ class UserBase(BaseModel):
 
 
 class Password(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+
     password1: str = Field(
         max_length=UserEntityEnum.PASSWORDMAX,
         min_length=UserEntityEnum.PASSWORDMIN,

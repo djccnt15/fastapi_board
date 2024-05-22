@@ -1,12 +1,13 @@
-from pydantic import BaseModel, ValidationInfo, field_validator
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
 from src.common.exception import WhiteSpaceError
+from src.db.entity.enum.post_enum import PostCategoryEntityEnum, PostContentEntityEnum
 from src.domain.board.model.enums import board_enum
 
 
 class PostBaseRequset(BaseModel):
-    title: str
-    content: str
+    title: str = Field(max_length=PostContentEntityEnum.TITLE)
+    content: str = Field(max_length=PostContentEntityEnum.CONTENT)
 
     @field_validator("title", "content")
     @classmethod
@@ -16,5 +17,7 @@ class PostBaseRequset(BaseModel):
         return v
 
 
-class PostCreateRequest(PostBaseRequset):
-    category: board_enum.CategoryEnum
+class PostUpdateRequest(PostBaseRequset):
+    category: board_enum.CategoryEnum = Field(
+        max_length=PostCategoryEntityEnum.CATEGORY
+    )
