@@ -24,7 +24,7 @@ async def create_user(
     await db.commit()
 
 
-async def create_login_his(
+async def create_login_log(
     *,
     db: AsyncSession,
     user_id: int,

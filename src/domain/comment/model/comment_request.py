@@ -4,7 +4,7 @@ from src.common.exception import WhiteSpaceError
 from src.db.entity.enum.comment_enum import CommentContentEntityEnum
 
 
-class CommentBaseRequest(BaseModel):
+class CommentCreateRequest(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
 
     content: str = Field(max_length=CommentContentEntityEnum.CONTENT)
@@ -15,7 +15,3 @@ class CommentBaseRequest(BaseModel):
         if not v or not v.strip():
             raise WhiteSpaceError(field=info.field_name)
         return v
-
-
-class CommentCreateRequest(CommentBaseRequest):
-    post_id: int

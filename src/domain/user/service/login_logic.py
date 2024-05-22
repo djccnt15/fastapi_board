@@ -40,12 +40,12 @@ async def identify_user(
     return user
 
 
-async def create_login_history(
+async def create_login_log(
     *,
     db: AsyncSession,
     user_id: int,
 ) -> None:
-    await user_create.create_login_his(
+    await user_create.create_login_log(
         db=db,
         user_id=user_id,
         created_datetime=datetime.now(KST),

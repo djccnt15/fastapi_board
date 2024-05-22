@@ -19,7 +19,7 @@ fastapi:
     - name: default
       externalDocs:
         description: External docs
-        url: https://djccnt15.github.io/tags#FastAPI
+        url: https://djccnt15.github.io/pages/tags/#fastapi
     - name: user
       description: User domain API, Such as **SignUp**, **LogIn**, etc.
   cors_orign:

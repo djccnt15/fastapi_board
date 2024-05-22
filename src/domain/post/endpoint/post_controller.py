@@ -28,7 +28,7 @@ async def get_post(
 @router.put(path="/{id}")
 async def update_post(
     id: int,
-    request: post_request.PostCreateRequest,
+    request: post_request.PostUpdateRequest,
     db: AsyncSession = Depends(get_db),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
@@ -89,6 +89,7 @@ async def get_post_comment(
 
 @router.post(path="/{id}/comment", status_code=status.HTTP_201_CREATED)
 async def create_comment(
+    id: int,
     request: comment_request.CommentCreateRequest,
     db: AsyncSession = Depends(get_db),
     current_user: user_request.UserCurrent = Depends(get_current_user),
@@ -96,6 +97,7 @@ async def create_comment(
     await post_process.create_comment(
         db=db,
         current_user=current_user,
+        post_id=id,
         request=request,
     )
     return ResponseEnum.CREATE

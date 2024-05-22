@@ -26,7 +26,7 @@ async def update_post(
     db: AsyncSession,
     current_user: user_request.UserCurrent,
     post_id: int,
-    data: post_request.PostCreateRequest,
+    data: post_request.PostUpdateRequest,
 ) -> None:
     await verify_logic.verify_author(
         db=db,
@@ -95,7 +95,7 @@ async def get_comment_list(
 ) -> Iterable[comment_response.CommentResponse]:
     comment_list = await post_logic.get_comment_list(db=db, post_id=post_id)
     response_list = (
-        comment_response.CommentResponse.model_validate(obj=x) for x in comment_list
+        comment_response.CommentResponse.model_validate(obj=v) for v in comment_list
     )
     return response_list
 
@@ -104,11 +104,12 @@ async def create_comment(
     *,
     db: AsyncSession,
     current_user: user_request.UserCurrent,
+    post_id: int,
     request: comment_request.CommentCreateRequest,
 ) -> None:
     await post_logic.create_comment(
         db=db,
         user_id=current_user.id,
-        post_id=request.post_id,
+        post_id=post_id,
         content=request.content,
     )

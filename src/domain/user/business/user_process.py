@@ -10,7 +10,7 @@ async def create_user(
     db: AsyncSession,
     request: user_request.UserCreateRequest,
 ) -> None:
-    await verify_logic.verify_user_info(db=db, user=request)
+    await verify_logic.verify_user_create(db=db, data=request)
     await user_logic.create_user(db=db, data=request)
 
 
@@ -21,7 +21,7 @@ async def login_user(
 ) -> user_response.Token:
     user = await login_logic.identify_user(db=db, form_data=form_data)
     current_user = user_request.UserCurrent.model_validate(obj=user)
-    await login_logic.create_login_history(db=db, user_id=current_user.id)
+    await login_logic.create_login_log(db=db, user_id=current_user.id)
     token = await login_logic.create_access_token(username=current_user.name)
     return token
 
@@ -29,10 +29,10 @@ async def login_user(
 async def update_user(
     *,
     db: AsyncSession,
-    request: user_request.UserBase,
     current_user: user_request.UserCurrent,
+    request: user_request.UserBase,
 ) -> None:
-    await verify_logic.verify_user(db=db, user=current_user)
+    await verify_logic.verify_user_update(db=db, data=current_user)
     await user_logic.update_user(
         db=db,
         update_info=request,

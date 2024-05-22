@@ -51,10 +51,7 @@ async def get_post_list(
     size: int,
     page: int,
 ) -> board_response.PostListResponse:
-    category_entity = await board_logic.get_category_id(
-        db=db,
-        category=board,
-    )
+    category_entity = await board_logic.get_category_id(db=db, category=board)
 
     count = await board_logic.get_post_count(
         db=db,
@@ -70,7 +67,7 @@ async def get_post_list(
         page=page,
     )
     response_list = (
-        post_response.BoardPostResponse.model_validate(obj=x) for x in post_list
+        post_response.BoardPostResponse.model_validate(obj=v) for v in post_list
     )
 
     res = board_response.PostListResponse(total=count, post_list=response_list)

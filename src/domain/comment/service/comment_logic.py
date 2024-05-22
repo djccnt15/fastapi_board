@@ -21,7 +21,7 @@ async def get_comment_history(
 async def update_comment(
     *,
     db: AsyncSession,
-    data: comment_request.CommentBaseRequest,
+    data: comment_request.CommentCreateRequest,
     comment_id: int,
 ) -> None:
     version = await comment_read.read_comment_last_version(db=db, comment_id=comment_id)

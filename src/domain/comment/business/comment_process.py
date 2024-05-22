@@ -14,7 +14,7 @@ async def update_comment(
     db: AsyncSession,
     current_user: user_request.UserCurrent,
     comment_id: int,
-    data: comment_request.CommentBaseRequest,
+    data: comment_request.CommentCreateRequest,
 ) -> None:
     await verify_logic.verify_author(
         db=db,

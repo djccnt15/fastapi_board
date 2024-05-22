@@ -18,7 +18,7 @@ router = APIRouter(prefix="/comment")
 @router.put(path="/{id}")
 async def update_comment(
     id: int,
-    request: comment_request.CommentBaseRequest,
+    request: comment_request.CommentCreateRequest,
     db: AsyncSession = Depends(get_db),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:

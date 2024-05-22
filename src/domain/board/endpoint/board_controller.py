@@ -2,6 +2,7 @@ from typing import Iterable
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette import status
 
 from src.common.auth import get_current_user
 from src.common.model.enums import ResponseEnum
@@ -25,7 +26,7 @@ async def board_list(
 
 
 @router.get(path="/category")
-async def get_list(
+async def get_category(
     board: board_enum.BoardEnum,
     db: AsyncSession = Depends(get_db),
 ) -> Iterable[str]:
@@ -60,7 +61,7 @@ async def get_post_list(
     return res
 
 
-@router.post(path="/{category}")
+@router.post(path="/{category}", status_code=status.HTTP_201_CREATED)
 async def create_post(
     category: board_enum.CategoryEnum,
     request: post_request.PostBaseRequset,
