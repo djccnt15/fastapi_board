@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.common.exception import InvalidUserError, QueryResultEmptyError
+from src.core.exception import InvalidUserError, QueryResultEmptyError
 from src.db.query.comment import comment_read
 from src.db.query.post import post_read
 from src.domain.user.model import user_request

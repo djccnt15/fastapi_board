@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
 
-from src.common.exception import WhiteSpaceError
+from src.core.exception import WhiteSpaceError
 from src.db.entity.enum.comment_enum import CommentContentEntityEnum
 
 

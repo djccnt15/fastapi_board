@@ -10,12 +10,8 @@ from pydantic import (
     model_validator,
 )
 
-from src.common.exception.exceptions import (
-    AlphanumericError,
-    PasswordNotMatchError,
-    WhiteSpaceError,
-)
-from src.common.model.common_model import IdModel
+from src.core.exception import AlphanumericError, PasswordNotMatchError, WhiteSpaceError
+from src.core.model.common_model import IdModel
 from src.db.entity.enum.user_enum import UserEntityEnum
 
 

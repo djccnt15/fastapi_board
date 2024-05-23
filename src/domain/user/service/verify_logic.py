@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.common.exception import NotUniqueError
+from src.core.exception import NotUniqueError
 from src.db.query.user import user_read
 
 from ..model import user_request

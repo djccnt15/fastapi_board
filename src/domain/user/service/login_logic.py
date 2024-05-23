@@ -6,8 +6,7 @@ from jose import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.common import auth, configs
-from src.common.configs import KST
+from src.core import auth, configs
 from src.db.entity.user_entity import UserEntity
 from src.db.query.user import user_create, user_read
 
@@ -48,7 +47,7 @@ async def create_login_log(
     await user_create.create_login_log(
         db=db,
         user_id=user_id,
-        created_datetime=datetime.now(KST),
+        created_datetime=datetime.now(configs.KST),
     )
 
 
@@ -58,7 +57,7 @@ async def create_access_token(
 ) -> user_response.Token:
     data = {
         "sub": username,
-        "exp": datetime.now(KST)
+        "exp": datetime.now(configs.KST)
         + timedelta(minutes=int(config.auth.token_expire_minutes)),
     }
     access_token = jwt.encode(

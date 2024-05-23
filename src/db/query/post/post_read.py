@@ -3,7 +3,7 @@ from typing import Any, Iterable, Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import func, select, text
 
-from src.common.exception import QueryResultEmptyError
+from src.core.exception import QueryResultEmptyError
 from src.db.entity.post_entity import PostCategoryEntity, PostContentEntity, PostEntity
 from src.db.entity.user_entity import UserEntity
 from src.db.query import sql

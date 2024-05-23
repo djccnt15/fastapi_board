@@ -4,8 +4,8 @@ from typing import Iterable, Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import src.db.query.post.post_delete
-from src.common.configs import KST
-from src.common.exception import QueryResultEmptyError
+from src.core.configs import KST
+from src.core.exception import QueryResultEmptyError
 from src.db.entity import PostContentEntity
 from src.db.query.comment import comment_create, comment_read
 from src.db.query.post import post_read, post_update

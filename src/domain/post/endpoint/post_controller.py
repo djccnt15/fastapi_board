@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.common.auth import get_current_user
-from src.common.model.enums import ResponseEnum
+from src.core.auth import get_current_user
+from src.core.model.enums import ResponseEnum
 from src.db.database import get_db
 from src.domain.comment.model import comment_request, comment_response
 from src.domain.user.model import user_request

@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.common.configs import KST
+from src.core.configs import KST
 from src.db.entity import PostCategoryEntity
 from src.db.query.board import board_read
 from src.db.query.post import post_create, post_read

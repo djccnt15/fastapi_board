@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from src.common import configs
-from src.common.exception import handlers as exception_handler
+from src.core import configs
+from src.core.exception import handlers as exception_handler
 from src.routes import api, default
 
 config = configs.config.fastapi

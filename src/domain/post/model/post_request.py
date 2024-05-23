@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
-from src.common.exception import WhiteSpaceError
+from src.core.exception import WhiteSpaceError
 from src.db.entity.enum.post_enum import PostCategoryEntityEnum, PostContentEntityEnum
 from src.domain.board.model.enums import board_enum
 

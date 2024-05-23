@@ -4,9 +4,12 @@ from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.common import configs
+from src.core import configs
+from src.core.exception import BlockedUserError
 from src.db import database
+from src.db.entity.user_entity import UserEntity
 from src.db.query.user import user_read
+from src.domain.user.model.enums import user_enum
 
 config = configs.config.fastapi
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/user/login")
@@ -43,7 +46,9 @@ async def get_current_user(
     except JWTError:
         raise credentials_exception
     else:
-        user = await user_read.read_user_by_name(db=db, name=username)
-        if user is None:
+        user_entity = await user_read.read_user_by_name(db=db, name=username)
+        if user_entity is None:
             raise credentials_exception
-        return user
+        await verify_user_state(user=user_entity)
+
+        return user_entity

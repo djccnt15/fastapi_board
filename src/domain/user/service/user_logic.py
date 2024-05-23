@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.common.configs import KST, pwd_context
+from src.core.configs import KST, pwd_context
 from src.db.query.user import user_create, user_delete, user_update
 
 from ..model import user_request

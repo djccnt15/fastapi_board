@@ -6,3 +6,4 @@ class ResponseEnum(StrEnum):
     UPDATE = "update success"
     DELETE = "delete success"
     VOTE = "vote success"
+    UPLOAD = "upload success"

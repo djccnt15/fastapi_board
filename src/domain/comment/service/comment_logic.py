@@ -3,7 +3,7 @@ from typing import Sequence
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.common.configs import KST
+from src.core.configs import KST
 from src.db.entity.comment_entity import CommentContentEntity
 from src.db.query.comment import comment_delete, comment_read, comment_update
 from src.domain.comment.model import comment_request
