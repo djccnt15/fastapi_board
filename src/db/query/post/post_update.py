@@ -1,26 +1,14 @@
-from datetime import datetime
-
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import insert
+from sqlalchemy.sql import update
 
-from src.db.entity.post_entity import PostContentEntity
+from src.db.entity.post_entity import PostEntity
 
 
-async def update_post(
+async def inactivate_post(
     *,
     db: AsyncSession,
-    version: int,
-    created_datetime: datetime,
-    title: str,
-    content: str,
     post_id: int,
 ) -> None:
-    q = insert(PostContentEntity).values(
-        version=version,
-        created_datetime=created_datetime,
-        title=title,
-        content=content,
-        post_id=post_id,
-    )
+    q = update(PostEntity).where(PostEntity.id == post_id).values(is_active=False)
     await db.execute(statement=q)
     await db.commit()

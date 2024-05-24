@@ -51,7 +51,7 @@ async def update_post(
     if not version:
         version = 0
 
-    await post_update.update_post(
+    await post_create.create_post_detail(
         db=db,
         version=version + 1,
         created_datetime=datetime.now(KST),
@@ -66,7 +66,7 @@ async def delete_post(
     db: AsyncSession,
     post_id: int,
 ) -> None:
-    await src.db.query.post.post_delete.delete_post(db=db, post_id=post_id)
+    await post_update.inactivate_post(db=db, post_id=post_id)
 
 
 async def create_comment(

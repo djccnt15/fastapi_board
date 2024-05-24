@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.configs import KST, pwd_context
-from src.db.query.user import user_create, user_delete, user_update
+from src.db.query.user import user_create, user_update
 
 from ..model import user_request
 
@@ -54,4 +54,4 @@ async def delete_user(
     db: AsyncSession,
     user: user_request.UserCurrent,
 ) -> None:
-    await user_delete.delete_user(db=db, user_id=user.id)
+    await user_update.resign_user(db=db, user_id=user.id)

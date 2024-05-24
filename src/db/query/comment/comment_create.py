@@ -36,11 +36,13 @@ async def create_comment(
 async def create_comment_detail(
     *,
     db: AsyncSession,
+    version: int | None = None,
     created_datetime: datetime,
     content: str,
     comment_id: int,
 ):
     q = insert(CommentContentEntity).values(
+        version=version,
         created_datetime=created_datetime,
         content=content,
         comment_id=comment_id,

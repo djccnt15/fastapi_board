@@ -1,24 +1,18 @@
-from datetime import datetime
-
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import insert
+from sqlalchemy.sql import update
 
-from src.db.entity.comment_entity import CommentContentEntity
+from src.db.entity.comment_entity import CommentEntity
 
 
-async def update_comment(
+async def inactivate_comment(
     *,
     db: AsyncSession,
-    version: int,
-    datetime: datetime,
-    content: str,
     comment_id: int,
 ):
-    q = insert(CommentContentEntity).values(
-        version=version,
-        created_datetime=datetime,
-        content=content,
-        comment_id=comment_id,
+    q = (
+        update(CommentEntity)
+        .where(CommentEntity.id == comment_id)
+        .values(is_active=False)
     )
     await db.execute(q)
     await db.commit()

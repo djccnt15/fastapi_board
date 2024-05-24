@@ -32,12 +32,14 @@ async def create_post(
 async def create_post_detail(
     *,
     db: AsyncSession,
+    version: int | None = None,
     created_datetime: datetime,
     title: str,
     content: str,
     post_id: int,
 ) -> None:
     q = insert(PostContentEntity).values(
+        version=version,
         created_datetime=created_datetime,
         title=title,
         content=content,
