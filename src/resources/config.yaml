@@ -1,7 +1,6 @@
 uvicorn:
   host: "0.0.0.0"
   port: 8000
-  # reload: true
   log_config: "src/resources/log.ini"
 
 fastapi:
@@ -22,6 +21,12 @@ fastapi:
         url: https://djccnt15.github.io/pages/tags/#fastapi
     - name: user
       description: User domain API, Such as **SignUp**, **LogIn**, etc.
+    - name: board
+      description: Board domain API
+    - name: post
+      description: Post domain API
+    - name: comment
+      description: Comment domain API
   cors_orign:
     - http://localhost:5173
     - http://127.0.0.1:5173
