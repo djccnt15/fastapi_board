@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
 
-ID = TypeVar("ID", int, UUID)
+ID = TypeVar("ID", int, UUID, str)
 
 
 class IdModel(BaseModel, Generic[ID]):
