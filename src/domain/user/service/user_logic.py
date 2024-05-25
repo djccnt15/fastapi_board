@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.configs import KST, pwd_context
+from src.core import configs, security
 from src.db.query.user import user_create, user_update
 
 from ..model import user_request
@@ -16,9 +16,9 @@ async def create_user(
     await user_create.create_user(
         db=db,
         name=data.name,
-        password=pwd_context.hash(secret=data.password1),
+        password=security.pwd_context.hash(secret=data.password1),
         email=data.email,
-        created_datetime=datetime.now(KST),
+        created_datetime=datetime.now(configs.KST),
     )
 
 
@@ -45,7 +45,7 @@ async def update_password(
     await user_update.update_password(
         db=db,
         user_id=current_user.id,
-        password=pwd_context.hash(secret=data.password1),
+        password=security.pwd_context.hash(secret=data.password1),
     )
 
 

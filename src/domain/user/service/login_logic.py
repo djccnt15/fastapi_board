@@ -6,7 +6,7 @@ from jose import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from src.core import auth, configs
+from src.core import auth, configs, security
 from src.db.entity.user_entity import UserEntity
 from src.db.query.user import user_create, user_read
 
@@ -24,7 +24,7 @@ async def identify_user(
         db=db,
         name=form_data.username,
     )
-    if user is None or not configs.pwd_context.verify(
+    if user is None or not security.pwd_context.verify(
         secret=form_data.password,
         hash=user.password,
     ):
