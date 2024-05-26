@@ -17,20 +17,9 @@ class CommentEntity(BigintIdEntity):
         ForeignKey(UserEntity.id),
         nullable=False,
     )
-    post_id: Mapped["PostEntity"] = mapped_column(
-        BigInteger,
-        ForeignKey(PostEntity.id),
-        nullable=False,
-    )
-    created_datetime: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-    )
-    is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        default=True,
-    )
+    post_id: Mapped["PostEntity"] = mapped_column(BigInteger, ForeignKey(PostEntity.id))
+    created_datetime: Mapped[datetime] = mapped_column(DateTime)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     user = relationship(
         argument="UserEntity",
@@ -42,23 +31,12 @@ class CommentEntity(BigintIdEntity):
 class CommentContentEntity(BigintIdEntity):
     __tablename__ = "comment_content"
 
-    version: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-        default=0,
-    )
-    created_datetime: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-    )
-    content: Mapped[str] = mapped_column(
-        Text,
-        nullable=False,
-    )
+    version: Mapped[int] = mapped_column(Integer, default=0)
+    created_datetime: Mapped[datetime] = mapped_column(DateTime)
+    content: Mapped[str] = mapped_column(Text)
     comment_id: Mapped["CommentEntity"] = mapped_column(
         BigInteger,
         ForeignKey(CommentEntity.id),
-        nullable=False,
     )
 
 

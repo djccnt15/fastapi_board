@@ -18,18 +18,11 @@ class PostCategoryEntity(BigintIdEntity):
         autoincrement=True,
         sort_order=-1,
     )  # need to override for self relations
-    tier: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-    )
+    tier: Mapped[int] = mapped_column(Integer)
     name: Mapped[str] = mapped_column(
-        String(length=PostCategoryEntityEnum.CATEGORY.value),
-        nullable=False,
+        String(length=PostCategoryEntityEnum.CATEGORY.value)
     )
-    parent_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("category.id"),
-    )
+    parent_id: Mapped[int | None] = mapped_column(BigInteger, ForeignKey("category.id"))
 
     parent = relationship(
         argument="PostCategoryEntity",
@@ -40,25 +33,13 @@ class PostCategoryEntity(BigintIdEntity):
 class PostEntity(BigintIdEntity):
     __tablename__ = "post"
 
-    user_id: Mapped["UserEntity"] = mapped_column(
-        BigInteger,
-        ForeignKey(UserEntity.id),
-        nullable=False,
-    )
+    user_id: Mapped["UserEntity"] = mapped_column(BigInteger, ForeignKey(UserEntity.id))
     category_id: Mapped["PostCategoryEntity"] = mapped_column(
         BigInteger,
         ForeignKey(PostCategoryEntity.id),
-        nullable=False,
     )
-    created_datetime: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-    )
-    is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        default=True,
-    )
+    created_datetime: Mapped[datetime] = mapped_column(DateTime)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
     user = relationship(
         argument="UserEntity",
@@ -70,28 +51,11 @@ class PostEntity(BigintIdEntity):
 class PostContentEntity(BigintIdEntity):
     __tablename__ = "post_content"
 
-    version: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-        default=0,
-    )
-    created_datetime: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-    )
-    title: Mapped[str] = mapped_column(
-        String(length=PostContentEntityEnum.TITLE.value),
-        nullable=False,
-    )
-    content: Mapped[str] = mapped_column(
-        Text,
-        nullable=False,
-    )
-    post_id: Mapped["PostEntity"] = mapped_column(
-        BigInteger,
-        ForeignKey(PostEntity.id),
-        nullable=False,
-    )
+    version: Mapped[int] = mapped_column(Integer, default=0)
+    created_datetime: Mapped[datetime] = mapped_column(DateTime)
+    title: Mapped[str] = mapped_column(String(length=PostContentEntityEnum.TITLE.value))
+    content: Mapped[str] = mapped_column(Text)
+    post_id: Mapped["PostEntity"] = mapped_column(BigInteger, ForeignKey(PostEntity.id))
 
 
 class PostVoterEntity(BaseEntity):

@@ -29,10 +29,7 @@ class UserEntity(BigintIdEntity):
         unique=True,
         index=True,
     )
-    created_datetime: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-    )
+    created_datetime: Mapped[datetime] = mapped_column(DateTime)
 
     post = relationship(
         argument="PostEntity",
@@ -56,7 +53,6 @@ class RoleEntity(BigintIdEntity):
     name: Mapped[str] = mapped_column(
         String(length=RoleEntityEnum.NAME.value),
         unique=True,
-        nullable=False,
     )
 
 
@@ -81,7 +77,6 @@ class StateEntity(BigintIdEntity):
     name: Mapped[str] = mapped_column(
         String(length=StateEntityEnum.NAME.value),
         unique=True,
-        nullable=False,
     )
 
     user = relationship(
@@ -105,22 +100,14 @@ class UserStateEntity(BaseEntity):
         ForeignKey(StateEntity.id),
         primary_key=True,
     )
-    detail: Mapped[str] = mapped_column(String(length=UserStateEntityEnum.DETAIL.value))
-    created_datetime: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
+    detail: Mapped[str | None] = mapped_column(
+        String(length=UserStateEntityEnum.DETAIL.value)
     )
+    created_datetime: Mapped[datetime] = mapped_column(DateTime)
 
 
 class LoggedInEntity(BigintIdEntity):
     __tablename__ = "logged_in"
 
-    user_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey(UserEntity.id),
-        nullable=False,
-    )
-    created_datetime: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-    )
+    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey(UserEntity.id))
+    created_datetime: Mapped[datetime] = mapped_column(DateTime)
