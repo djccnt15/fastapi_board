@@ -28,11 +28,7 @@ async def update_post(
     post_id: int,
     data: post_request.PostUpdateRequest,
 ) -> None:
-    await verify_logic.verify_author(
-        db=db,
-        current_user=current_user,
-        post_id=post_id,
-    )
+    await verify_logic.verify_author(db=db, current_user=current_user, post_id=post_id)
     await post_logic.update_post(
         db=db,
         title=data.title,
@@ -47,11 +43,7 @@ async def delete_post(
     current_user: user_request.UserCurrent,
     post_id: int,
 ) -> None:
-    await verify_logic.verify_author(
-        db=db,
-        current_user=current_user,
-        post_id=post_id,
-    )
+    await verify_logic.verify_author(db=db, current_user=current_user, post_id=post_id)
     await verify_logic.verify_comment(db=db, post_id=post_id)
     await post_logic.delete_post(db=db, post_id=post_id)
 
@@ -59,7 +51,7 @@ async def delete_post(
 async def get_post_history(
     *,
     db: AsyncSession,
-    post_id,
+    post_id: int,
 ) -> Iterable[post_response.PostContentResponse]:
     history = await post_logic.get_post_history(db=db, post_id=post_id)
     result = (post_response.PostContentResponse.model_validate(v) for v in history)
@@ -74,11 +66,7 @@ async def vote_post(
 ) -> None:
     try:
         # vote post
-        await vote_logic.vote_post(
-            db=db,
-            current_user=current_user,
-            post_id=post_id,
-        )
+        await vote_logic.vote_post(db=db, current_user=current_user, post_id=post_id)
     except IntegrityError:
         # revoke vote post
         await vote_logic.revoke_vote_post(
@@ -105,11 +93,11 @@ async def create_comment(
     db: AsyncSession,
     current_user: user_request.UserCurrent,
     post_id: int,
-    request: comment_request.CommentCreateRequest,
+    data: comment_request.CommentCreateRequest,
 ) -> None:
     await post_logic.create_comment(
         db=db,
         user_id=current_user.id,
         post_id=post_id,
-        content=request.content,
+        content=data.content,
     )

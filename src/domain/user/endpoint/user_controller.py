@@ -15,7 +15,7 @@ router = APIRouter(prefix="/user")
 
 @router.post(path="", status_code=status.HTTP_201_CREATED)
 async def create_user(
-    request: user_request.UserCreateRequest,
+    body: user_request.UserCreateRequest,
     db: AsyncSession = Depends(get_db),
 ) -> ResponseEnum:
     """
@@ -23,7 +23,7 @@ async def create_user(
     - username cannot be used if one is occupied
     - PW1 and PW2 mush be same
     """
-    await user_process.create_user(db=db, request=request)
+    await user_process.create_user(db=db, data=body)
     return ResponseEnum.CREATE
 
 
@@ -38,28 +38,28 @@ async def login_user(
 
 @router.put(path="")
 async def update_user(
-    request: user_request.UserBase,
+    body: user_request.UserBase,
     db: AsyncSession = Depends(get_db),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
     await user_process.update_user(
         db=db,
-        request=request,
         current_user=current_user,
+        data=body,
     )
     return ResponseEnum.UPDATE
 
 
 @router.put(path="/password")
 async def update_password(
-    request: user_request.Password,
+    body: user_request.Password,
     db: AsyncSession = Depends(get_db),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
     await user_process.update_password(
         db=db,
         current_user=current_user,
-        data=request,
+        data=body,
     )
     return ResponseEnum.UPDATE
 

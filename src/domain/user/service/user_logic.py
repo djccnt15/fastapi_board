@@ -25,14 +25,14 @@ async def create_user(
 async def update_user(
     *,
     db: AsyncSession,
-    update_info: user_request.UserBase,
+    data: user_request.UserBase,
     current_user: user_request.UserCurrent,
 ) -> None:
     await user_update.update_user(
         db=db,
         user_id=current_user.id,
-        name=update_info.name,
-        email=update_info.email,
+        name=data.name,
+        email=data.email,
     )
 
 

@@ -21,28 +21,21 @@ async def update_comment(
         current_user=current_user,
         comment_id=comment_id,
     )
-    await comment_logic.update_comment(
-        db=db,
-        data=data,
-        comment_id=comment_id,
-    )
+    await comment_logic.update_comment(db=db, data=data, comment_id=comment_id)
 
 
 async def delete_comment(
     *,
-    comment_id: int,
     db: AsyncSession,
     current_user: user_request.UserCurrent,
+    comment_id: int,
 ) -> None:
     await verify_logic.verify_author(
         db=db,
         current_user=current_user,
         comment_id=comment_id,
     )
-    await comment_logic.delete_comment(
-        db=db,
-        comment_id=comment_id,
-    )
+    await comment_logic.delete_comment(db=db, comment_id=comment_id)
 
 
 async def get_comment_history(

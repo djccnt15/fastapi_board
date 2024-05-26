@@ -64,7 +64,7 @@ async def get_post_list(
 @router.post(path="/{category}", status_code=status.HTTP_201_CREATED)
 async def create_post(
     category: board_enum.CategoryEnum,
-    request: post_request.PostBaseRequset,
+    body: post_request.PostBaseRequset,
     db: AsyncSession = Depends(get_db),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
@@ -72,6 +72,6 @@ async def create_post(
         db=db,
         user=current_user,
         category=category,
-        data=request,
+        data=body,
     )
     return ResponseEnum.CREATE

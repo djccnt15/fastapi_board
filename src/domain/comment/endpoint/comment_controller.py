@@ -18,7 +18,7 @@ router = APIRouter(prefix="/comment")
 @router.put(path="/{id}")
 async def update_comment(
     id: int,
-    request: comment_request.CommentCreateRequest,
+    body: comment_request.CommentCreateRequest,
     db: AsyncSession = Depends(get_db),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
@@ -26,7 +26,7 @@ async def update_comment(
         db=db,
         current_user=current_user,
         comment_id=id,
-        data=request,
+        data=body,
     )
     return ResponseEnum.UPDATE
 
@@ -38,9 +38,9 @@ async def delete_comment(
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
     await comment_process.delete_comment(
-        comment_id=id,
         db=db,
         current_user=current_user,
+        comment_id=id,
     )
     return ResponseEnum.DELETE
 
@@ -60,9 +60,5 @@ async def vote_comment(
     db: AsyncSession = Depends(get_db),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
-    await comment_process.vote_comment(
-        db=db,
-        current_user=current_user,
-        comment_id=id,
-    )
+    await comment_process.vote_comment(db=db, current_user=current_user, comment_id=id)
     return ResponseEnum.VOTE

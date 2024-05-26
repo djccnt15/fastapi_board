@@ -14,5 +14,5 @@ async def verify_author(
     comment = await comment_read.read_comment_by_id(db=db, comment_id=comment_id)
     if not comment:
         raise QueryResultEmptyError
-    elif comment.user.id != current_user.id:
+    elif comment.user_id != current_user.id:
         raise InvalidUserError
