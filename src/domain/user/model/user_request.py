@@ -21,14 +21,6 @@ class UserBase(BaseModel):
     name: str = Field(max_length=UserEntityEnum.NAME)
     email: EmailStr = Field(max_length=UserEntityEnum.EMAIL)
 
-    @field_validator("name", "email")
-    @classmethod
-    def check_whitespace(cls, v: str, info: ValidationInfo) -> str:
-        condition = any([not v, not v.strip(), v != v.replace(" ", "")])
-        if condition:
-            raise WhiteSpaceError(field=info.field_name)
-        return v
-
     @field_validator("name")
     @classmethod
     def check_alphanumeric(cls, v: str, info: ValidationInfo) -> str:
