@@ -1,5 +1,6 @@
 from typing import Self
 
+from fastapi import HTTPException
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -9,8 +10,9 @@ from pydantic import (
     field_validator,
     model_validator,
 )
+from starlette import status
 
-from src.core.exception import AlphanumericError, PasswordNotMatchError, WhiteSpaceError
+from src.core.exception import WhiteSpaceError
 from src.core.model.common import IdModel
 from src.db.entity.enum.user_enum import UserEntityEnum
 
@@ -24,8 +26,12 @@ class UserBase(BaseModel):
     @field_validator("name")
     @classmethod
     def check_alphanumeric(cls, v: str, info: ValidationInfo) -> str:
-        if not v.isalnum():
-            raise AlphanumericError(field=info.field_name)
+        if not v.encode().isalnum():
+            # used encode method here to make korean returns false
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"{info.field_name} must be alphanumeric",
+            )
         return v
 
 
@@ -54,7 +60,10 @@ class Password(BaseModel):
         pw1 = self.password1
         pw2 = self.password2
         if pw1 is not None and pw2 is not None and pw1 != pw2:
-            raise PasswordNotMatchError
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="password1 and password2 are not equal",
+            )
         return self
 
 

@@ -18,7 +18,10 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/user/login")
 async def verify_user_state(*, user: UserEntity):
     for state in user.state:
         if str(state.name) == user_enum.UserStateEnum.BLOCKED:
-            raise BlockedUserError
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="you are blocked",
+            )
         elif str(state.name) == user_enum.UserStateEnum.INACTIVATE:
             # TODO
             ...
