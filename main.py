@@ -18,7 +18,7 @@ exception_handler.add_handlers(app=app)
 
 app.add_middleware(  # allow CORS credential
     CORSMiddleware,
-    allow_origins=config.cors_orign,
+    allow_origins=config.cors_origin,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -27,7 +27,7 @@ fastapi:
       description: Post domain API
     - name: comment
       description: Comment domain API
-  cors_orign:
+  cors_origin:
     - http://localhost:5173
     - http://127.0.0.1:5173
   auth:

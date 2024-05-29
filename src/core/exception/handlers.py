@@ -11,7 +11,7 @@ from .exceptions import (
 )
 
 
-def add_handlers(app: FastAPI) -> None:
+def add_handlers(*, app: FastAPI) -> None:
     @app.exception_handler(QueryResultEmptyError)
     async def empty_query_handler(
         request: Request,
