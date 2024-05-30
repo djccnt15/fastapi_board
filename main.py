@@ -1,13 +1,12 @@
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
 
-from src.core import configs, middleware
+from src.core import configs, lifespan, middleware
 from src.core.exception import handlers as exception_handler
 from src.routes import api, default
 
 config = configs.config.fastapi
 
-app = FastAPI(**config)
+app = FastAPI(**config, lifespan=lifespan.lifespan)
 
 # API Routers
 app.include_router(router=default.router)
