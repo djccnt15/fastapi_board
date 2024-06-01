@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.11
 
 EXPOSE 8000
 
@@ -8,19 +8,20 @@ RUN echo Asia/Seoul > /etc/timezone
 RUN apt-get update
 RUN apt-get install -y vim
 
-RUN mkdir fastboard
-WORKDIR fastboard/
+RUN mkdir fastapi
+WORKDIR fastapi/
+RUN mkdir log
 
 COPY ./ ./
 
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r ./requirements/test.txt
+RUN pip install --no-cache-dir -r ./requirements/ops.txt
 
-# ENTRYPOINT [ "uvicorn", "--host", "0.0.0.0", "main:app", "--reload" ]
+# ENTRYPOINT [ "uvicorn", "--host", "0.0.0.0", "main:app" ]
 ENTRYPOINT [ \
     "gunicorn", "main:app", \
-    "--workers", "2", \
+    "--workers", "1", \
     "--worker-class", "uvicorn.workers.UvicornWorker", \
     "--bind", "0.0.0.0", \
-    "--log-config", "/fastboard/logs/uvicorn_log.ini" \
+    "--log-config", "/fastapi/src/resources/log.ini" \
  ]
