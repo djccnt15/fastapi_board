@@ -1,8 +1,3 @@
-uvicorn:
-  host: "0.0.0.0"
-  port: 8000
-  log_config: src/resources/log.ini
-
 fastapi:
   title: Python FastAPI Server
   version: 0.0.1
@@ -40,7 +35,7 @@ db:
     drivername: mysql+aiomysql
     username: qwer
     password: asdf
-    host: 127.0.0.1
+    host: host.docker.internal
     port: 3306
     database: test
   engine:
@@ -49,7 +44,7 @@ db:
     echo: false
 
 redis:
-  host: 127.0.0.1
+  host: host.docker.internal
   port: 6379
   decode_responses: true
   db: 0
