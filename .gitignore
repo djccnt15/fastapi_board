@@ -102,7 +102,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env
 .venv
 venv/
 ENV/
@@ -128,13 +128,8 @@ dmypy.json
 .pyre/
 
 # workspace
-include/
-scripts/
-pyvenv.cfg
-note.py
-key.json
-key.bin
+.vscode/
 alembic.ini
 migrations/
-sql_app.db
-*.pem
+script.py
+tmp/
