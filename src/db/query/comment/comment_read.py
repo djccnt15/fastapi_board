@@ -12,7 +12,11 @@ async def read_comment_by_id(
     db: AsyncSession,
     comment_id: int,
 ) -> CommentEntity | None:
-    q = select(CommentEntity).where(CommentEntity.id == comment_id)
+    q = (
+        select(CommentEntity)
+        .where(CommentEntity.id == comment_id)
+        .order_by(CommentEntity.id)
+    )
     res = await db.execute(statement=q)
     return res.scalar()
 
@@ -22,7 +26,11 @@ async def read_comment_by_post_id(
     db: AsyncSession,
     post_id: int,
 ) -> Sequence[CommentEntity]:
-    q = select(CommentEntity).where(CommentEntity.post_id == post_id)
+    q = (
+        select(CommentEntity)
+        .where(CommentEntity.post_id == post_id)
+        .order_by(CommentEntity.id)
+    )
     res = await db.execute(statement=q)
     return res.scalars().all()
 
@@ -60,8 +68,10 @@ async def read_comment_history(
     db: AsyncSession,
     comment_id: int,
 ) -> Sequence[CommentContentEntity]:
-    q = select(CommentContentEntity).where(
-        CommentContentEntity.comment_id == comment_id
+    q = (
+        select(CommentContentEntity)
+        .where(CommentContentEntity.comment_id == comment_id)
+        .order_by(CommentContentEntity.id)
     )
     res = await db.execute(statement=q)
     return res.scalars().all()

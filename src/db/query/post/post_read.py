@@ -143,6 +143,10 @@ async def read_post_history(
     db: AsyncSession,
     post_id: int,
 ) -> Sequence[PostContentEntity]:
-    q = select(PostContentEntity).where(PostContentEntity.post_id == post_id)
+    q = (
+        select(PostContentEntity)
+        .where(PostContentEntity.post_id == post_id)
+        .order_by(PostContentEntity.id)
+    )
     res = await db.execute(q)
     return res.scalars().all()
