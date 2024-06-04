@@ -4,7 +4,7 @@ from datetime import timedelta
 from redis.asyncio.client import Redis
 from redis.asyncio.connection import ConnectionPool
 
-from src.common import configs
+from src.core import configs
 
 config = configs.config.redis
 
@@ -16,7 +16,7 @@ async def get_redis():
     try:
         yield r
     finally:
-        await r.close()
+        await r.aclose()
 
 
 @asynccontextmanager
