@@ -14,10 +14,7 @@ class CommentResponse(IdModel[int]):
 
 
 class CommentContentResponse(BaseModel):
-    model_config = ConfigDict(
-        validate_assignment=True,
-        from_attributes=True,
-    )
+    model_config = ConfigDict(from_attributes=True)
 
     version: int
     created_datetime: datetime = Field(serialization_alias="updated_datetime")
