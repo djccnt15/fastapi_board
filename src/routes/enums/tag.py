@@ -7,3 +7,4 @@ class RouterTagEnum(StrEnum):
     BOARD = auto()
     POST = auto()
     COMMENT = auto()
+    PREDICT = auto()
