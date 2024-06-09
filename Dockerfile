@@ -7,10 +7,9 @@ RUN echo Asia/Seoul > /etc/timezone
 
 RUN apt-get update
 RUN apt-get install -y vim
-RUN apt install -y tesseract-ocr
 
-RUN mkdir fastapi
-WORKDIR /fastapi/
+RUN mkdir app
+WORKDIR /app/
 RUN mkdir log
 
 COPY ./ ./
@@ -24,5 +23,5 @@ ENTRYPOINT [ \
     "--workers", "1", \
     "--worker-class", "uvicorn.workers.UvicornWorker", \
     "--bind", "0.0.0.0", \
-    "--log-config", "/fastapi/src/resources/log_container.ini" \
+    "--log-config", "/app/src/resources/log_container.ini" \
  ]

@@ -1,6 +1,7 @@
 wheel
 fastapi==0.111.0
 uvicorn[standard]==0.30.0
+gunicorn
 addict
 SQLAlchemy==2.0.29
 email-validator==2.1.1
@@ -14,4 +15,3 @@ numpy
 pandas
 scikit-learn==1.5.0
 joblib
-gunicorn
