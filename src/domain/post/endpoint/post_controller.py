@@ -1,9 +1,11 @@
 from typing import Iterable
 
 from fastapi import APIRouter, Depends
+from redis.asyncio.client import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
+from src.caching import redis_db
 from src.core.auth import get_current_user
 from src.core.model.enums import ResponseEnum
 from src.db.database import get_db
@@ -20,8 +22,9 @@ router = APIRouter(prefix="/post")
 async def get_post(
     id: int,
     db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(redis_db.get_redis),
 ) -> post_response.PostResponse:
-    res = await post_process.get_post(db=db, post_id=id)
+    res = await post_process.get_post(db=db, redis=redis, post_id=id)
     return res
 
 
@@ -30,10 +33,12 @@ async def update_post(
     id: int,
     body: post_request.PostUpdateRequest,
     db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(redis_db.get_redis),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
     await post_process.update_post(
         db=db,
+        redis=redis,
         current_user=current_user,
         post_id=id,
         data=body,
@@ -45,10 +50,12 @@ async def update_post(
 async def delete_post(
     id: int,
     db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(redis_db.get_redis),
     current_user: user_request.UserCurrent = Depends(get_current_user),
 ) -> ResponseEnum:
     await post_process.delete_post(
         db=db,
+        redis=redis,
         current_user=current_user,
         post_id=id,
     )
