@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Iterable
 
 from redis.asyncio.client import Redis
@@ -80,6 +81,17 @@ async def get_post_history(
     history = await post_logic.get_post_history(db=db, post_id=post_id)
     result = (post_response.PostContentResponse.model_validate(v) for v in history)
     return result
+
+
+async def download_post_history(
+    *,
+    db: AsyncSession,
+    post_id: int,
+) -> Path:
+    history = await post_logic.get_post_history(db=db, post_id=post_id)
+    rows = (post_response.PostContentResponse.model_validate(v) for v in history)
+    file_path = await post_logic.create_post_history_file(data=rows, post_id=post_id)
+    return file_path
 
 
 async def vote_post(

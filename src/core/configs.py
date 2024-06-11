@@ -17,3 +17,6 @@ if env == "container":
 else:
     with open(RESOURCES / "config.yaml", encoding="utf-8") as f:
         config = Dict(yaml.load(f, Loader=yaml.SafeLoader))
+
+TEMP_DIR = Path("tmp")
+TEMP_DIR.mkdir(exist_ok=True)
