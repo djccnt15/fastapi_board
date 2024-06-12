@@ -1,6 +1,7 @@
-from pathlib import Path
+from datetime import datetime
 from typing import Iterable
 
+from fastapi.responses import Response
 from redis.asyncio.client import Redis
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -87,11 +88,15 @@ async def download_post_history(
     *,
     db: AsyncSession,
     post_id: int,
-) -> Path:
+) -> Response:
     history = await post_logic.get_post_history(db=db, post_id=post_id)
     rows = (post_response.PostContentResponse.model_validate(v) for v in history)
-    file_path = await post_logic.create_post_history_file(data=rows, post_id=post_id)
-    return file_path
+    data = await post_logic.create_post_history_data(data=rows)
+    res = Response(content=data, media_type="text/csv")
+    now = datetime.now().replace(microsecond=0)
+    file_name = f"POST_HISTORY_{post_id}_{now.strftime('%Y%m%d_%H%M%S')}.csv"
+    res.headers["Content-Disposition"] = f"attachment; filename={file_name}"
+    return res
 
 
 async def vote_post(

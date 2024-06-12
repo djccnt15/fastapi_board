@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from fastapi import APIRouter, BackgroundTasks, Depends
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends
+from fastapi.responses import Response
 from redis.asyncio.client import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
@@ -75,12 +75,10 @@ async def get_post_history(
 @router.get(path="/{id}/download")
 async def download_post_history(
     id: int,
-    background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
-) -> FileResponse:
-    file_path = await post_process.download_post_history(db=db, post_id=id)
-    background_tasks.add_task(func=file_path.unlink)
-    return FileResponse(path=file_path, filename=file_path.name, media_type="text/csv")
+) -> Response:
+    res = await post_process.download_post_history(db=db, post_id=id)
+    return res
 
 
 @router.post(path="/{id}/vote")

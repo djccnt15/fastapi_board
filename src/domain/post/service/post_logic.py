@@ -1,14 +1,12 @@
 from datetime import datetime
-from pathlib import Path
+from io import StringIO
 from typing import Iterable, Sequence
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette import concurrency
 
-from src.core.configs import KST, TEMP_DIR
+from src.core.configs import KST
 from src.core.exception import QueryResultEmptyError
-from src.core.utils import pd_to_csv
 from src.db.entity import PostContentEntity
 from src.db.query.comment import comment_create, comment_read
 from src.db.query.post import post_read, post_update
@@ -36,17 +34,18 @@ async def get_post_history(
     return post_history
 
 
-async def create_post_history_file(
+async def create_post_history_data(
     *,
     data: Iterable[post_response.PostContentResponse],
-    post_id: int,
-) -> Path:
-    now = datetime.now().replace(microsecond=0)
-    file_name = f"POST_HISTORY_{post_id}_{now.strftime('%Y%m%d%H%M')}.csv"
-    file_path = TEMP_DIR / file_name
+) -> bytes:
     df = pd.DataFrame(data=(v.model_dump() for v in data))
-    await concurrency.run_in_threadpool(func=pd_to_csv, path=file_path, data=df)
-    return file_path
+
+    with StringIO() as io:
+        df.to_csv(path_or_buf=io, index=False)
+        csv_content = io.getvalue()
+
+    csv_bytes = csv_content.encode("utf-8")
+    return csv_bytes
 
 
 async def get_comment_list(
