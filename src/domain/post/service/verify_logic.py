@@ -17,7 +17,7 @@ async def verify_author(
     post = await post_read.read_post_by_id(db=db, post_id=post_id)
     if not post:
         raise QueryResultEmptyError
-    elif post.user.id != current_user.id:
+    elif post.user_id != current_user.id:
         raise InvalidUserError
 
 

@@ -9,7 +9,7 @@ from src.core.configs import KST
 from src.core.exception import QueryResultEmptyError
 from src.db.entity import PostContentEntity
 from src.db.query.comment import comment_create, comment_read
-from src.db.query.post import post_read, post_update
+from src.db.query.post import post_create, post_read, post_update
 
 from ..model import post_response
 
