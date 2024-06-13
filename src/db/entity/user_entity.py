@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Union
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import ForeignKey
@@ -11,6 +12,15 @@ from .enum.user_enum import (
     UserEntityEnum,
     UserStateEntityEnum,
 )
+
+
+class RoleEntity(BigintIdEntity):
+    __tablename__ = "role"
+
+    name: Mapped[str] = mapped_column(
+        String(length=RoleEntityEnum.NAME.value),
+        unique=True,
+    )
 
 
 class UserEntity(BigintIdEntity):
@@ -30,6 +40,10 @@ class UserEntity(BigintIdEntity):
         index=True,
     )
     created_datetime: Mapped[datetime] = mapped_column(DateTime)
+    role_id: Mapped[Union["RoleEntity", None]] = mapped_column(
+        BigInteger,
+        ForeignKey(RoleEntity.id),
+    )
 
     post = relationship(
         argument="PostEntity",
@@ -44,30 +58,6 @@ class UserEntity(BigintIdEntity):
         secondary="user_state",
         back_populates="user",
         lazy="selectin",
-    )
-
-
-class RoleEntity(BigintIdEntity):
-    __tablename__ = "role"
-
-    name: Mapped[str] = mapped_column(
-        String(length=RoleEntityEnum.NAME.value),
-        unique=True,
-    )
-
-
-class UserRoleEntity(BaseEntity):
-    __tablename__ = "user_role"
-
-    user_id: Mapped["UserEntity"] = mapped_column(
-        BigInteger,
-        ForeignKey(UserEntity.id),
-        primary_key=True,
-    )
-    role_id: Mapped["RoleEntity"] = mapped_column(
-        BigInteger,
-        ForeignKey(RoleEntity.id),
-        primary_key=True,
     )
 
 
