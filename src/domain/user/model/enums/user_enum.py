@@ -1,7 +1,8 @@
 from enum import StrEnum, auto
 
 
-class UserRoleEnum(StrEnum): ...
+class UserRoleEnum(StrEnum):
+    ADMIN = auto()
 
 
 class UserStateEnum(StrEnum):

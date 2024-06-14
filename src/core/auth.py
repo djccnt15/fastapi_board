@@ -11,7 +11,7 @@ from src.caching.enums.redis_enum import RedisKeyEnum
 from src.caching.model import user_redis
 from src.core import configs
 from src.db import database
-from src.db.entity.user_entity import UserEntity
+from src.db.entity.user_entity import RoleEntity, UserEntity
 from src.db.query.user import user_read
 from src.domain.user.converter import user_converter
 from src.domain.user.model.enums import user_enum
@@ -30,6 +30,12 @@ async def verify_user_state(*, user: UserEntity):
         elif str(state.name) == user_enum.UserStateEnum.INACTIVATE:
             # TODO
             ...
+
+
+async def verify_admin(*, role: RoleEntity) -> bool:
+    if role.name == user_enum.UserRoleEnum.ADMIN:
+        return True
+    return False
 
 
 async def get_current_user(
