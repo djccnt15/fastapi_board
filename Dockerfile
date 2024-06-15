@@ -23,5 +23,5 @@ ENTRYPOINT [ \
     "--workers", "1", \
     "--worker-class", "uvicorn.workers.UvicornWorker", \
     "--bind", "0.0.0.0", \
-    "--log-config", "/app/src/resources/log_container.ini" \
+    "--log-config", "/app/resources/log_container.ini" \
  ]

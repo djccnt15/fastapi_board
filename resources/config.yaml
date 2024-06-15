@@ -1,7 +1,7 @@
 uvicorn:
   host: "0.0.0.0"
   port: 8000
-  log_config: src/resources/log.ini
+  log_config: resources/log.ini
 
 fastapi:
   title: Python FastAPI Server

@@ -6,7 +6,7 @@ from addict import Dict
 from starlette.config import Config
 
 KST = dt.timezone(offset=dt.timedelta(hours=9), name="KST")
-RESOURCES = Path("src") / "resources"
+RESOURCES = Path("resources")
 
 sys_config = Config(env_file=".env")
 env = sys_config(key="env")
