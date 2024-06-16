@@ -3,12 +3,11 @@ from datetime import datetime, timedelta
 from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from src.core import auth, configs, security
 from src.db.entity.user_entity import UserEntity
-from src.db.query.user import user_create, user_read
+from src.dependency import ports
 
 from ..model import user_response
 
@@ -17,13 +16,10 @@ config = configs.config.fastapi
 
 async def identify_user(
     *,
-    db: AsyncSession,
+    repo: ports.UserRepository,
     form_data: OAuth2PasswordRequestForm,
 ) -> UserEntity:
-    user = await user_read.read_user_by_name(
-        db=db,
-        name=form_data.username,
-    )
+    user = await repo.read_user_by_name(name=form_data.username)
     if user is None or not security.pwd_context.verify(
         secret=form_data.password,
         hash=user.password,
@@ -35,17 +31,15 @@ async def identify_user(
         )
 
     await auth.verify_user_state(user=user)
-
     return user
 
 
 async def create_login_log(
     *,
-    db: AsyncSession,
+    repo: ports.UserRepository,
     user_id: int,
 ) -> None:
-    await user_create.create_login_log(
-        db=db,
+    await repo.create_login_log(
         user_id=user_id,
         created_datetime=datetime.now(configs.KST),
     )

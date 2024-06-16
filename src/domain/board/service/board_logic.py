@@ -2,44 +2,45 @@ from datetime import datetime
 from typing import Iterable, Sequence
 
 from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
+from src import dependency
 from src.core.configs import KST
 from src.db.entity import PostCategoryEntity
-from src.db.query.board import board_read
-from src.db.query.post import post_create, post_read
 
 
-async def get_board_list(*, db: AsyncSession) -> Sequence[PostCategoryEntity]:
-    category_list = await board_read.read_t1_category_list(db=db)
+async def get_board_list(
+    *,
+    repo: dependency.CategoryRepo,
+) -> Sequence[PostCategoryEntity]:
+    category_list = await repo.read_t1_category_list()
     return category_list
 
 
 async def get_category_list(
     *,
-    db: AsyncSession,
+    repo: dependency.CategoryRepo,
     board: str,
 ) -> Sequence[PostCategoryEntity]:
-    category_list = await board_read.read_t2_category_list(db=db, parent=board)
+    category_list = await repo.read_t2_category_list(category=board)
     return category_list
 
 
 async def get_parent_category(
     *,
-    db: AsyncSession,
+    repo: dependency.CategoryRepo,
     category: str,
 ) -> PostCategoryEntity | None:
-    parent_category = await board_read.read_parent_category(db=db, category=category)
+    parent_category = await repo.read_parent_category(category=category)
     return parent_category
 
 
 async def get_category_id(
     *,
-    db: AsyncSession,
+    repo: dependency.CategoryRepo,
     category: str,
 ) -> PostCategoryEntity:
-    post_category = await board_read.read_category_id(db=db, category=category)
+    post_category = await repo.read_category_id(category=category)
     if not post_category:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -50,15 +51,11 @@ async def get_category_id(
 
 async def get_post_count(
     *,
-    db: AsyncSession,
+    repo: dependency.PostRepo,
     category: int,
-    keyword: str,
+    keyword: str | None,
 ) -> int:
-    count = await post_read.read_post_count(
-        db=db,
-        category_id=category,
-        keyword=keyword,
-    )
+    count = await repo.read_post_count(category_id=category, keyword=keyword)
     if not count:
         return 0
     return int(count)
@@ -66,14 +63,13 @@ async def get_post_count(
 
 async def get_post_list(
     *,
-    db: AsyncSession,
+    repo: dependency.PostRepo,
     board: int,
-    keyword: str,
+    keyword: str | None,
     size: int,
     page: int,
 ) -> Iterable[dict]:
-    post_list = await post_read.read_post_list(
-        db=db,
+    post_list = await repo.read_post_list(
         category_id=board,
         keyword=keyword,
         size=size,
@@ -84,21 +80,19 @@ async def get_post_list(
 
 async def create_post(
     *,
-    db: AsyncSession,
+    repo: dependency.PostRepo,
     category: int,
     user_id: int,
     title: str,
     content: str,
 ) -> None:
-    post_id = await post_create.create_post(
-        db=db,
+    post_id = await repo.create_post(
         category_id=category,
         created_datetime=datetime.now(KST),
         user_id=user_id,
     )
 
-    await post_create.create_post_detail(
-        db=db,
+    await repo.create_post_detail(
         created_datetime=datetime.now(KST),
         title=title,
         content=content,

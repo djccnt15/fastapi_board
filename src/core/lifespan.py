@@ -4,17 +4,14 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 
 from src.ai import model
-from src.caching import redis_db
-from src.caching.command import redis_cmd
-from src.db import database
-from src.db.query import db_read
+from src.dependency import adapters
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:
     # Check DB/Redis availability
-    await db_read.ping()
-    await redis_cmd.ping()
+    await adapters.db_ping()
+    await adapters.redis_ping()
 
     # Load the ML model
     model.load_ml_models()
@@ -22,8 +19,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     yield
 
     # close DB engine
-    await database.engine.dispose()
-    await redis_db.redis_pool.aclose()
+    await adapters.db_engine.dispose()
+    await adapters.redis_pool.aclose()
 
     # Clean up the ML models and release the resources
     model.clear_resource()

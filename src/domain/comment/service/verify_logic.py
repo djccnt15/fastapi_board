@@ -1,18 +1,14 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.core.exception import InvalidUserError, QueryResultEmptyError
-from src.db.query.comment import comment_read
+from src.core.exception import InvalidUserError
+from src.dependency import ports
 from src.domain.user.model import user_request
 
 
 async def verify_author(
     *,
-    db: AsyncSession,
-    current_user: user_request.UserCurrent,
+    user: user_request.UserCurrent,
+    repo: ports.CommentRepository,
     comment_id: int,
 ) -> None:
-    comment = await comment_read.read_comment_by_id(db=db, comment_id=comment_id)
-    if not comment:
-        raise QueryResultEmptyError
-    elif comment.user_id != current_user.id:
+    comment = await repo.read_comment_by_id(comment_id=comment_id)
+    if comment.user_id != user.id:
         raise InvalidUserError

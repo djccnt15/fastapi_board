@@ -3,34 +3,29 @@ from io import StringIO
 from typing import Iterable, Sequence
 
 import pandas as pd
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.configs import KST
-from src.core.exception import QueryResultEmptyError
 from src.db.entity import PostContentEntity
-from src.db.query.comment import comment_create, comment_read
-from src.db.query.post import post_create, post_read, post_update
+from src.dependency import ports
 
 from ..model import post_response
 
 
 async def get_post(
     *,
-    db: AsyncSession,
+    repo: ports.PostRepository,
     post_id: int,
 ) -> dict:
-    post = await post_read.read_post(db=db, post_id=post_id)
+    post = await repo.read_post(post_id=post_id)
     return post
 
 
 async def get_post_history(
     *,
-    db: AsyncSession,
+    repo: ports.PostRepository,
     post_id: int,
 ) -> Sequence[PostContentEntity]:
-    post_history = await post_read.read_post_history(db=db, post_id=post_id)
-    if not post_history:
-        raise QueryResultEmptyError
+    post_history = await repo.read_post_history(post_id=post_id)
     return post_history
 
 
@@ -50,26 +45,22 @@ async def create_post_history_data(
 
 async def get_comment_list(
     *,
-    db: AsyncSession,
+    repo: ports.CommentRepository,
     post_id: int,
 ) -> Iterable[dict]:
-    comment_list = await comment_read.read_comment_list(db=db, post_id=post_id)
+    comment_list = await repo.read_comment_list(post_id=post_id)
     return comment_list
 
 
 async def update_post(
     *,
-    db: AsyncSession,
+    repo: ports.PostRepository,
     title: str,
     content: str,
     post_id: int,
 ) -> None:
-    version = await post_read.read_post_last_version(db=db, post_id=post_id)
-    if not version:
-        version = 0
-
-    await post_create.create_post_detail(
-        db=db,
+    version = await repo.read_post_last_version(post_id=post_id)
+    await repo.create_post_detail(
         version=version + 1,
         created_datetime=datetime.now(KST),
         title=title,
@@ -80,28 +71,26 @@ async def update_post(
 
 async def delete_post(
     *,
-    db: AsyncSession,
+    repo: ports.PostRepository,
     post_id: int,
 ) -> None:
-    await post_update.inactivate_post(db=db, post_id=post_id)
+    await repo.inactivate_post(post_id=post_id)
 
 
 async def create_comment(
     *,
-    db: AsyncSession,
+    repo: ports.CommentRepository,
     user_id: int,
     post_id: int,
     content: str,
 ) -> None:
-    comment_id = await comment_create.create_comment(
-        db=db,
+    comment_id = await repo.create_comment(
         user_id=user_id,
         post_id=post_id,
         created_datetime=datetime.now(KST),
     )
 
-    await comment_create.create_comment_detail(
-        db=db,
+    await repo.create_comment_detail(
         created_datetime=datetime.now(KST),
         content=content,
         comment_id=comment_id if comment_id else 0,

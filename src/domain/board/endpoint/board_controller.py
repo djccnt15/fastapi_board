@@ -1,14 +1,12 @@
-from typing import Iterable
+from typing import Annotated, Iterable
 
-from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Body, Path, Query
 from starlette import status
 
-from src.core.auth import get_current_user
+from src import dependency
+from src.core import auth
 from src.core.model.enums import ResponseEnum
-from src.db.database import get_db
 from src.domain.post.model import post_request
-from src.domain.user.model import user_request
 
 from ..business import board_process
 from ..model import board_response
@@ -18,41 +16,41 @@ router = APIRouter(prefix="/board")
 
 
 @router.get(path="")
-async def board_list(
-    db: AsyncSession = Depends(get_db),
-) -> Iterable[str]:
-    board_list = await board_process.get_board_list(db=db)
+async def board_list(repo: dependency.CategoryRepo) -> Iterable[str]:
+    board_list = await board_process.get_board_list(repo=repo)
     return board_list
 
 
 @router.get(path="/category")
 async def get_category(
-    board: board_enum.BoardEnum,
-    db: AsyncSession = Depends(get_db),
+    repo: dependency.CategoryRepo,
+    board: Annotated[board_enum.BoardEnum, Query()],
 ) -> Iterable[str]:
-    category_list = await board_process.get_category_list(db=db, board=board)
+    category_list = await board_process.get_category_list(repo=repo, board=board)
     return category_list
 
 
 @router.get(path="/parent")
 async def get_parent(
-    category: board_enum.CategoryEnum,
-    db: AsyncSession = Depends(get_db),
+    repo: dependency.CategoryRepo,
+    category: Annotated[board_enum.CategoryEnum, Query()],
 ) -> str:
-    parent = await board_process.get_parent_category(db=db, category=category)
+    parent = await board_process.get_parent_category(repo=repo, category=category)
     return parent
 
 
 @router.get(path="/{board}")
 async def get_post_list(
-    board: board_enum.BoardEnum,
-    keyword: str = "",
-    size: int = 10,
-    page: int = 0,
-    db: AsyncSession = Depends(get_db),
+    category_repo: dependency.CategoryRepo,
+    post_repo: dependency.PostRepo,
+    board: Annotated[board_enum.BoardEnum, Path()],
+    keyword: Annotated[str | None, Query()] = None,
+    size: Annotated[int, Query(gt=0)] = 10,
+    page: Annotated[int, Query(ge=0)] = 0,
 ) -> board_response.PostListResponse:
     res = await board_process.get_post_list(
-        db=db,
+        category_repo=category_repo,
+        post_repo=post_repo,
         board=board,
         keyword=keyword,
         size=size,
@@ -63,13 +61,15 @@ async def get_post_list(
 
 @router.post(path="/{category}", status_code=status.HTTP_201_CREATED)
 async def create_post(
-    category: board_enum.CategoryEnum,
-    body: post_request.PostBaseRequset,
-    db: AsyncSession = Depends(get_db),
-    current_user: user_request.UserCurrent = Depends(get_current_user),
+    current_user: auth.CurrentUser,
+    category_repo: dependency.CategoryRepo,
+    post_repo: dependency.PostRepo,
+    category: Annotated[board_enum.CategoryEnum, Path()],
+    body: Annotated[post_request.PostBaseRequset, Body()],
 ) -> ResponseEnum:
     await board_process.create_post(
-        db=db,
+        category_repo=category_repo,
+        post_repo=post_repo,
         user=current_user,
         category=category,
         data=body,

@@ -1,9 +1,9 @@
 from typing import Iterable
 
 from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
+from src import dependency
 from src.domain.post.model import post_request, post_response
 from src.domain.user.model import user_request
 
@@ -12,28 +12,28 @@ from ..model.enums import board_enum
 from ..service import board_logic
 
 
-async def get_board_list(db: AsyncSession) -> Iterable[str]:
-    category_list = await board_logic.get_board_list(db=db)
+async def get_board_list(*, repo: dependency.CategoryRepo) -> Iterable[str]:
+    category_list = await board_logic.get_board_list(repo=repo)
     result = (i.name for i in category_list)
     return result
 
 
 async def get_category_list(
     *,
-    db: AsyncSession,
+    repo: dependency.CategoryRepo,
     board: str,
 ) -> Iterable[str]:
-    category_list = await board_logic.get_category_list(db=db, board=board)
+    category_list = await board_logic.get_category_list(repo=repo, board=board)
     result = (i.name for i in category_list)
     return result
 
 
 async def get_parent_category(
     *,
-    db: AsyncSession,
+    repo: dependency.CategoryRepo,
     category: str,
 ) -> str:
-    parent = await board_logic.get_parent_category(db=db, category=category)
+    parent = await board_logic.get_parent_category(repo=repo, category=category)
     if parent is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -45,22 +45,26 @@ async def get_parent_category(
 
 async def get_post_list(
     *,
-    db: AsyncSession,
+    category_repo: dependency.CategoryRepo,
+    post_repo: dependency.PostRepo,
     board: board_enum.BoardEnum,
-    keyword: str,
+    keyword: str | None,
     size: int,
     page: int,
 ) -> board_response.PostListResponse:
-    category_entity = await board_logic.get_category_id(db=db, category=board)
+    category_entity = await board_logic.get_category_id(
+        repo=category_repo,
+        category=board,
+    )
 
     count = await board_logic.get_post_count(
-        db=db,
+        repo=post_repo,
         category=category_entity.id,
         keyword=keyword,
     )
 
     post_list = await board_logic.get_post_list(
-        db=db,
+        repo=post_repo,
         board=category_entity.id,
         keyword=keyword,
         size=size,
@@ -76,14 +80,18 @@ async def get_post_list(
 
 async def create_post(
     *,
-    db: AsyncSession,
+    category_repo: dependency.CategoryRepo,
+    post_repo: dependency.PostRepo,
     user: user_request.UserCurrent,
     category: str,
     data: post_request.PostBaseRequset,
 ) -> None:
-    category_entity = await board_logic.get_category_id(db=db, category=category)
+    category_entity = await board_logic.get_category_id(
+        repo=category_repo,
+        category=category,
+    )
     await board_logic.create_post(
-        db=db,
+        repo=post_repo,
         category=category_entity.id,
         user_id=user.id,
         title=data.title,
