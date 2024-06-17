@@ -8,7 +8,7 @@ from src.domain.user.endpoint import user_controller
 
 from .enums.tag import RouterTagEnum
 
-router = APIRouter(prefix="/api")
+router = APIRouter(prefix="/v1")
 
 router.include_router(
     router=user_controller.router,

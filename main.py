@@ -10,7 +10,7 @@ app = FastAPI(**config, lifespan=lifespan.lifespan)
 
 # API Routers
 app.include_router(router=default.router)
-app.include_router(router=api.router)
+app.include_router(router=api.router, prefix="/api")
 
 # Exception Handler
 exception_handler.add_handlers(app=app)
