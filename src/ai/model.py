@@ -7,7 +7,7 @@ from src.domain.predict.model.enums.predict_enum import AlgorithmEnum
 
 AI_MODEL_PATH = RESOURCES / "ai_model"
 
-iris_classifier: dict[str, KNeighborsClassifier | DecisionTreeClassifier] = {}
+iris_classifier: dict[AlgorithmEnum, KNeighborsClassifier | DecisionTreeClassifier] = {}
 
 
 def load_ml_models():
