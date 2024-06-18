@@ -6,7 +6,6 @@ aiomysql==0.2.0
 passlib[bcrypt]
 python-jose[cryptography]
 redis
-pycryptodome
 numpy
 pandas
 scikit-learn==1.5.0
