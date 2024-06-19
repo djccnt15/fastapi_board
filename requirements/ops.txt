@@ -5,6 +5,7 @@ SQLAlchemy==2.0.29
 aiomysql==0.2.0
 passlib[bcrypt]
 python-jose[cryptography]
+prometheus-client
 redis
 numpy
 pandas
