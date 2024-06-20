@@ -31,9 +31,7 @@ async def verify_user_state(*, user: UserEntity):
 
 
 async def verify_admin(*, role: RoleEntity) -> bool:
-    if role.name == user_enum.UserRoleEnum.ADMIN:
-        return True
-    return False
+    return True if role.name == user_enum.UserRoleEnum.ADMIN else False
 
 
 async def get_current_user(
