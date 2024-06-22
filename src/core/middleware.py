@@ -3,7 +3,7 @@ import time
 from fastapi import FastAPI, Request
 from starlette.middleware.cors import CORSMiddleware
 
-from src.core import configs, metrics
+from src.core import configs, log, metrics
 
 config = configs.config.fastapi
 
@@ -16,6 +16,9 @@ def add_middleware(*, app: FastAPI):
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # request logger
+    app.add_middleware(middleware_class=log.LoggingMiddleware)
 
     @app.middleware("http")
     async def metrics_middleware(request: Request, call_next):

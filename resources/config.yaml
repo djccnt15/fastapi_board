@@ -3,6 +3,11 @@ uvicorn:
   port: 8000
   log_config: resources/log.ini
 
+logstash:
+  host: 127.0.0.1
+  port: 5000
+  database_path:
+
 fastapi:
   title: Python FastAPI Server
   version: 0.0.1
