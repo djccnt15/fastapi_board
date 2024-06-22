@@ -19,9 +19,7 @@ def add_handlers(*, app: FastAPI) -> None:
     ):
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            content={
-                "detail": "query result is empty",
-            },
+            content={"detail": "query result is empty"},
         )
 
     @app.exception_handler(WhiteSpaceError)
@@ -57,7 +55,5 @@ def add_handlers(*, app: FastAPI) -> None:
     ):
         return JSONResponse(
             status_code=status.HTTP_403_FORBIDDEN,
-            content={
-                "detail": "invalid user",
-            },
+            content={"detail": "invalid user"},
         )
