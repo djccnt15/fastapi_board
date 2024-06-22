@@ -3,6 +3,8 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from src.core.log import logger
+
 from .exceptions import (
     InvalidUserError,
     NotUniqueError,
@@ -12,6 +14,27 @@ from .exceptions import (
 
 
 def add_handlers(*, app: FastAPI) -> None:
+    @app.exception_handler(Exception)
+    async def internal_error_handler(
+        request: Request,
+        exc: Exception,
+    ):
+        log_content = {
+            "detail": str(exc),
+            "request": {
+                "method": request.method,
+                "url": str(request.url),
+                "headers": dict(request.headers),
+                "client": request.client.host,
+            },
+            "body": request.state.body,
+        }
+        logger.error(f"ERROR: {log_content}")
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Internal Server Error"},
+        )
+
     @app.exception_handler(QueryResultEmptyError)
     async def empty_query_handler(
         request: Request,

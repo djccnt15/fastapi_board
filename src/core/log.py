@@ -40,3 +40,10 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         logger.info(f"LOG: {log_content}")
 
         return response
+
+
+class RequestBodyLoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        request_body = await request.body()
+        request.state.body = request_body.decode("utf-8")
+        return await call_next(request)

@@ -19,6 +19,7 @@ def add_middleware(*, app: FastAPI):
 
     # request logger
     app.add_middleware(middleware_class=log.LoggingMiddleware)
+    app.add_middleware(middleware_class=log.RequestBodyLoggingMiddleware)
 
     @app.middleware("http")
     async def metrics_middleware(request: Request, call_next):
