@@ -3,6 +3,7 @@ fastapi==0.111.0
 addict
 SQLAlchemy==2.0.29
 aiomysql==0.2.0
+pytest
 passlib[bcrypt]
 python-jose[cryptography]
 prometheus-client
