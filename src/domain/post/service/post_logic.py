@@ -5,7 +5,7 @@ from typing import Iterable, Sequence
 import pandas as pd
 
 from src.core.configs import KST
-from src.db.entity import PostContentEntity
+from src.db.entity.post_entity import PostContentEntity
 from src.dependency import ports
 
 from ..model import post_response

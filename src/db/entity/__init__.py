@@ -1,4 +1,16 @@
-from .base_entity import *
-from .comment_entity import *
-from .post_entity import *
-from .user_entity import *
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.types import BigInteger
+
+
+class BaseEntity(DeclarativeBase): ...
+
+
+class BigintIdEntity(BaseEntity):
+    __abstract__ = True
+
+    id: Mapped[int] = mapped_column(
+        type_=BigInteger,
+        primary_key=True,
+        autoincrement=True,
+        sort_order=-1,
+    )

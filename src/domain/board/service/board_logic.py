@@ -6,7 +6,7 @@ from starlette import status
 
 from src import dependency
 from src.core.configs import KST
-from src.db.entity import PostCategoryEntity
+from src.db.entity.post_entity import PostCategoryEntity
 
 
 async def get_board_list(

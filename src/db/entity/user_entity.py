@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import ForeignKey
 from sqlalchemy.types import BigInteger, DateTime, String
 
-from .base_entity import BaseEntity, BigintIdEntity
+from . import BaseEntity, BigintIdEntity
 from .enum.user_enum import (
     RoleEntityEnum,
     StateEntityEnum,
