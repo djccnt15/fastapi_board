@@ -1,6 +1,6 @@
 from pydantic import ConfigDict
 
-from src.core.model.common import IdModel
+from src.core.model import IdModel
 from src.domain.user.model import user_request
 
 

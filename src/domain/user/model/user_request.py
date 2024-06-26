@@ -13,7 +13,7 @@ from pydantic import (
 from starlette import status
 
 from src.core.exception import WhiteSpaceError
-from src.core.model.common import IdModel
+from src.core.model import IdModel
 from src.db.entity.enum.user_enum import UserEntityEnum
 
 

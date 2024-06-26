@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from src.core.model.common import IdModel
+from src.core.model import IdModel
 
 
 class PostResponse(IdModel[int]):
