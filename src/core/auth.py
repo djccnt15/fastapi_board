@@ -15,7 +15,7 @@ from src.domain.user.model import user_request
 from src.domain.user.model.enums import user_enum
 
 config = configs.config.fastapi
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/user/login")
 
 
 async def verify_user_state(*, user: UserEntity):
