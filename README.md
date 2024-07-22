@@ -1,6 +1,18 @@
-# study_fastapi
+# Board Service Backend with FastAPI
 
-## memo
+FastAPI 기반 게시판 서비스 Backend 서버  
+
+## Requirements
+
+- Python 3.11
+    - check `requirements` directory for third-party packages
+- MariaDB 11.1
+- Redis 6.2
+- Grafana
+- Prometheus
+- ELK
+
+## Memo
 
 - commends for running FastAPI dev server
 
@@ -14,7 +26,7 @@ fastapi dev main.py
 main.py
 ```
 
-## alembic migration
+## Migration with Alembic
 
 - initialize alembic
 
