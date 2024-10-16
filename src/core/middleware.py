@@ -23,16 +23,21 @@ def add_middleware(*, app: FastAPI):
 
     @app.middleware("http")
     async def metrics_middleware(request: Request, call_next):
-        start_time = time.time()
+        start_time = time.perf_counter()
         response = await call_next(request)
-        request_latency = time.time() - start_time
+        process_time = time.perf_counter() - start_time
+        response.headers["X-Process-Time"] = str(process_time)
 
         # Increment counters and histograms
         metrics.REQUEST_COUNT.labels(
-            "fastapi_app", request.method, request.url.path, response.status_code
+            "fastapi_app",
+            request.method,
+            request.url.path,
+            response.status_code,
         ).inc()
-        metrics.REQUEST_LATENCY.labels("fastapi_app", request.url.path).observe(
-            amount=request_latency
-        )
+        metrics.REQUEST_LATENCY.labels(
+            "fastapi_app",
+            request.url.path,
+        ).observe(amount=process_time)
 
         return response
