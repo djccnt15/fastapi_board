@@ -48,7 +48,7 @@ async def get_post_list(
     category_repo: dependency.CategoryRepo,
     post_repo: dependency.PostRepo,
     board: board_enum.BoardEnum,
-    keyword: str | None,
+    keyword: str,
     size: int,
     page: int,
 ) -> board_response.PostListResponse:

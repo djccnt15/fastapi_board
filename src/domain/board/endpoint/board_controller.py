@@ -44,7 +44,7 @@ async def get_post_list(
     category_repo: dependency.CategoryRepo,
     post_repo: dependency.PostRepo,
     board: Annotated[board_enum.BoardEnum, Path()],
-    keyword: Annotated[str | None, Query()] = None,
+    keyword: Annotated[str, Query()] = "",
     size: Annotated[int, Query(gt=0)] = 10,
     page: Annotated[int, Query(ge=0)] = 0,
 ) -> board_response.PostListResponse:

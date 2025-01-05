@@ -45,3 +45,10 @@ WHERE
         c.parent_id = :category_id
         OR c.id = :category_id
     )
+    AND (
+        u.name LIKE :keyword
+        OR title LIKE :keyword
+        OR content LIKE :keyword
+    )
+ORDER BY p.id DESC
+LIMIT :size OFFSET :page

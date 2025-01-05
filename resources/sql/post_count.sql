@@ -23,3 +23,7 @@ WHERE
         c.parent_id = :category_id
         OR c.id = :category_id
     )
+    AND (
+        title LIKE :keyword
+        OR content LIKE :keyword
+    )

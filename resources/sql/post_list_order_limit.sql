@@ -1,2 +1,0 @@
-ORDER BY p.id DESC
-LIMIT :size OFFSET :page

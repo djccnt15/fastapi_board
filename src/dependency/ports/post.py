@@ -32,7 +32,7 @@ class PostRepository(ABC):
         self,
         *,
         category_id: int,
-        keyword: str | None = None,
+        keyword: str,
     ) -> int: ...
 
     @abstractmethod
@@ -40,7 +40,7 @@ class PostRepository(ABC):
         self,
         *,
         category_id: int,
-        keyword: str | None,
+        keyword: str,
         size: int,
         page: int,
     ) -> Iterable[dict]: ...

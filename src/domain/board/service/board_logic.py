@@ -53,7 +53,7 @@ async def get_post_count(
     *,
     repo: dependency.PostRepo,
     category: int,
-    keyword: str | None,
+    keyword: str,
 ) -> int:
     count = await repo.read_post_count(category_id=category, keyword=keyword)
     if not count:
@@ -65,7 +65,7 @@ async def get_post_list(
     *,
     repo: dependency.PostRepo,
     board: int,
-    keyword: str | None,
+    keyword: str,
     size: int,
     page: int,
 ) -> Iterable[dict]:

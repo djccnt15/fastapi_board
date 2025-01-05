@@ -22,12 +22,6 @@ with open(file=SQL_PATH / "post_count.sql", encoding="utf-8") as f:
 with open(file=SQL_PATH / "post_list.sql", encoding="utf-8") as f:
     POST_LIST_QUERY = f.read()
 
-with open(file=SQL_PATH / "post_list_keyword_where.sql", encoding="utf-8") as f:
-    POST_LIST_QUERY_KEYWORD_WHERE = f.read()
-
-with open(file=SQL_PATH / "post_list_order_limit.sql", encoding="utf-8") as f:
-    POST_LIST_QUERY_ORDER_LIMIT = f.read()
-
 
 class RdbPostRepository(PostRepository):
     def __init__(self, *, db: AsyncSession):
@@ -77,13 +71,10 @@ class RdbPostRepository(PostRepository):
         self,
         *,
         category_id: int,
-        keyword: str | None = None,
+        keyword: str,
     ) -> int:
         q = POST_COUNT_QUERY
-
-        if keyword:
-            keyword = f"%{keyword}%"
-            q += POST_LIST_QUERY_KEYWORD_WHERE
+        keyword = f"%{keyword}%"
 
         param = {
             "category_id": category_id,
@@ -96,17 +87,12 @@ class RdbPostRepository(PostRepository):
         self,
         *,
         category_id: int,
-        keyword: str | None,
+        keyword: str,
         size: int,
         page: int,
     ) -> Iterable[dict]:
         q = POST_LIST_QUERY
-
-        if keyword:
-            keyword = f"%{keyword}%"
-            q += POST_LIST_QUERY_KEYWORD_WHERE
-
-        q += POST_LIST_QUERY_ORDER_LIMIT
+        keyword = f"%{keyword}%"
 
         param = {
             "category_id": category_id,
