@@ -74,8 +74,6 @@ class RdbPostRepository(PostRepository):
         keyword: str,
     ) -> int:
         q = POST_COUNT_QUERY
-        keyword = f"%{keyword}%"
-
         param = {
             "category_id": category_id,
             "keyword": keyword,
@@ -92,8 +90,6 @@ class RdbPostRepository(PostRepository):
         page: int,
     ) -> Iterable[dict]:
         q = POST_LIST_QUERY
-        keyword = f"%{keyword}%"
-
         param = {
             "category_id": category_id,
             "keyword": keyword,

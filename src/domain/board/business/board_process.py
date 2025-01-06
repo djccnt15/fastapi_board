@@ -57,16 +57,16 @@ async def get_post_list(
         category=board,
     )
 
+    kw = f"%{keyword}%"
     count = await board_logic.get_post_count(
         repo=post_repo,
         category=category_entity.id,
-        keyword=keyword,
+        keyword=kw,
     )
-
     post_list = await board_logic.get_post_list(
         repo=post_repo,
         board=category_entity.id,
-        keyword=keyword,
+        keyword=kw,
         size=size,
         page=page,
     )
