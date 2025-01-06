@@ -73,7 +73,7 @@ async def get_post_list(
         category_id=board,
         keyword=keyword,
         size=size,
-        page=page,
+        page=size * page,
     )
     return post_list
 
