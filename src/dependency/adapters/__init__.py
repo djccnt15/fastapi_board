@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import Depends, Query
@@ -19,6 +20,8 @@ from .predict import IrisInferencer
 from .user import RdbUserRepository
 
 config = configs.config
+
+logging.getLogger("sqlalchemy.engine.Engine").addHandler(logging.NullHandler())
 
 DB_URL = URL.create(**config.db.url)
 db_engine = create_async_engine(
