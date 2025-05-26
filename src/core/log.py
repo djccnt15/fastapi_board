@@ -12,7 +12,7 @@ logstash_handler = AsynchronousLogstashHandler(**configs.config.logstash)
 logstash_handler.setFormatter(LogstashFormatter())
 
 # base logger
-logger = logging.getLogger("fastapi")
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logstash_handler)
 
